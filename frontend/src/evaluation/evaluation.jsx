@@ -23,7 +23,7 @@ class Evaluation extends Component {
     render() {
         return (
             <div> 
-                <ContentHeader title='Bays' small='Management' />
+                <ContentHeader title='Desks' small='Management' />
                 <Content>
                     <Tabs> 
                         <TabsHeader> 

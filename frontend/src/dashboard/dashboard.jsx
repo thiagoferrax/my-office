@@ -54,7 +54,7 @@ class Dashboard extends Component {
                         <InfoBox cols='12 6 4' color='red' icon='people '
                             value={members.length} text='Responsibles' />
                         <InfoBox cols='12 6 4' color='green' icon='options'
-                            value={number_evaluations} text='BAYS' />
+                            value={number_evaluations} text='Desks' />
                     </Row>
                     <Row>
                         {this.renderProjects()}
