@@ -24,17 +24,21 @@ class EvaluationForm extends Component {
         this.props.getProjects()
     }
 
-    getSprintList() {
-        const sprints = []
-        sprints.push({ id: 1, name: 'North' })
-        sprints.push({ id: 2, name: 'South' })
-        sprints.push({ id: 3, name: 'West' })
-        sprints.push({ id: 4, name: 'East' })
+    getPossibleDirections() {
+        const directions = []
+        directions.push({ id: 'north', name: 'North' })
+        directions.push({ id: 'south', name: 'South' })
+        directions.push({ id: 'east', name: 'East' })
+        directions.push({ id: 'west', name: 'West' })
+        directions.push({ id: 'north-east', name: 'North-east' })
+        directions.push({ id: 'north-west', name: 'North-west' })
+        directions.push({ id: 'south-east', name: 'South-east' })
+        directions.push({ id: 'south-west', name: 'South-west' })
 
-        return sprints
+        return directions
     }
 
-    getPosiblePositions() {
+    getPossiblePositions() {
         const positions = []
 
         for (let i = 0; i < 100; i++) {
@@ -74,6 +78,7 @@ class EvaluationForm extends Component {
     render() {
 
         const { projects, checklists, checklist, handleSubmit, readOnly, selectChecklist } = this.props
+        
         const data = [
             {
                 chairPosition: 'south', x: 0, y: 0,
@@ -119,15 +124,15 @@ class EvaluationForm extends Component {
                 <div className='box-body'>
                     <Field name='projectId' label='Room' cols='12 3'
                         component={Select} readOnly={readOnly} options={projects} optionValue='id' optionLabel='name' autoFocus={true} />
-                    <Field name='sprint' label='Chair direction' cols='12 3'
+                    <Field name='chairDirection' label='Chair direction' cols='12 3'
                         component={Select} readOnly={readOnly}
-                        options={this.getSprintList()} optionValue='id' optionLabel='name' />
+                        options={this.getPossibleDirections()} optionValue='id' optionLabel='name' />
                     <Field name='x' label='X position' cols='12 2'
                         component={Select} readOnly={readOnly}
-                        options={this.getPosiblePositions()} optionValue='id' optionLabel='name' />
+                        options={this.getPossiblePositions()} optionValue='id' optionLabel='name' />
                     <Field name='y' label='Y position' cols='12 2'
                         component={Select} readOnly={readOnly}
-                        options={this.getPosiblePositions()} optionValue='id' optionLabel='name' />
+                        options={this.getPossiblePositions()} optionValue='id' optionLabel='name' />
 
                     <Grid cols='12 2'>
                         <If test={readOnly}>

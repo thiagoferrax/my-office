@@ -26,6 +26,7 @@ module.exports = app => {
 
     protectedApi.post('/evaluations', app.api.evaluation.save)
     protectedApi.get('/evaluations', app.api.evaluation.get)
+    protectedApi.get('/evaluations/officeData', app.api.evaluation.getOfficeData)
     protectedApi.put('/evaluations/:id', app.api.evaluation.save)
     protectedApi.delete('/evaluations/:id', app.api.evaluation.remove)
     protectedApi.get('/evaluations/:id', app.api.evaluation.getById)

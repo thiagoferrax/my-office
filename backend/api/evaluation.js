@@ -5,18 +5,21 @@ module.exports = app => {
         const evaluation = {
             id: req.body.id,
             projectId: req.body.projectId,
-            sprint: req.body.sprint,
-            checklistId: req.body.checklistId,
             userId: req.decoded.id,
-            checklist: req.body.checklist
+            checklist: req.body.checklist,
+            chairDirection: req.body.chairDirection,
+            x: req.body.x || 0,
+            y: req.body.x || 0
         }
+
+        console.log(evaluation)
 
         if (req.params.id) evaluation.id = req.params.id
 
         try {
-            existsOrError(evaluation.projectId, 'Project was not informed!')
-            existsOrError(evaluation.sprint, 'Sprint was not informed!')
-            existsOrError(evaluation.checklistId, 'Checklist was not informed!')
+            //existsOrError(evaluation.projectId, 'Project was not informed!')
+            //existsOrError(evaluation.sprint, 'Sprint was not informed!')
+            //existsOrError(evaluation.checklistId, 'Checklist was not informed!')
             existsOrError(evaluation.userId, 'User was not informed!')
         } catch (msg) {
             return res.status(400).json({ errors: [msg] })
@@ -24,10 +27,6 @@ module.exports = app => {
 
         const checklist = evaluation.checklist
         delete evaluation.checklist
-
-        if(checklist && checklist.length > 0) {
-            evaluation.score = getScore(checklist)
-        }   
 
         if (evaluation.id) {  
             evaluation.updated_at = new Date()
@@ -47,19 +46,24 @@ module.exports = app => {
               
         } else {
 
-            try {
-                existsOrError(checklist, 'You need to answer the checklist!')
-            } catch (msg) {
-                return res.status(400).json({ errors: [msg] })
-            }
+            // try {
+            //     existsOrError(checklist, 'You need to answer the checklist!')
+            // } catch (msg) {
+            //     return res.status(400).json({ errors: [msg] })
+            // }
             evaluation.created_at = new Date()
             evaluation.updated_at = null
 
-            const evaluationId = app.db('evaluations')
+            console.log('Insert...', evaluation)
+
+            app.db('evaluations')
                 .insert(evaluation)
                 .returning('id')
-                .then(evaluationId => insertAnswers(evaluationId[0], checklist, res))
-                .catch(err => res.status(500).json({ errors: [err] }))
+                .then(_ => res.status(204).send())
+                .catch(err => {
+                    console.log(err)
+                    res.status(500).json({ errors: [err] })
+                })
         }
     }
 
@@ -104,20 +108,46 @@ module.exports = app => {
             {
                 id: 'evaluations.id',
                 projectId: 'evaluations.projectId',
-                sprint: 'evaluations.sprint',
-                checklistId: 'evaluations.checklistId',
-                score: 'evaluations.score',
-                userId: 'evaluations.userId',
+                userId: 'evaluations.userId',                
                 date: 'evaluations.created_at',
                 projectName: 'projects.name',
-                checklistDescription: 'checklists.description'
             }
         ).from('evaluations')
             .leftJoin('projects', 'evaluations.projectId', 'projects.id')
-            .leftJoin('checklists', 'evaluations.checklistId', 'checklists.id')
             .where({'evaluations.userId': req.decoded.id})
             .orderBy('evaluations.created_at', 'desc')
             .then(evaluations => res.json(evaluations))
+            .catch(err => res.status(500).json({ errors: [err] }))
+    }
+
+    const getOfficeData = (req, res) => {
+        app.db.select(
+            {
+                id: 'evaluations.id',
+                projectId: 'evaluations.projectId',
+                userId: 'evaluations.userId',                
+                date: 'evaluations.created_at',
+                chairDirection: 'evaluations.chairDirection',
+                x: 'evaluations.x',
+                y: 'evaluations.y',
+                projectName: 'projects.name'
+            }
+        ).from('evaluations')
+            .leftJoin('projects', 'evaluations.projectId', 'projects.id')
+            .where({'evaluations.userId': req.decoded.id})
+            .orderBy('evaluations.created_at', 'desc')
+            .then(evaluations => {
+                const officeData = evaluations && evaluations.reduce((data, evaluation) => {
+                    const projectId = evaluation.projectId
+                    if(!Object.keys(data).includes(projectId)) {
+                        data[projectId] = []
+                    }
+                    data[projectId].push({ ...evaluation })    
+                    return data                
+                }, {}) 
+                
+                res.json(officeData)
+            })
             .catch(err => res.status(500).json({ errors: [err] }))
     }
 
@@ -155,5 +185,5 @@ module.exports = app => {
 
     const getScore = (checklist) => parseInt(checklist[0].value)
 
-    return { save, remove, get, getById, getAnswers }
+    return { save, remove, get, getById, getAnswers, getOfficeData }
 }
