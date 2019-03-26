@@ -149,7 +149,7 @@ class EvaluationForm extends Component {
                         <If test={!readOnly}>
                             <div className='buttons_checklist_form'>
                                 <button type='submit' className='btn btn-primary' title="Save">
-                                    <i className="fa fa-plus"></i>
+                                    <i className="fa fa-check"></i>
                                 </button>
                                 <button type='button' className='btn btn-default'
                                     onClick={init} title="Clear">
@@ -172,13 +172,6 @@ class EvaluationForm extends Component {
                             </div>
                         </Grid >
                     </If>
-                </div>
-                <div className='box-footer text-right'>
-                    <button type='submit' className={`btn btn-${this.props.submitClass}`}>
-                        {this.props.submitLabel}
-                    </button>
-                    <button type='button' className='btn btn-default'
-                        onClick={this.props.init}>Cancel</button>
                 </div>
             </form>
         )

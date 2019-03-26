@@ -21,9 +21,6 @@ class EvaluatonList extends Component {
         return list.map(evaluation => (
             <tr key={evaluation.id}>
                 <td>{evaluation.projectName}</td>                
-                <td>{`Sprint ${evaluation.sprint}`}</td>
-                <td>{evaluation.checklistDescription}</td>                                
-                <td>{evaluation.score ? parseFloat(evaluation.score).toFixed(1) : '0.0'}</td>
                 <td>{this.getFormatedDate(evaluation.date)}</td>
                 <td>
                     <button className='btn btn-default' onClick={() => this.props.showUpdate(evaluation)}>
@@ -43,10 +40,7 @@ class EvaluatonList extends Component {
                 <table className='table'>
                     <thead>
                         <tr>
-                            <th>Project</th>
-                            <th>Sprint</th>
-                            <th>Checklist</th>
-                            <th>Score</th>
+                            <th>Room</th>
                             <th>Created at</th>
                             <th className='table-actions'>Actions</th>
                         </tr>

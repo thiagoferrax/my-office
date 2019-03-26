@@ -28,22 +28,8 @@ class Dashboard extends Component {
         clearInterval(this.interval)
     }
 
-    renderProjects() {
-        const { projects, evaluations, sprintEvaluations, fishboneData, paretoData, summaryData } = this.props.summary
-
-        return projects.map(
-            project => ([
-                <EvaluationBarChart key={`barChart_${project.id}`} cols='12' evaluations={evaluations} project={project} summaryData={summaryData[project.id]} />,
-                <ComparativeLineChart key={`lineChart_${project.id}`} cols='12 12 6' evaluations={sprintEvaluations[project.id]} project={project.name} />,
-                <SprintRadarChart key={`radarChart_${project.id}`} cols='12 12 6' evaluations={sprintEvaluations[project.id]} project={project.name} />,
-                <ParetoChart key={`paretoChart_${project.id}`} cols='12' data={paretoData[project.id]} project={project.name} />,
-                <FishboneChart key={`fishboneChart_${project.id}`} cols='12' data={fishboneData[project.id]} project={project.name} />
-            ])
-        )
-    }
-
     render() {
-        const { projects, number_checklists, number_evaluations, members } = this.props.summary
+        const { projects, number_evaluations, members } = this.props.summary
         return (
             <div>
                 <ContentHeader title='Dashboard' small='Control Panel' />
@@ -52,13 +38,11 @@ class Dashboard extends Component {
                         <InfoBox cols='12 6 4' color='aqua' icon='cube'
                             value={projects.length} text='Rooms' />
                         <InfoBox cols='12 6 4' color='red' icon='people '
-                            value={members.length} text='Responsibles' />
+                            value={members.length} text='Managers' />
                         <InfoBox cols='12 6 4' color='green' icon='options'
                             value={number_evaluations} text='Desks' />
                     </Row>
-                    <Row>
-                        {this.renderProjects()}
-                    </Row>
+                   
                 </Content>
                 <br />
                 <br />

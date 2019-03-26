@@ -121,14 +121,10 @@ module.exports = app => {
         app.db.select({
             id: 'evaluations.id',
             project: 'projects.name',
-            sprint: 'evaluations.sprint',
-            checklist: 'checklists.description',
-            score: 'evaluations.score',
             user: 'users.name',
             time: 'evaluations.created_at',
         }).from('evaluations')
             .leftJoin('projects', 'evaluations.projectId', 'projects.id')
-            .leftJoin('checklists', 'evaluations.checklistId', 'checklists.id')
             .leftJoin('users', 'evaluations.userId', 'users.id')
             .whereIn('evaluations.projectId', summary.projectsIds)
             .then(evaluations => {
@@ -165,7 +161,6 @@ module.exports = app => {
         getLoggedUser(summary)
             .then(getProjectsIds)
             .then(getProjects)
-            .then(getChecklists)
             .then(getEvaluations)
             .then(getSingleUser)
             .then(summary => res.json(summary.timeline))
