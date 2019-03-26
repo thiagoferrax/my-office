@@ -1,4 +1,4 @@
-const INITIAL_STATE = { list: [], checklist: [], tree: [], checklistId: null, score: null, completion: 0 }
+const INITIAL_STATE = { list: [], checklist: [], tree: [], checklistId: null, score: null, completion: 0, officeData: [] }
 
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -8,6 +8,8 @@ export default (state = INITIAL_STATE, action) => {
             let tree = state.tree || []
             let checklist = tree.filter(checklist => checklist.id === action.payload)
             return { ...state, checklist, score: null }
+        case 'OFFICE_DATA_FETCHED':
+            return { ...state, officeData: action.payload.data }
         case 'TREE_FETCHED':
             return { ...state, tree: action.payload.data }
         case 'SCORE_UPDATED':

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { reduxForm, Field } from 'redux-form'
 
-import { init, selectChecklist, updateScore } from './evaluationActions'
+import { init, selectChecklist, updateScore, getOfficeData } from './evaluationActions'
 import { getList as getChecklists, getTree } from '../checklist/checklistActions'
 import { getList as getProjects } from '../project/projectActions'
 import Tree from 'tree-slide-bar'
@@ -77,53 +77,15 @@ class EvaluationForm extends Component {
 
     render() {
 
-        const { projects, checklists, checklist, handleSubmit, readOnly, selectChecklist } = this.props
+        const { projects, checklists, checklist, handleSubmit, readOnly, selectChecklist, getOfficeData, officeData } = this.props
         
-        const data = [
-            {
-                chairPosition: 'south', x: 0, y: 0,
-                equipments: {
-                    cpu: 'Dual core 2.4 GHz, 16 GB RAM, 256 GB HD',
-                    monitor: 'HP V197 18.5-inch',
-                    keyboard: 'HP Ultrathin Wireless Keyboard',
-                    phone: 'Cisco Phone IP 7960G/7940G',
-                    chair: '817L Kare Ergonomic Office Chair',
-                    mouse: 'HP USB 2 Button Optical Mouse'
-                },
-            },
-            {
-                chairPosition: 'south', x: 1, y: 0,
-                equipments: {
-                    cpu: 'Dual core 2.4 GHz, 16 GB RAM, 256 GB HD',
-                    monitor: 'HP V197 18.5-inch',
-                    keyboard: 'HP Ultrathin Wireless Keyboard',
-                    phone: 'Cisco Phone IP 7960G/7940G',
-                    chair: '817L Kare Ergonomic Office Chair',
-                    mouse: 'HP USB 2 Button Optical Mouse'
-                }
-            },
-            { chairPosition: 'south', x: 2, y: 0 },
-            { chairPosition: 'south', x: 3, y: 0 },
-            { chairPosition: 'west', x: 0, y: 1 },
-            { chairPosition: 'east', x: 1, y: 1 },
-            {
-                chairPosition: 'north-west', x: 2, y: 1,
-                equipments: {
-                    cpu: 'Dual core 2.4 GHz, 8 GB RAM, 512 GB HD',
-                    monitor: 'HP V197 18.5-inch',
-                    keyboard: 'HP Ultrathin Wireless Keyboard',
-                    phone: 'Cisco Phone IP 7960G/7940G',
-                    chair: '817L Kare Ergonomic Office Chair'
-                }
-            },
-            { chairPosition: 'south-west', x: 2, y: 2 },
-            { chairPosition: 'north-east', x: 3, y: 1 },
-        ]
         return (
             <form role='form' onSubmit={handleSubmit}>
                 <div className='box-body'>
                     <Field name='projectId' label='Room' cols='12 3'
-                        component={Select} readOnly={readOnly} options={projects} optionValue='id' optionLabel='name' autoFocus={true} />
+                        component={Select} readOnly={readOnly} 
+                        options={projects} optionValue='id' optionLabel='name' autoFocus={true} 
+                        inputOnChange={getOfficeData} />
                     <Field name='chairDirection' label='Chair direction' cols='12 3'
                         component={Select} readOnly={readOnly}
                         options={this.getPossibleDirections()} optionValue='id' optionLabel='name' />
@@ -159,7 +121,7 @@ class EvaluationForm extends Component {
                         </If>
                     </Grid>
 
-                    <If test={data && data.length > 0}>
+                    <If test={officeData && officeData.length > 0}>
                         <Grid key={`checklist_${checklist.id}`} cols='12'>
                             <div className="box_ box-default">
                                 <div className="box-header with-border">
@@ -167,7 +129,7 @@ class EvaluationForm extends Component {
                                     <h3 className="box-title">MY OFFICE - {checklist.description}</h3>
                                 </div>
                                 <div className="box-body">
-                                    <OfficeMap data={data} />
+                                    <OfficeMap data={officeData} />
                                 </div>
                             </div>
                         </Grid >
@@ -185,7 +147,8 @@ const mapStateToProps = state => ({
     checklists: state.checklist.list,
     checklist: state.evaluation.checklist,
     score: state.evaluation.score,
-    completion: state.evaluation.completion
+    completion: state.evaluation.completion,
+    officeData:  state.evaluation.officeData
 })
-const mapDispatchToProps = dispatch => bindActionCreators({ init, getChecklists, selectChecklist, getTree, getProjects, updateScore }, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({ init, getChecklists, selectChecklist, getTree, getProjects, updateScore, getOfficeData }, dispatch)
 export default connect(mapStateToProps, mapDispatchToProps)(EvaluationForm)

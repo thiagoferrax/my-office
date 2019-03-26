@@ -9,7 +9,7 @@ module.exports = app => {
             checklist: req.body.checklist,
             chairDirection: req.body.chairDirection,
             x: req.body.x || 0,
-            y: req.body.x || 0
+            y: req.body.y || 0
         }
 
         console.log(evaluation)
@@ -111,6 +111,9 @@ module.exports = app => {
                 userId: 'evaluations.userId',                
                 date: 'evaluations.created_at',
                 projectName: 'projects.name',
+                chairDirection: 'evaluations.chairDirection',
+                x: 'evaluations.x',
+                y: 'evaluations.y'
             }
         ).from('evaluations')
             .leftJoin('projects', 'evaluations.projectId', 'projects.id')
@@ -123,29 +126,20 @@ module.exports = app => {
     const getOfficeData = (req, res) => {
         app.db.select(
             {
-                id: 'evaluations.id',
-                projectId: 'evaluations.projectId',
-                userId: 'evaluations.userId',                
-                date: 'evaluations.created_at',
-                chairDirection: 'evaluations.chairDirection',
+                chairPosition: 'evaluations.chairDirection',
                 x: 'evaluations.x',
                 y: 'evaluations.y',
-                projectName: 'projects.name'
             }
         ).from('evaluations')
             .leftJoin('projects', 'evaluations.projectId', 'projects.id')
-            .where({'evaluations.userId': req.decoded.id})
+            .where({'evaluations.userId': req.decoded.id, 'projects.id': req.params.id })
             .orderBy('evaluations.created_at', 'desc')
             .then(evaluations => {
                 const officeData = evaluations && evaluations.reduce((data, evaluation) => {
-                    const projectId = evaluation.projectId
-                    if(!Object.keys(data).includes(projectId)) {
-                        data[projectId] = []
-                    }
-                    data[projectId].push({ ...evaluation })    
+                    data.push({ ...evaluation })    
                     return data                
-                }, {}) 
-                
+                }, []) 
+                console.log('officeData', officeData)
                 res.json(officeData)
             })
             .catch(err => res.status(500).json({ errors: [err] }))
