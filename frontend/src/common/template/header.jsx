@@ -7,7 +7,7 @@ export default props => (
         <a href='/#/' className='logo'>
             <span className='logo-mini'><b>My</b>O</span>
             <span className='logo-lg'>
-                <i className='icon ion-md-checkbox-outline'></i>
+                <i className='fa fa-building-o'></i>
                 &nbsp;&nbsp;<b>My</b> Office
             </span>        
         </a>
