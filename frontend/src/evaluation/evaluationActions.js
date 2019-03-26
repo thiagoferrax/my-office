@@ -89,7 +89,7 @@ export function showDelete(evaluation) {
 
 export function init() {
     return [
-        showTabs('tabEvaluate', 'tabList'),
+        showTabs('tabCreate', 'tabList'),
         selectTab('tabList'),
         getList(),
         initializeChecklist(),

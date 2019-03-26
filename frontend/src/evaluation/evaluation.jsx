@@ -23,12 +23,12 @@ class Evaluation extends Component {
     render() {
         return (
             <div> 
-                <ContentHeader title='Evaluations' small='Management' />
+                <ContentHeader title='Bays' small='Management' />
                 <Content>
                     <Tabs> 
                         <TabsHeader> 
                             <TabHeader label='List' icon='bars' target='tabList' />
-                            <TabHeader label='Evaluate' icon='plus' target='tabEvaluate' />
+                            <TabHeader label='Create' icon='plus' target='tabCreate' />
                             <TabHeader label='Update' icon='pencil' target='tabUpdate' />
                             <TabHeader label='Delete' icon='trash-o' target='tabDelete' />
                         </TabsHeader> 
@@ -36,9 +36,9 @@ class Evaluation extends Component {
                             <TabContent id='tabList'>
                                 <List />
                             </TabContent>
-                            <TabContent id='tabEvaluate'>
+                            <TabContent id='tabCreate'>
                                 <Form onSubmit={this.props.create}
-                                    submitLabel='Evaluate' submitClass='primary' />
+                                    submitLabel='Create' submitClass='primary' />
                             </TabContent>
                             <TabContent id='tabUpdate'>
                                 <Form onSubmit={this.props.update}

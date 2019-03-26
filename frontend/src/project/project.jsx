@@ -23,7 +23,7 @@ class Project extends Component {
     render() {
         return (
             <div> 
-                <ContentHeader title='Projects' small='Management' />
+                <ContentHeader title='Rooms' small='Management' />
                 <Content> 
                     <Tabs> 
                         <TabsHeader> 
