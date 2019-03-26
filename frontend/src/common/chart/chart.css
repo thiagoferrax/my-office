@@ -1,0 +1,70 @@
+.chart {
+    padding: 5px;
+}
+
+.description-block > .description-header {
+    font-size: 14px;
+}
+
+.carousel_controller{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: stretch;
+    padding-top: 22px;    
+}
+
+.carousel_controller a {color:black;}
+.carousel_controller a:visited {color:black;}
+.carousel_controller a:hover {color:black;}
+.carousel_controller a:active {color:black;}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+    margin-bottom: 18px;
+}
+
+.card-footer {
+    padding: .75rem 1.25rem;
+    background-color: rgba(0,0,0,.03);
+    border-top: 0 solid rgba(0,0,0,.125);
+}
+
+.card .border-right {
+    border-right: 1px solid rgba(0,0,0,.125);
+}
+
+  .animation-appear {
+    opacity: 0.01;
+  }
+  
+  .animation-appear.animation-appear-active {
+    opacity: 1;
+    transition: opacity 250ms ease-in;
+  }
+
+  .animation-enter {
+    opacity: 0.01;
+  }
+  
+  .animation-enter.animation-enter-active {
+    opacity: 1;
+    transition: opacity 250ms ease-in;
+  }
+  
+  .animation-leave {
+    opacity: 1;
+  }
+  
+  .animation-leave.animation-leave-active {
+    opacity: 0.01;
+    transition: opacity 250ms ease-in;
+  }

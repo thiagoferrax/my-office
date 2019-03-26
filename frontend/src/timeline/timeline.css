@@ -1,0 +1,12 @@
+
+.timeline > li > .timeline-item > .timeline-header {
+    font-size: 14px;
+}
+
+.timeline > li > .timeline-item > .time {
+    color: #555;
+}
+
+.timeline > .time-label > span {
+    padding: 5px 10px;
+}

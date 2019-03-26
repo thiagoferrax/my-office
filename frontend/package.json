@@ -1,0 +1,51 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "1.2.15",
+    "@fortawesome/free-solid-svg-icons": "5.7.2",
+    "@fortawesome/react-fontawesome": "0.1.4",
+    "admin-lte": "2.4.10",
+    "axios": "0.18.0",
+    "chart.js": "2.8.0",
+    "fishbone-chart": "1.0.22",
+    "font-awesome": "4.7.0",
+    "ionicons": "4.5.5",
+    "jquery": "3.3.1",
+    "pareto-chart": "1.0.21",
+    "radium": "0.25.1",
+    "react": "16.8.4",
+    "react-addons-css-transition-group": "15.6.2",
+    "react-animations": "1.0.0",
+    "react-chartjs-2": "2.7.4",
+    "react-dom": "16.8.4",
+    "react-redux": "6.0.1",
+    "react-redux-toastr": "7.4.8",
+    "react-router": "4.3.1",
+    "react-router-dom": "4.3.1",
+    "react-scripts": "2.1.8",
+    "react-select": "2.4.2",
+    "redux": "4.0.1",
+    "redux-form": "8.1.0",
+    "redux-multi": "0.1.12",
+    "redux-promise": "0.6.0",
+    "redux-thunk": "2.3.0",
+    "tree-slide-bar": "1.0.30"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
