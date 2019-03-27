@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { reduxForm, Field } from 'redux-form'
 
-import { init, selectChecklist, updateScore, getOfficeData } from './evaluationActions'
+import { init, selectChecklist, updateScore, getOfficeData, prepareToShow, showUpdate } from './evaluationActions'
 import { getList as getChecklists, getTree } from '../checklist/checklistActions'
 import { getList as getProjects } from '../project/projectActions'
 import Tree from 'tree-slide-bar'
@@ -77,7 +77,7 @@ class EvaluationForm extends Component {
 
     render() {
 
-        const { projects, checklists, checklist, handleSubmit, readOnly, selectChecklist, getOfficeData, officeData } = this.props
+        const { projects, checklists, checklist, handleSubmit, readOnly, selectChecklist, getOfficeData, officeData,  prepareToShow, showUpdate} = this.props
         
         return (
             <form role='form' onSubmit={handleSubmit}>
@@ -129,7 +129,7 @@ class EvaluationForm extends Component {
                                     <h3 className="box-title">MY OFFICE - {checklist.description}</h3>
                                 </div>
                                 <div className="box-body">
-                                    <OfficeMap data={officeData} />
+                                    <OfficeMap data={officeData} onSelect={deskId => this.props.prepareToShow(deskId, showUpdate) }/>
                                 </div>
                             </div>
                         </Grid >
@@ -150,5 +150,5 @@ const mapStateToProps = state => ({
     completion: state.evaluation.completion,
     officeData:  state.evaluation.officeData
 })
-const mapDispatchToProps = dispatch => bindActionCreators({ init, getChecklists, selectChecklist, getTree, getProjects, updateScore, getOfficeData }, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({ init, getChecklists, selectChecklist, getTree, getProjects, updateScore, getOfficeData, prepareToShow, showUpdate }, dispatch)
 export default connect(mapStateToProps, mapDispatchToProps)(EvaluationForm)

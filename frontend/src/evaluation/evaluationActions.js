@@ -77,12 +77,20 @@ export function initializeChecklist() {
     }
 }
 
+export function prepareToShow(deskId, callback) {
+    return dispatch => {
+        axios['get'](`${consts.API_URL}/evaluations/${deskId}`)
+            .then(evaluation => { dispatch(callback(evaluation.data)) })
+            .catch(e => {
+                e.response.data.errors.forEach(error => toastr.error('Error', error))
+            })
+    }
+}
+
 export function showUpdate(evaluation) {
     return [ 
         showTabs('tabUpdate'),
         selectTab('tabUpdate'),        
-        getAnswers(evaluation),
-        selectChecklist(evaluation.checklistId),
         initialize('evaluationForm', evaluation)
     ]
 }
