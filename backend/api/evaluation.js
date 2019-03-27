@@ -126,6 +126,7 @@ module.exports = app => {
     const getOfficeData = (req, res) => {
         app.db.select(
             {
+                room: 'projects.name',
                 id: 'evaluations.id',
                 chairPosition: 'evaluations.chairDirection',
                 x: 'evaluations.x',

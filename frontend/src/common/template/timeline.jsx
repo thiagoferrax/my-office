@@ -63,7 +63,7 @@ const evaluationItem = ({ sprint, project, user, checklist, formattedTime }) => 
             key={`evaluations_${sprint}_${project}_${user}_${checklist}_${formattedTime}`}
             time={formattedTime}
             icon="sliders" color="green">
-            <a href="/#/evaluations">Sprint {sprint}</a> of <a href="/#/projects">{project}</a> was evaluated by <a href="#">{user}</a> using <a href="/#/checklists">{checklist}</a>
+            A new desk in <a href="/#/projects">{project}</a> was created by <a href="#">{user}</a>
         </TimelineItem>
     )
 }

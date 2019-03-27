@@ -4,7 +4,7 @@ import { initialize } from 'redux-form'
 import { showTabs, selectTab } from '../common/tab/tabActions'
 import consts from '../consts'
 
-const INITIAL_VALUES = {checklist:[]}
+const INITIAL_VALUES = { projects: [], officeData:  []}
 
 export function getList() {
     const request = axios.get(`${consts.API_URL}/evaluations`)
@@ -106,7 +106,7 @@ export function showDelete(evaluation) {
 export function init() {
     return [
         showTabs('tabCreate', 'tabList'),
-        selectTab('tabCreate'),
+        selectTab('tabList'),
         getList(),
         initialize('evaluationForm', INITIAL_VALUES),
     ]

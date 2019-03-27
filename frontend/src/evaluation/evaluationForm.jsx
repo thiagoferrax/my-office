@@ -126,7 +126,7 @@ class EvaluationForm extends Component {
                             <div className="box_ box-default">
                                 <div className="box-header with-border">
                                     <i className="fa fa-check"></i>
-                                    <h3 className="box-title">MY OFFICE - {checklist.description}</h3>
+                                    <h3 className="box-title">MY OFFICE - {officeData[0] && officeData[0].room}</h3>
                                 </div>
                                 <div className="box-body">
                                     <OfficeMap data={officeData} onSelect={deskId => this.props.prepareToShow(deskId, showUpdate) }/>
