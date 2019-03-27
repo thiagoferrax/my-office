@@ -6,13 +6,8 @@ import { getSummary } from './dashboardActions'
 import ContentHeader from '../common/template/contentHeader'
 import Content from '../common/template/content'
 import InfoBox from '../common/widget/infoBox'
-import EvaluationBarChart from '../common/chart/evaluationBarChart'
-import SprintRadarChart from '../common/chart/sprintRadarChart'
-import ComparativeLineChart from '../common/chart/comparativeLineChart'
-import FishboneChart from '../common/chart/fishboneChart'
-import ParetoChart from '../common/chart/paretoChart'
-
-
+import OfficeMap from 'office-map'
+import Grid from '../common/layout/grid'
 import Row from '../common/layout/row'
 
 class Dashboard extends Component {
@@ -29,7 +24,7 @@ class Dashboard extends Component {
     }
 
     render() {
-        const { projects, number_evaluations, members } = this.props.summary
+        const { projects, number_evaluations, members, officeData } = this.props.summary
         return (
             <div>
                 <ContentHeader title='Dashboard' small='Control Panel' />
@@ -42,7 +37,21 @@ class Dashboard extends Component {
                         <InfoBox cols='12 6 4' color='green' icon='options'
                             value={number_evaluations} text='Desks' />
                     </Row>
-                   
+                    {
+                        officeData && Object.keys(officeData).map((project => {
+                            return (<Grid key={`room_${project}`} cols='12'>
+                                <div className="box_ box-default">
+                                    <div className="box-header with-border">
+                                        <i className="fa fa-check"></i>
+                                        <h3 className="box-title">MY OFFICE - {officeData[project][0] && officeData[project][0].room}</h3>
+                                    </div>
+                                    <div className="box-body">
+                                        <OfficeMap data={officeData[project]} />
+                                    </div>
+                                </div>
+                            </Grid >)
+                        }))
+                    }
                 </Content>
                 <br />
                 <br />

@@ -41,41 +41,36 @@ module.exports = app => {
             .catch(err => reject(err))
     })
 
-    const mergeEvaluations = (evaluations) => {
-        const evaluationsMap = evaluations.reduce((map, evaluation) => {
-            const key = `${evaluation.projectId}_${evaluation.sprint}_${evaluation.checklistId}`
-            if (map[key]) {
-                map[key].score = map[key].score + evaluation.score
-                map[key].qtd = map[key].qtd + 1
-            } else {
-                map[key] = evaluation
-                map[key].qtd = 1
-            }
-
-            return map
-        }, {})
-
-        const caculatedEvaluations = Object.values(evaluationsMap)
-
-        caculatedEvaluations.forEach(evaluation => {
-            evaluation.score = (evaluation.score / evaluation.qtd).toFixed(2)
-        })
-
-        return caculatedEvaluations
-    }
-
     const getEvaluations = (summary) => new Promise((resolve, reject) => {
         app.db.select({
             id: 'evaluations.id',
             projectId: 'evaluations.projectId',
+            room: 'projects.name',
+            chairPosition: 'evaluations.chairDirection',
+            x: 'evaluations.x',
+            y: 'evaluations.y',
             userId: 'evaluations.userId',
-            date: 'evaluations.created_at',
+            date: 'evaluations.created_at'
         }).from('evaluations')
             .whereIn('evaluations.projectId', summary.projectsIds)
+            .leftJoin('projects', 'evaluations.projectId', 'projects.id')
             .then(evaluations => {
-                summary.pureEvaluations = evaluations
                 summary.number_evaluations = evaluations.length
-                summary.evaluations = mergeEvaluations(evaluations)
+
+                summary.officeData = evaluations && evaluations.reduce((data, evaluation) => {
+                    const room = evaluation.projectId
+                    console.log('data', data, room)
+
+                    if(!Object.keys(data).includes(`${room}`)) {
+                        console.log('clean....')
+                        data[room] = []
+                    }
+                    data[room].push({ ...evaluation })    
+                    return data                
+                }, {}) 
+
+                console.log('summary.officeData',  summary.officeData)
+
                 resolve(summary)
             }).catch(err => reject(err))
     })

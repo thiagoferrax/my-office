@@ -58,7 +58,7 @@ class EvaluationForm extends Component {
                 <div className="box_ box-default box_evaluations">
                     <div className="box-header">
                         <i className={`fa fa-check`}></i>
-                        <h3 className="box-title">&nbsp;&nbsp;MY OFFICE</h3>
+                        <h3 className="box-title"> MY OFFICE</h3>
                     </div>
                     <ProgressBar score={this.props.score} completion={this.props.completion} />
                     <div className="box-body">

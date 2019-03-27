@@ -179,7 +179,5 @@ module.exports = app => {
         }, initialAnswers)
     }
 
-    const getScore = (checklist) => parseInt(checklist[0].value)
-
     return { save, remove, get, getById, getAnswers, getOfficeData }
 }
