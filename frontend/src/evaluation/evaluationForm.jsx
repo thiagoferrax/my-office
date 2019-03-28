@@ -72,17 +72,16 @@ class EvaluationForm extends Component {
 
                     <ItemList cols='12' list={equipments || [{}]} readOnly={readOnly}
                         field='equipments' legend='EQUIPMENTS' />
-
-                    <div className='box-footer text-right'>
-                        <button type='submit' className={`btn btn-${this.props.submitClass}`}>
-                            {this.props.submitLabel}
-                        </button>
-                        <button type='button' className='btn btn-default'
-                            onClick={this.props.init}>Cancel</button>
-                    </div>
                 </div>
-                <div className='box-footer'>
-                    <If test={officeData && officeData.length > 0}>
+                <div className='box-footer text-right'>
+                    <button type='submit' className={`btn btn-${this.props.submitClass}`}>
+                        {this.props.submitLabel}
+                    </button>
+                    <button type='button' className='btn btn-default'
+                        onClick={this.props.init}>Cancel</button>
+                </div>
+                <If test={officeData && officeData.length > 0}>
+                    <div className='box-footer'>
                         <Grid key={`checklist_${checklist.id}`} cols='12'>
                             <div className="box_ box-default">
                                 <div className="box-header with-border">
@@ -94,8 +93,8 @@ class EvaluationForm extends Component {
                                 </div>
                             </div>
                         </Grid >
-                    </If>
-                </div>
+                    </div>
+                </If>
             </form>
         )
     }
