@@ -6,7 +6,7 @@ module.exports = app => {
             id: req.body.id,
             projectId: req.body.projectId,
             userId: req.decoded.id,
-            checklist: req.body.checklist,
+            equipments: req.body.equipments,
             chairDirection: req.body.chairDirection,
             x: req.body.x || 0,
             y: req.body.y || 0
@@ -23,8 +23,11 @@ module.exports = app => {
             return res.status(400).json({ errors: [msg] })
         }
 
-        const checklist = evaluation.checklist
-        delete evaluation.checklist
+        const equipments = evaluation.equipments
+        equipments && equipments.shift()
+        delete evaluation.equipments
+
+        console.log('equipments', equipments)
 
         if (evaluation.id) {  
             evaluation.updated_at = new Date()
@@ -33,8 +36,8 @@ module.exports = app => {
                 .update(evaluation)
                 .where({ id: evaluation.id })
                 .then(_ => {
-                    if(checklist && checklist.length > 0) {
-                        updateAnswers(evaluation.id, checklist, res)
+                    if(equipments && equipments.length > 0) {
+                        updateEquipments(evaluation.id, equipments, res)
                     } else {
                         res.status(204).send()
                     }
@@ -44,34 +47,37 @@ module.exports = app => {
               
         } else {
 
-            // try {
-            //     existsOrError(checklist, 'You need to answer the checklist!')
-            // } catch (msg) {
-            //     return res.status(400).json({ errors: [msg] })
-            // }
-            evaluation.created_at = new Date()
-            evaluation.updated_at = null
+            try {
+                 existsOrError(equipments, 'You need to inform the equipments!')
 
-            app.db('evaluations')
-                .insert(evaluation)
-                .returning('id')
-                .then(_ => res.status(204).send())
-                .catch(err => {
-                    res.status(500).json({ errors: [err] })
-                })
+                 evaluation.created_at = new Date()
+                 evaluation.updated_at = null
+     
+                 app.db('evaluations')
+                     .insert(evaluation)
+                     .returning('id')
+                     .then(evaluationId => insertEquipments(evaluationId[0], equipments, res))
+                     .catch(err => {
+                         res.status(500).json({ errors: [err] })
+                     })
+            } catch (msg) {
+                 return res.status(400).json({ errors: [msg] })
+            }           
         }
     }
 
-    const updateAnswers = (evaluationId, checklist, res) => {
+    const updateEquipments = (evaluationId, checklist, res) => {
         app.db('answers').where({ evaluationId: evaluationId }).del().then(
             rowsDeleted => {               
-                insertAnswers(evaluationId, checklist, res)            
+                insertEquipments(evaluationId, checklist, res)            
             }    
         )           
     }    
 
-    const insertAnswers = (evaluationId, checklist, res) => {
-        const rows = getChecklistAnswersToInsert(evaluationId, checklist)
+    const insertEquipments = (evaluationId, equipments, res) => {
+        const rows = getEquipmentsToInsert(evaluationId, equipments)
+
+        console.log('insertEquipments rows', rows)
         const chunkSize = rows.lenght
         app.db.batchInsert('answers', rows, chunkSize)
             .then(_ => res.status(204).send())
@@ -166,11 +172,11 @@ module.exports = app => {
             .catch(err => res.status(500).json({ errors: [err] }))
     }
 
-    const getChecklistAnswersToInsert = (evaluationId, checklist, initialAnswers = []) => {
-        return checklist.reduce((answers, item) => {
-            answers.push({evaluationId, checklistId: item.id, value: parseInt(item.value)})
-            return getChecklistAnswersToInsert(evaluationId, item.children, answers)
-        }, initialAnswers)
+    const getEquipmentsToInsert = (evaluationId, equipments) => {
+        return equipments.reduce((rows, equipment) => {
+            rows.push({evaluationId, name: equipment.name, specification: equipment.specification})
+            return rows
+        }, [])
     }
 
     return { save, remove, get, getById, getAnswers, getOfficeData }

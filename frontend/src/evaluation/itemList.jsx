@@ -1,77 +1,59 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { Field, arrayInsert, arrayRemove } from 'redux-form'
+import { Field, FieldArray } from 'redux-form'
 import Grid from '../common/layout/grid'
 import Input from '../common/form/input'
+import If from '../common/operator/if'
+import Row from '../common/layout/row'
 
-class ItemList extends Component {
-
-    add(index, item = {}) {
-        if (!this.props.readOnly) {
-            this.props.arrayInsert('evaluationForm', this.props.field, index, item)
-        }
-    }
-
-    remove(index) {
-        if (!this.props.readOnly && this.props.list.length > 1) {
-            this.props.arrayRemove('evaluationForm', this.props.field, index)
-        }
-    }
-
-    renderRows() {
-        const list = this.props.list || []
-        return list.map((item, index) => (
-            <tr key={index}>
-                <td><Field name={`${this.props.field}[${index}].name`} component={Input}
-                    placeholder='Inform a name' readOnly={this.props.readOnly} /></td>
-                <td><Field name={`${this.props.field}[${index}].value`} component={Input}
-                    placeholder='Inform a value' readOnly={this.props.readOnly} /></td>
-                <td>
-                    <button type='button' className='btn btn-success'
-                        onClick={() => this.add(index + 1)}>
+export default props => {
+    const renderRows = ({ fields, meta: { touched, error, submitFailed } }) => {
+        return fields.map((member, index) => (
+            <Row key={index}>
+                <Field autoFocus={true} cols='12 3'
+                    name={`${member}.name`}
+                    type="text"
+                    component={Input}
+                    label="Name"
+                    placeholder="Equipment name"
+                    readOnly={props.readOnly}
+                />
+                <Field cols='12 8'
+                    name={`${member}.specification`}
+                    type="text"
+                    component={Input}
+                    label="Specification"
+                    placeholder="Equipment specification"
+                    readOnly={props.readOnly}
+                />
+                <If test={!index}>
+                    <button type='button' className='btn btn-info' cols='12 1'
+                        onClick={() => { fields.unshift({}) }}>
                         <i className="fa fa-plus"></i>
                     </button>
-                    <button type='button' className='btn btn-warning'
-                        onClick={() => this.add(index + 1, item)}>
-                        <i className="fa fa-clone"></i>
+                    {(touched || submitFailed) && error && <span>{error}</span>}
+                </If>
+                <If test={index}>
+                    <button type='button' className='btn btn-danger' cols='12 1'
+                        onClick={() => fields.remove(index)}>
+                        <i className="icon ion-md-trash"></i>
                     </button>
-                    <button type='button' className='btn btn-danger'
-                        onClick={() => this.remove(index)}>
-                        <i className="fa fa-trash-o"></i>
-                    </button>
-                </td>
-            </tr>
+                </If>
+            </Row>
         ))
     }
 
-    render() {
-        return (
-            <Grid cols={this.props.cols}>
-                <div className="box_ box-default">
-                    <div className="box-header with-border">
-                        <i className="fa fa-check"></i>
-                        <h3 className="box-title">{this.props.legend}</h3>
-                    </div>
-                    <div className="box-body">
-                        <table className='table'>
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Value</th>
-                                    <th className='table-actions'>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {this.renderRows()}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </Grid >
-        )
-    }
-}
 
-const mapDispatchToProps = dispatch => bindActionCreators({ arrayInsert, arrayRemove }, dispatch)
-export default connect(null, mapDispatchToProps)(ItemList)
+    return (
+        <Grid cols={props.cols}>
+            <div className="box_ box-default">
+                <div className="box-header with-border">
+                    <i className="fa fa-laptop"></i>
+                    <h3 className="box-title">{props.legend}</h3>
+                </div>
+                <div className="box-body box-body_desks">
+                    <FieldArray name={props.field} component={renderRows} />
+                </div>
+            </div>
+        </Grid >
+    )
+}

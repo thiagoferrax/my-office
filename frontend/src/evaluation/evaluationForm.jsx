@@ -49,33 +49,6 @@ class EvaluationForm extends Component {
         return positions
     }
 
-    updateChecklistScore(tree) {
-        this.props.updateScore(tree)
-    }
-
-    getChecklist(checklist) {
-        return (
-            <Grid cols='12'>
-                <div className="box_ box-default box_evaluations">
-                    <div className="box-header">
-                        <i className={`fa fa-check`}></i>
-                        <h3 className="box-title"> MY OFFICE</h3>
-                    </div>
-                    <ProgressBar score={this.props.score} completion={this.props.completion} />
-                    <div className="box-body">
-                        <Field
-                            name='checklist'
-                            component={Tree}
-                            tree={checklist}
-                            onChange={tree => this.updateChecklistScore(tree)}
-                        />
-                    </div>
-                    <ProgressBar score={this.props.score} completion={this.props.completion} />
-                </div>
-            </Grid >
-        )
-    }
-
     render() {
 
         const { projects, checklist, handleSubmit, readOnly, getOfficeData, officeData, showUpdate, equipments } = this.props
@@ -116,7 +89,7 @@ class EvaluationForm extends Component {
                                     <i className="fa fa-check"></i>
                                     <h3 className="box-title">MY OFFICE - {officeData[0] && officeData[0].room}</h3>
                                 </div>
-                                <div className="box-body">
+                                <div className="box-body box-body_desks">
                                     <OfficeMap data={officeData} onSelect={deskId => this.props.prepareToShow(deskId, showUpdate)} />
                                 </div>
                             </div>
