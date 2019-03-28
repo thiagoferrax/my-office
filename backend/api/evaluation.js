@@ -12,8 +12,6 @@ module.exports = app => {
             y: req.body.y || 0
         }
 
-        console.log(evaluation)
-
         if (req.params.id) evaluation.id = req.params.id
 
         try {
@@ -54,14 +52,11 @@ module.exports = app => {
             evaluation.created_at = new Date()
             evaluation.updated_at = null
 
-            console.log('Insert...', evaluation)
-
             app.db('evaluations')
                 .insert(evaluation)
                 .returning('id')
                 .then(_ => res.status(204).send())
                 .catch(err => {
-                    console.log(err)
                     res.status(500).json({ errors: [err] })
                 })
         }
@@ -141,7 +136,6 @@ module.exports = app => {
                     data.push({ ...evaluation })    
                     return data                
                 }, []) 
-                console.log('officeData', officeData)
                 res.json(officeData)
             })
             .catch(err => res.status(500).json({ errors: [err] }))

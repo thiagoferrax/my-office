@@ -37,6 +37,7 @@ class Dashboard extends Component {
                         <InfoBox cols='12 6 4' color='green' icon='options'
                             value={number_evaluations} text='Desks' />
                     </Row>
+                    <Row>
                     {
                         officeData && Object.keys(officeData).map((project => {
                             return (<Grid key={`room_${project}`} cols='12'>
@@ -52,6 +53,8 @@ class Dashboard extends Component {
                             </Grid >)
                         }))
                     }
+
+                    </Row>
                 </Content>
                 <br />
                 <br />

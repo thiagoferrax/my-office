@@ -59,17 +59,13 @@ module.exports = app => {
 
                 summary.officeData = evaluations && evaluations.reduce((data, evaluation) => {
                     const room = evaluation.projectId
-                    console.log('data', data, room)
 
                     if(!Object.keys(data).includes(`${room}`)) {
-                        console.log('clean....')
                         data[room] = []
                     }
                     data[room].push({ ...evaluation })    
                     return data                
                 }, {}) 
-
-                console.log('summary.officeData',  summary.officeData)
 
                 resolve(summary)
             }).catch(err => reject(err))

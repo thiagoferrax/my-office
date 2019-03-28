@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { reduxForm, Field } from 'redux-form'
+import { reduxForm, Field, formValueSelector } from 'redux-form'
 
 import { init, selectChecklist, updateScore, getOfficeData, prepareToShow, showUpdate } from './evaluationActions'
 import { getList as getChecklists, getTree } from '../checklist/checklistActions'
@@ -13,6 +13,7 @@ import ProgressBar from '../common/widget/progressBar'
 import OfficeMap from 'office-map'
 
 import Select from '../common/form/select'
+import ItemList from './itemList'
 
 import './evaluation.css'
 
@@ -77,50 +78,37 @@ class EvaluationForm extends Component {
 
     render() {
 
-        const { projects, checklists, checklist, handleSubmit, readOnly, selectChecklist, getOfficeData, officeData,  prepareToShow, showUpdate} = this.props
-        
+        const { projects, checklist, handleSubmit, readOnly, getOfficeData, officeData, showUpdate, equipments } = this.props
+
         return (
             <form role='form' onSubmit={handleSubmit}>
                 <div className='box-body'>
                     <Field name='projectId' label='Room' cols='12 3'
-                        component={Select} readOnly={readOnly} 
-                        options={projects} optionValue='id' optionLabel='name' autoFocus={true} 
+                        component={Select} readOnly={readOnly}
+                        options={projects} optionValue='id' optionLabel='name' autoFocus={true}
                         inputOnChange={getOfficeData} />
                     <Field name='chairDirection' label='Chair direction' cols='12 3'
                         component={Select} readOnly={readOnly}
                         options={this.getPossibleDirections()} optionValue='id' optionLabel='name' />
-                    <Field name='x' label='X position' cols='12 2'
+                    <Field name='x' label='X position' cols='12 3'
                         component={Select} readOnly={readOnly}
                         options={this.getPossiblePositions()} optionValue='id' optionLabel='name' />
-                    <Field name='y' label='Y position' cols='12 2'
+                    <Field name='y' label='Y position' cols='12 3'
                         component={Select} readOnly={readOnly}
                         options={this.getPossiblePositions()} optionValue='id' optionLabel='name' />
 
-                    <Grid cols='12 2'>
-                        <If test={readOnly}>
-                            <div className='buttons_checklist_form'>
-                                <button type='submit' className='btn btn-danger'>
-                                    <i className="icon ion-md-trash"></i>
-                                </button>
-                                <button type='button' className='btn btn-default'
-                                    onClick={init}>
-                                    <i className="icon ion-md-close"></i>
-                                </button>
-                            </div>
-                        </If>
-                        <If test={!readOnly}>
-                            <div className='buttons_checklist_form'>
-                                <button type='submit' className='btn btn-primary' title="Save">
-                                    <i className="fa fa-check"></i>
-                                </button>
-                                <button type='button' className='btn btn-default'
-                                    onClick={init} title="Clear">
-                                    <i className="icon ion-md-close"></i>
-                                </button>
-                            </div>
-                        </If>
-                    </Grid>
+                    <ItemList cols='12' list={equipments || [{}]} readOnly={readOnly}
+                        field='equipments' legend='EQUIPMENTS' />
 
+                    <div className='box-footer text-right'>
+                        <button type='submit' className={`btn btn-${this.props.submitClass}`}>
+                            {this.props.submitLabel}
+                        </button>
+                        <button type='button' className='btn btn-default'
+                            onClick={this.props.init}>Cancel</button>
+                    </div>
+                </div>
+                <div className='box-footer'>
                     <If test={officeData && officeData.length > 0}>
                         <Grid key={`checklist_${checklist.id}`} cols='12'>
                             <div className="box_ box-default">
@@ -129,7 +117,7 @@ class EvaluationForm extends Component {
                                     <h3 className="box-title">MY OFFICE - {officeData[0] && officeData[0].room}</h3>
                                 </div>
                                 <div className="box-body">
-                                    <OfficeMap data={officeData} onSelect={deskId => this.props.prepareToShow(deskId, showUpdate) }/>
+                                    <OfficeMap data={officeData} onSelect={deskId => this.props.prepareToShow(deskId, showUpdate)} />
                                 </div>
                             </div>
                         </Grid >
@@ -141,6 +129,7 @@ class EvaluationForm extends Component {
 }
 
 EvaluationForm = reduxForm({ form: 'evaluationForm', destroyOnUnmount: false })(EvaluationForm)
+const selector = formValueSelector('evaluationForm')
 
 const mapStateToProps = state => ({
     projects: state.project.list,
@@ -148,7 +137,8 @@ const mapStateToProps = state => ({
     checklist: state.evaluation.checklist,
     score: state.evaluation.score,
     completion: state.evaluation.completion,
-    officeData:  state.evaluation.officeData
+    officeData: state.evaluation.officeData,
+    equipments: state.evaluation.equipments
 })
 const mapDispatchToProps = dispatch => bindActionCreators({ init, getChecklists, selectChecklist, getTree, getProjects, updateScore, getOfficeData, prepareToShow, showUpdate }, dispatch)
 export default connect(mapStateToProps, mapDispatchToProps)(EvaluationForm)
