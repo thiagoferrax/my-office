@@ -15,56 +15,61 @@ const getPossibleEquipments = () => {
     equipments.push({ id: 'Phone', name: 'Phone' })
     equipments.push({ id: 'Drawer', name: 'Drawer' })
     equipments.push({ id: 'Chair', name: 'Chair' })
-
     return equipments
 }
 
-export default props => {
-    const renderRows = ({ fields, meta: { touched, error, submitFailed } }) => {
-        return fields.map((member, index) => (
-            <Row key={index}>
+export default class ItemList extends Component {
+    renderRows = ({ fields, meta: { touched, error, submitFailed } }) => {
 
-            <Field name={`${member}.name`} cols='12 3'
+        return fields.map((member, index) => {
+            console.log('renderRows', index)
+
+            return (
+                <Row key={index}>
+
+                    <Field name={`${member}.name`} cols='12 3'
                         component={Select}
-                        options={getPossibleEquipments()} optionValue='id' optionLabel='name' placeholder="Equipment name" readOnly={props.readOnly} />
+                        options={getPossibleEquipments()} optionValue='id' optionLabel='name' placeholder="Equipment name" readOnly={this.props.readOnly} />
 
-                <Field cols='12 8'
-                    name={`${member}.specification`}
-                    type="text"
-                    component={Input}
-                    label="Specification"
-                    placeholder="Equipment specification"
-                    readOnly={props.readOnly}
-                />
-                <If test={!index}>
-                    <button type='button' className='btn btn-info' cols='12 1'
-                        onClick={() => { fields.unshift({}) }}>
-                        <i className="fa fa-plus"></i>
-                    </button>
-                    {(touched || submitFailed) && error && <span>{error}</span>}
-                </If>
-                <If test={index}>
-                    <button type='button' className='btn btn-danger' cols='12 1'
-                        onClick={() => fields.remove(index)}>
-                        <i className="icon ion-md-trash"></i>
-                    </button>
-                </If>
-            </Row>
-        ))
+                    <Field cols='12 8'
+                        name={`${member}.specification`}
+                        type="text"
+                        component={Input}
+                        label="Specification"
+                        placeholder="Equipment specification"
+                        readOnly={this.props.readOnly}
+                    />
+                    <If test={!index}>
+                        <button type='button' className='btn btn-info' cols='12 1'
+                            onClick={() => {
+                                console.log('clicked')
+                                fields.unshift({})
+                            }}>
+                            <i className="fa fa-plus"></i>
+                        </button>
+                        {(touched || submitFailed) && error && <span>{error}</span>}
+                    </If>
+                    <If test={index}>
+                        <button type='button' className='btn btn-danger' cols='12 1'
+                            onClick={() => fields.remove(index)}>
+                            <i className="icon ion-md-trash"></i>
+                        </button>
+                    </If>
+                </Row>)
+        })
     }
 
-
-    return (
-        <Grid cols={props.cols}>
+    render() {
+        return (<Grid cols={this.props.cols}>
             <div className="box_ box-default">
                 <div className="box-header with-border">
                     <i className="fa fa-laptop"></i>
-                    <h3 className="box-title"><label>{props.legend}</label></h3>
+                    <h3 className="box-title"><label>{this.props.legend}</label></h3>
                 </div>
                 <div className="box-body box-body_desks">
-                    <FieldArray name={props.field} component={renderRows} />
+                    <FieldArray name={this.props.field} component={this.renderRows} />
                 </div>
             </div>
-        </Grid >
-    )
+        </Grid >)
+    }
 }

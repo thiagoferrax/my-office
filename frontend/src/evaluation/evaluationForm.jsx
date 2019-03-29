@@ -89,7 +89,12 @@ class EvaluationForm extends Component {
                                     <h3 className="box-title">MY OFFICE - {officeData[0] && officeData[0].room}</h3>
                                 </div>
                                 <div className="box-body">
-                                    <OfficeMap data={officeData} onSelect={deskId => this.props.prepareToShow(deskId, showUpdate)} minHorizontalSize={6} />
+                                    <If test={this.props.submitLabel === 'Update'}>
+                                        <OfficeMap data={officeData} onSelect={deskId => this.props.prepareToShow(deskId, showUpdate)} minHorizontalSize={6} />
+                                    </If>    
+                                    <If test={this.props.submitLabel !== 'Update'}>
+                                        <OfficeMap data={officeData} minHorizontalSize={6} />
+                                    </If>
                                 </div>
                             </div>
                         </Grid >
