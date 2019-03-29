@@ -4,7 +4,7 @@ module.exports = app => {
     const { existsOrError } = app.api.validation
 
     const getProjects = (userId) => new Promise((resolve, reject) => {
-        const summary = { rooms: 0, evaluations: 0, number_evaluations: 0, members: 0, comments: 0, userId }
+        const summary = { rooms: 0, desks: 0, number_desks: 0, members: 0, comments: 0, userId }
 
         app.db.select({
             id: 'rooms.id',
@@ -41,49 +41,49 @@ module.exports = app => {
             .catch(err => reject(err))
     })
 
-    const getEvaluations = (summary) => new Promise((resolve, reject) => {
+    const getDesks = (summary) => new Promise((resolve, reject) => {
         app.db.select({
-            id: 'evaluations.id',
-            roomId: 'evaluations.roomId',
+            id: 'desks.id',
+            roomId: 'desks.roomId',
             room: 'rooms.name',
-            chairPosition: 'evaluations.chairDirection',
-            x: 'evaluations.x',
-            y: 'evaluations.y',
-            userId: 'evaluations.userId',
-            date: 'evaluations.created_at',
+            chairPosition: 'desks.chairDirection',
+            x: 'desks.x',
+            y: 'desks.y',
+            userId: 'desks.userId',
+            date: 'desks.created_at',
             equipmentName: 'answers.name',
             equipmentSpecification: 'answers.specification'
-        }).from('evaluations')
-            .leftJoin('rooms', 'evaluations.roomId', 'rooms.id')
-            .leftJoin('answers', 'answers.evaluationId', 'evaluations.id')               
-            .whereIn('evaluations.roomId', summary.roomsIds)
-            .then(evaluations => {
-                let number_evaluations = 0
-                summary.officeData = evaluations && evaluations.reduce((data, evaluation) => {
-                    const room = evaluation.roomId
+        }).from('desks')
+            .leftJoin('rooms', 'desks.roomId', 'rooms.id')
+            .leftJoin('answers', 'answers.deskId', 'desks.id')               
+            .whereIn('desks.roomId', summary.roomsIds)
+            .then(desks => {
+                let number_desks = 0
+                summary.officeData = desks && desks.reduce((data, desk) => {
+                    const room = desk.roomId
 
                     if(!Object.keys(data).includes(`${room}`)) {
                         data[room] = []
                     }
 
-                    const foundEvaluation = data[room].filter(e => e.id == evaluation.id)
-                    if(foundEvaluation.length > 0) {
-                        const index = data[room].indexOf(foundEvaluation[0])
-                        if(evaluation.equipmentName && evaluation.equipmentSpecification) {
-                            data[room][index].equipments[evaluation.equipmentName] = evaluation.equipmentSpecification
+                    const foundDesk = data[room].filter(e => e.id == desk.id)
+                    if(foundDesk.length > 0) {
+                        const index = data[room].indexOf(foundDesk[0])
+                        if(desk.equipmentName && desk.equipmentSpecification) {
+                            data[room][index].equipments[desk.equipmentName] = desk.equipmentSpecification
                         }
                     } else {
-                        evaluation.equipments = {}
-                        if(evaluation.equipmentName && evaluation.equipmentSpecification) {
-                            evaluation.equipments[evaluation.equipmentName] = evaluation.equipmentSpecification
+                        desk.equipments = {}
+                        if(desk.equipmentName && desk.equipmentSpecification) {
+                            desk.equipments[desk.equipmentName] = desk.equipmentSpecification
                         }
-                        data[room].push({ ...evaluation })
-                        number_evaluations++    
+                        data[room].push({ ...desk })
+                        number_desks++    
                     }
 
                     return data                
                 }, {}) 
-                summary.number_evaluations = number_evaluations
+                summary.number_desks = number_desks
                 resolve(summary)
             }).catch(err => reject(err))
     })
@@ -93,7 +93,7 @@ module.exports = app => {
 
         getProjects(userId)
             .then(getTeam)
-            .then(getEvaluations)
+            .then(getDesks)
             .then(summary => res.json(summary))
             .catch(err => res.status(500).json({ errors: [err] }))
     }

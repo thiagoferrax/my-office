@@ -5,7 +5,7 @@ const MAX_DATASETS = 2
 
 export default props => {     
 
-    const chartData = getLineChartData(props.evaluations)
+    const chartData = getLineChartData(props.desks)
 
     if(chartData && chartData.categories > 1) {
         const cols = chartData.categories > 2 ? props.cols : '12'
@@ -58,12 +58,12 @@ const getChartBorderColor = (index) => {
     return colors[index]
 }
 
-const getLineChartData = (evaluations) => {
+const getLineChartData = (desks) => {
     let color = 0
     let datasets = 0
-    const LineChartData = evaluations && evaluations.reduce((map, evaluation) => {
-        const sprint = 'Sprint ' + evaluation.sprint
-        const checklist = evaluation.checklistDescription
+    const LineChartData = desks && desks.reduce((map, desk) => {
+        const sprint = 'Sprint ' + desk.sprint
+        const checklist = desk.checklistDescription
 
         if (!map.labels.includes(checklist)) {
             map.labels.push(checklist)
@@ -73,10 +73,10 @@ const getLineChartData = (evaluations) => {
         const dataset = getDataSet(map.datasets, sprint)
         const index = map.labels.indexOf(checklist)
         if (dataset && dataset.length) {
-            dataset[0].data[index] = evaluation.score
+            dataset[0].data[index] = desk.score
         } else {
             let data = []
-            data[index] = evaluation.score
+            data[index] = desk.score
             let hidden = datasets >= MAX_DATASETS
             map.datasets.push({
                 label: sprint,

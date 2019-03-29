@@ -117,18 +117,18 @@ module.exports = app => {
             }).catch(err => reject(err))
     })
 
-    const getEvaluations = (summary) => new Promise((resolve, reject) => {
+    const getDesks = (summary) => new Promise((resolve, reject) => {
         app.db.select({
-            id: 'evaluations.id',
+            id: 'desks.id',
             room: 'rooms.name',
             user: 'users.name',
-            time: 'evaluations.created_at',
-        }).from('evaluations')
-            .leftJoin('rooms', 'evaluations.roomId', 'rooms.id')
-            .leftJoin('users', 'evaluations.userId', 'users.id')
-            .whereIn('evaluations.roomId', summary.roomsIds)
-            .then(evaluations => {
-                summary.timeline.data = buildTimeline(summary.timeline.data, 'evaluation', evaluations)
+            time: 'desks.created_at',
+        }).from('desks')
+            .leftJoin('rooms', 'desks.roomId', 'rooms.id')
+            .leftJoin('users', 'desks.userId', 'users.id')
+            .whereIn('desks.roomId', summary.roomsIds)
+            .then(desks => {
+                summary.timeline.data = buildTimeline(summary.timeline.data, 'desk', desks)
                 resolve(summary)
             }).catch(err => reject(err))
     })
@@ -161,7 +161,7 @@ module.exports = app => {
         getLoggedUser(summary)
             .then(getProjectsIds)
             .then(getProjects)
-            .then(getEvaluations)
+            .then(getDesks)
             .then(getSingleUser)
             .then(summary => res.json(summary.timeline))
             .catch(err => res.status(500).json({ errors: [err] }))

@@ -79,9 +79,9 @@ module.exports = app => {
 
             existsOrError(roomId, "Room id was not informed!")
 
-            const evaluations = await app.db('evaluations').where({ roomId })
+            const desks = await app.db('desks').where({ roomId })
 
-            notExistsOrError(evaluations, "The room has evaluations!")
+            notExistsOrError(desks, "The room has desks!")
 
             app.db('teams').where({ roomId }).del().then(
                 teamDeleted => {

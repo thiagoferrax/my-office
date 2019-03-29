@@ -4,7 +4,7 @@ import RadarChart from './radarChart'
 const MAX_DATASETS = 1
 
 export default props => {     
-    const chartData = getRadarChartData(props.evaluations)
+    const chartData = getRadarChartData(props.desks)
 
     if(chartData && chartData.categories > 2) {
         return (<RadarChart cols={props.cols} data={chartData} room={props.room}/>)
@@ -55,12 +55,12 @@ const getChartBorderColor = (index) => {
     return colors[index]
 }
 
-const getRadarChartData = (evaluations) => {
+const getRadarChartData = (desks) => {
     let color = 0
     let datasets = 0
-    const RadarChartData = evaluations && evaluations.reduce((map, evaluation) => {
-        const sprint = 'Sprint ' + evaluation.sprint
-        const checklist = evaluation.checklistDescription
+    const RadarChartData = desks && desks.reduce((map, desk) => {
+        const sprint = 'Sprint ' + desk.sprint
+        const checklist = desk.checklistDescription
 
         if (!map.labels.includes(checklist)) {
             map.labels.push(checklist)
@@ -70,10 +70,10 @@ const getRadarChartData = (evaluations) => {
         const dataset = getDataSet(map.datasets, sprint)
         const index = map.labels.indexOf(checklist)
         if (dataset && dataset.length) {
-            dataset[0].data[index] = evaluation.score
+            dataset[0].data[index] = desk.score
         } else {
             let data = []
-            data[index] = evaluation.score
+            data[index] = desk.score
             let hidden = datasets >= MAX_DATASETS
             map.datasets.push({
                 label: sprint,

@@ -6,7 +6,7 @@ import DashboardReducer from '../dashboard/dashboardReducer'
 import TabReducer from '../common/tab/tabReducer'
 import ProjectReducer from '../room/roomReducer'
 import ChecklistReducer from '../checklist/checklistReducer'
-import EvaluationReducer from '../evaluation/evaluationReducer'
+import DeskReducer from '../desk/deskReducer'
 import AuthReducer from '../auth/authReducer'
 import UserReducer from '../user/userReducer'
 import TimelineReducer from '../timeline/timelineReducer'
@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
     tab: TabReducer,
     room: ProjectReducer,
     checklist: ChecklistReducer,
-    evaluation: EvaluationReducer,
+    desk: DeskReducer,
     form: formReducer,    
     toastr: toastrReducer,
     auth: AuthReducer,

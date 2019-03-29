@@ -2,9 +2,9 @@ import React from 'react'
 import BarChart from './barChart'
 
 export default props => {
-    const data = getBarChartData(props.evaluations, props.room.id)
+    const data = getBarChartData(props.desks, props.room.id)
 
-    const dateInterval = getDateInterval(props.evaluations, props.room.id)
+    const dateInterval = getDateInterval(props.desks, props.room.id)
 
     if (!data) {
         return <React.Fragment />
@@ -69,19 +69,19 @@ const getFormatedDate = (isoDate) => {
     return date.toLocaleDateString('en-US', options)
 }
 
-const getDateInterval = (evaluations, roomId) => {
-    const roomEvaluations =
-        evaluations.filter(evaluation => evaluation.roomId === roomId).sort((e1, e2) => e1.sprint - e2.sprint)
+const getDateInterval = (desks, roomId) => {
+    const roomDesks =
+        desks.filter(desk => desk.roomId === roomId).sort((e1, e2) => e1.sprint - e2.sprint)
 
-    if (!roomEvaluations.length) {
+    if (!roomDesks.length) {
         return
     }
 
-    const startDate = getFormatedDate(roomEvaluations[0].date)
-    if (roomEvaluations.length === 1) {
+    const startDate = getFormatedDate(roomDesks[0].date)
+    if (roomDesks.length === 1) {
         return startDate
     } else {
-        const endDate = getFormatedDate(roomEvaluations[roomEvaluations.length - 1].date)
+        const endDate = getFormatedDate(roomDesks[roomDesks.length - 1].date)
         if(startDate === endDate) {
             return startDate
         }
@@ -90,18 +90,18 @@ const getDateInterval = (evaluations, roomId) => {
     }
 }
 
-const getBarChartData = (evaluations, roomId) => {
-    const roomEvaluations =
-        evaluations.filter(evaluation => evaluation.roomId === roomId).sort((e1, e2) => e1.sprint - e2.sprint)
+const getBarChartData = (desks, roomId) => {
+    const roomDesks =
+        desks.filter(desk => desk.roomId === roomId).sort((e1, e2) => e1.sprint - e2.sprint)
 
-    if (!roomEvaluations.length) {
+    if (!roomDesks.length) {
         return
     }
 
     let color = 0
-    const barChartData = roomEvaluations.reduce((map, evaluation) => {
-        const sprint = 'Sprint ' + evaluation.sprint
-        const checklist = evaluation.checklistDescription
+    const barChartData = roomDesks.reduce((map, desk) => {
+        const sprint = 'Sprint ' + desk.sprint
+        const checklist = desk.checklistDescription
 
         if (!map.labels.includes(sprint)) {
             map.labels.push(sprint)
@@ -110,10 +110,10 @@ const getBarChartData = (evaluations, roomId) => {
         const dataset = getDataSet(map.datasets, checklist)
         const index = map.labels.indexOf(sprint)
         if (dataset && dataset.length) {
-            dataset[0].data[index] = evaluation.score
+            dataset[0].data[index] = desk.score
         } else {
             let data = []
-            data[index] = evaluation.score
+            data[index] = desk.score
             map.datasets.push({
                 label: checklist,
                 data,

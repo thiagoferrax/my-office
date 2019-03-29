@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { getList, showUpdate, showDelete } from './evaluationActions'
+import { getList, showUpdate, showDelete } from './deskActions'
 
 class EvaluatonList extends Component {
 
@@ -18,19 +18,19 @@ class EvaluatonList extends Component {
 
     renderRows() {
         const list = this.props.list || []
-        return list.map(evaluation => (
-            <tr key={evaluation.id}>
-                <td>{evaluation.id}</td>                
-                <td>{evaluation.chairDirection}</td>                
-                <td>{evaluation.x}</td>                
-                <td>{evaluation.y}</td>                
-                <td>{evaluation.roomName}</td>                
-                <td>{this.getFormatedDate(evaluation.date)}</td>
+        return list.map(desk => (
+            <tr key={desk.id}>
+                <td>{desk.id}</td>                
+                <td>{desk.chairDirection}</td>                
+                <td>{desk.x}</td>                
+                <td>{desk.y}</td>                
+                <td>{desk.roomName}</td>                
+                <td>{this.getFormatedDate(desk.date)}</td>
                 <td>
-                    <button className='btn btn-default' onClick={() => this.props.showUpdate(evaluation)}>
+                    <button className='btn btn-default' onClick={() => this.props.showUpdate(desk)}>
                         <i className='icon ion-md-create'></i>
                     </button>
-                    <button className='btn btn-danger' onClick={() => this.props.showDelete(evaluation)}>
+                    <button className='btn btn-danger' onClick={() => this.props.showDelete(desk)}>
                         <i className='icon ion-md-trash'></i>
                     </button>
                 </td>
@@ -62,6 +62,6 @@ class EvaluatonList extends Component {
     }
 }
 
-const mapStateToProps = state => ({list: state.evaluation.list})
+const mapStateToProps = state => ({list: state.desk.list})
 const mapDispatchToProps = dispatch => bindActionCreators({getList, showUpdate, showDelete}, dispatch)
 export default connect(mapStateToProps, mapDispatchToProps)(EvaluatonList)

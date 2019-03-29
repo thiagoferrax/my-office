@@ -9,12 +9,12 @@ import TabsHeader from '../common/tab/tabsHeader'
 import TabsContent from '../common/tab/tabsContent'
 import TabHeader from '../common/tab/tabHeader'
 import TabContent from '../common/tab/tabContent'
-import { init, create, update, remove } from './evaluationActions'
+import { init, create, update, remove } from './deskActions'
 
-import List from './evaluationList'
-import Form from './evaluationForm'
+import List from './deskList'
+import Form from './deskForm'
 
-class Evaluation extends Component {
+class Desk extends Component {
 
     componentWillMount() {
         this.props.init()
@@ -59,4 +59,4 @@ class Evaluation extends Component {
 const mapDispatchToProps = dispatch => bindActionCreators({
     init, create, update, remove
 }, dispatch)
-export default connect(null, mapDispatchToProps)(Evaluation)
+export default connect(null, mapDispatchToProps)(Desk)

@@ -24,13 +24,13 @@ module.exports = app => {
     protectedApi.delete('/rooms/:id', app.api.room.remove)
     protectedApi.get('/rooms/:id', app.api.room.getById)
 
-    protectedApi.post('/evaluations', app.api.evaluation.save)
-    protectedApi.get('/evaluations', app.api.evaluation.get)
-    protectedApi.get('/rooms/:id/officeData', app.api.evaluation.getOfficeData)
-    protectedApi.put('/evaluations/:id', app.api.evaluation.save)
-    protectedApi.delete('/evaluations/:id', app.api.evaluation.remove)
-    protectedApi.get('/evaluations/:id', app.api.evaluation.getById)
-    protectedApi.get('/evaluations/:id/answers', app.api.evaluation.getAnswers)
+    protectedApi.post('/desks', app.api.desk.save)
+    protectedApi.get('/desks', app.api.desk.get)
+    protectedApi.get('/rooms/:id/officeData', app.api.desk.getOfficeData)
+    protectedApi.put('/desks/:id', app.api.desk.save)
+    protectedApi.delete('/desks/:id', app.api.desk.remove)
+    protectedApi.get('/desks/:id', app.api.desk.getById)
+    protectedApi.get('/desks/:id/answers', app.api.desk.getAnswers)
 
     protectedApi.get('/dashboard/summary', app.api.dashboard.get)
 

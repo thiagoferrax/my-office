@@ -9,7 +9,7 @@ import { validateToken } from '../auth/authActions'
 import Dashboard from '../dashboard/dashboard'
 import Room from '../room/room'
 import Checklist from '../checklist/checklist'
-import Evaluation from '../evaluation/evaluation'
+import Desk from '../desk/desk'
 import Timeline from '../timeline/timeline'
 
 import { Route } from 'react-router-dom'
@@ -28,7 +28,7 @@ class AuthOrApp extends Component {
             return [<Route exact key='route_dashboard' path='/' component={Dashboard}/>,
             <Route key='route_rooms' path='/rooms' component={Room} />,
             <Route key='route_checklists' path='/checklists' component={Checklist} />,
-            <Route key='route_evaluations' path='/evaluations' component={Evaluation} />,
+            <Route key='route_desks' path='/desks' component={Desk} />,
             <Route key='route_timeline' path='/timeline' component={Timeline} />]
         } else if (!user && !validToken) {
             return <Route key='route_auth' path='/' component={Auth}/>

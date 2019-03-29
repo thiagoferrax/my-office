@@ -7,7 +7,7 @@ import consts from '../consts'
 const INITIAL_VALUES = { rooms: [], officeData:  [], equipments: [{}]}
 
 export function getList() {
-    const request = axios.get(`${consts.API_URL}/evaluations`)
+    const request = axios.get(`${consts.API_URL}/desks`)
     return {
         type: 'EVALUATIONS_FETCHED',
         payload: request
@@ -52,7 +52,7 @@ function submit(values, method) {
     return dispatch => {
         const id = values.id ? values.id : ''
         const roomId = values.roomId
-        axios[method](`${consts.API_URL}/evaluations/${id}`, values)
+        axios[method](`${consts.API_URL}/desks/${id}`, values)
             .then(resp => {
                 toastr.success('Sucess', 'Successful operation.')
                 dispatch([getOfficeData(roomId), init()])
@@ -63,8 +63,8 @@ function submit(values, method) {
     }
 }
 
-export function getAnswers(evaluation) {
-    const request = axios.get(`${consts.API_URL}/evaluations/${evaluation.id}/answers`)
+export function getAnswers(desk) {
+    const request = axios.get(`${consts.API_URL}/desks/${desk.id}/answers`)
     return {
         type: 'ANSWERS_FETCHED',
         payload: request
@@ -79,28 +79,28 @@ export function initializeChecklist() {
 
 export function prepareToShow(deskId, callback) {
     return dispatch => {
-        axios['get'](`${consts.API_URL}/evaluations/${deskId}`)
-            .then(evaluation => { dispatch(callback(evaluation.data)) })
+        axios['get'](`${consts.API_URL}/desks/${deskId}`)
+            .then(desk => { dispatch(callback(desk.data)) })
             .catch(e => {
                 e.response.data.errors.forEach(error => toastr.error('Error', error))
             })
     }
 }
 
-export function showUpdate(evaluation) {
+export function showUpdate(desk) {
     return [ 
         showTabs('tabUpdate'),
         selectTab('tabUpdate'),        
-        initialize('evaluationForm', evaluation),
-        getOfficeData(evaluation.roomId)
+        initialize('deskForm', desk),
+        getOfficeData(desk.roomId)
     ]
 }
 
-export function showDelete(evaluation) {
+export function showDelete(desk) {
     return [ 
         showTabs('tabDelete'),
         selectTab('tabDelete'),
-        initialize('evaluationForm', evaluation)
+        initialize('deskForm', desk)
     ]
 }
 
@@ -109,6 +109,6 @@ export function init() {
         showTabs('tabCreate', 'tabList'),
         selectTab('tabList'),
         getList(),
-        initialize('evaluationForm', INITIAL_VALUES),
+        initialize('deskForm', INITIAL_VALUES),
     ]
 }

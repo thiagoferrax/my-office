@@ -75,9 +75,9 @@ module.exports = app => {
 
             notExistsOrError(subChecklists, "This checklist has items!")
 
-            const evaluations = await app.db('evaluations').where({ checklistId: req.params.id })
+            const desks = await app.db('desks').where({ checklistId: req.params.id })
 
-            notExistsOrError(evaluations, "There are evaluations with this checklist!")
+            notExistsOrError(desks, "There are desks with this checklist!")
 
             const rowsDeleted = await app.db('checklists').where({ id: req.params.id }).del()
 

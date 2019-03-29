@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { reduxForm, Field, formValueSelector } from 'redux-form'
 
-import { init, selectChecklist, updateScore, getOfficeData, prepareToShow, showUpdate } from './evaluationActions'
+import { init, selectChecklist, updateScore, getOfficeData, prepareToShow, showUpdate } from './deskActions'
 import { getList as getChecklists, getTree } from '../checklist/checklistActions'
 import { getList as getProjects } from '../room/roomActions'
 import Tree from 'tree-slide-bar'
@@ -15,9 +15,9 @@ import OfficeMap from 'office-map'
 import Select from '../common/form/select'
 import ItemList from './itemList'
 
-import './evaluation.css'
+import './desk.css'
 
-class EvaluationForm extends Component {
+class DeskForm extends Component {
 
     componentWillMount() {
         this.props.getChecklists()
@@ -105,17 +105,17 @@ class EvaluationForm extends Component {
     }
 }
 
-EvaluationForm = reduxForm({ form: 'evaluationForm', destroyOnUnmount: false })(EvaluationForm)
-const selector = formValueSelector('evaluationForm')
+DeskForm = reduxForm({ form: 'deskForm', destroyOnUnmount: false })(DeskForm)
+const selector = formValueSelector('deskForm')
 
 const mapStateToProps = state => ({
     rooms: state.room.list,
     checklists: state.checklist.list,
-    checklist: state.evaluation.checklist,
-    score: state.evaluation.score,
-    completion: state.evaluation.completion,
-    officeData: state.evaluation.officeData,
-    equipments: state.evaluation.equipments
+    checklist: state.desk.checklist,
+    score: state.desk.score,
+    completion: state.desk.completion,
+    officeData: state.desk.officeData,
+    equipments: state.desk.equipments
 })
 const mapDispatchToProps = dispatch => bindActionCreators({ init, getChecklists, selectChecklist, getTree, getProjects, updateScore, getOfficeData, prepareToShow, showUpdate }, dispatch)
-export default connect(mapStateToProps, mapDispatchToProps)(EvaluationForm)
+export default connect(mapStateToProps, mapDispatchToProps)(DeskForm)

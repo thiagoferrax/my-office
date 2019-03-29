@@ -23,7 +23,7 @@ export default props => {
 }
 
 const getTimelineItems = (data) => {
-    const functions = {roomItem, userItem, evaluationItem, checklistItem}
+    const functions = {roomItem, userItem, deskItem, checklistItem}
 
     let dates = data && Object.keys(data)
     dates = dates && dates.sort((d1, d2) => new Date(d2) - new Date(d1))
@@ -57,10 +57,10 @@ const userItem = ({ user, formattedTime }) => {
     )
 }
 
-const evaluationItem = ({ sprint, room, user, checklist, formattedTime }) => {
+const deskItem = ({ sprint, room, user, checklist, formattedTime }) => {
     return (
         <TimelineItem
-            key={`evaluations_${sprint}_${room}_${user}_${checklist}_${formattedTime}`}
+            key={`desks_${sprint}_${room}_${user}_${checklist}_${formattedTime}`}
             time={formattedTime}
             icon="desktop" color="green">
             A new desk in <a href="/#/rooms">{room}</a> was created by <a href="#">{user}</a>
