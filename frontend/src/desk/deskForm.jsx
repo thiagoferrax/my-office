@@ -5,11 +5,9 @@ import { reduxForm, Field, formValueSelector } from 'redux-form'
 
 import { init, selectChecklist, updateScore, getOfficeData, prepareToShow, showUpdate } from './deskActions'
 import { getList as getChecklists, getTree } from '../checklist/checklistActions'
-import { getList as getProjects } from '../room/roomActions'
-import Tree from 'tree-slide-bar'
+import { getList as getRooms } from '../room/roomActions'
 import If from '../common/operator/if'
 import Grid from '../common/layout/grid'
-import ProgressBar from '../common/widget/progressBar'
 import OfficeMap from 'office-map'
 
 import Select from '../common/form/select'
@@ -22,7 +20,7 @@ class DeskForm extends Component {
     componentWillMount() {
         this.props.getChecklists()
         this.props.getTree()
-        this.props.getProjects()
+        this.props.getRooms()
     }
 
     getPossibleDirections() {
@@ -117,5 +115,5 @@ const mapStateToProps = state => ({
     officeData: state.desk.officeData,
     equipments: state.desk.equipments
 })
-const mapDispatchToProps = dispatch => bindActionCreators({ init, getChecklists, selectChecklist, getTree, getProjects, updateScore, getOfficeData, prepareToShow, showUpdate }, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({ init, getChecklists, selectChecklist, getTree, getRooms, updateScore, getOfficeData, prepareToShow, showUpdate }, dispatch)
 export default connect(mapStateToProps, mapDispatchToProps)(DeskForm)
