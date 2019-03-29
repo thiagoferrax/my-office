@@ -10,7 +10,7 @@ My office can be used to create a map of office rooms to control key equipment i
 
 ## In Action!
 
-![officeMap](https://user-images.githubusercontent.com/43149895/54958762-a2850b80-4f35-11e9-82e0-2bbe63df566b.gif)
+![myOffice](https://user-images.githubusercontent.com/43149895/55230879-e27f1380-51ff-11e9-995d-3aca3bd1bac6.gif)
 
 >
 
