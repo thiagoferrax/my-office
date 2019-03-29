@@ -4,7 +4,7 @@ import { initialize } from 'redux-form'
 import { showTabs, selectTab } from '../common/tab/tabActions'
 import consts from '../consts'
 
-const INITIAL_VALUES = { projects: [], officeData:  [], equipments: [{}]}
+const INITIAL_VALUES = { rooms: [], officeData:  [], equipments: [{}]}
 
 export function getList() {
     const request = axios.get(`${consts.API_URL}/evaluations`)
@@ -51,7 +51,7 @@ export function remove(values) {
 function submit(values, method) {
     return dispatch => {
         const id = values.id ? values.id : ''
-        const roomId = values.projectId
+        const roomId = values.roomId
         axios[method](`${consts.API_URL}/evaluations/${id}`, values)
             .then(resp => {
                 toastr.success('Sucess', 'Successful operation.')
@@ -92,7 +92,7 @@ export function showUpdate(evaluation) {
         showTabs('tabUpdate'),
         selectTab('tabUpdate'),        
         initialize('evaluationForm', evaluation),
-        getOfficeData(evaluation.projectId)
+        getOfficeData(evaluation.roomId)
     ]
 }
 

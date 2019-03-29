@@ -120,27 +120,27 @@ module.exports = app => {
     }
 
     const getProjectsIds = (userId) => new Promise((resolve, reject) => {
-        let projectsIds = []
+        let roomsIds = []
         app.db.select({
-            id: 'projects.id',
-        }).from('projects')
-            .leftJoin('teams', 'teams.projectId', 'projects.id')
+            id: 'rooms.id',
+        }).from('rooms')
+            .leftJoin('teams', 'teams.roomId', 'rooms.id')
             .leftJoin('users', 'teams.userId', 'users.id')
-            .where({ 'projects.userId': userId })
+            .where({ 'rooms.userId': userId })
             .orWhere({ 'users.id': userId })
-            .then(projects => {
-                if (projects.length > 0) {
-                    const projectsMap = array2map(projects, 'id')
-                    projectsIds = Object.keys(projectsMap)
+            .then(rooms => {
+                if (rooms.length > 0) {
+                    const roomsMap = array2map(rooms, 'id')
+                    roomsIds = Object.keys(roomsMap)
                 }
-                resolve({ userId, projectsIds })
+                resolve({ userId, roomsIds })
             })
             .catch(err => reject(err))
     })
 
-    const getTeam = projects => {
+    const getTeam = rooms => {
         const distinctUsers = {}
-        return projects && projects.reduce((users, member) => {
+        return rooms && rooms.reduce((users, member) => {
             if (!distinctUsers[member.memberId]) {
                 distinctUsers[member.memberId] = 1
                 users.push({ userId: member.memberId, user: member.memberName, time: member.memberTime })
@@ -149,23 +149,23 @@ module.exports = app => {
         }, [])
     }
 
-    const getMembersIds = ({ userId, projectsIds }) => new Promise((resolve, reject) => {
+    const getMembersIds = ({ userId, roomsIds }) => new Promise((resolve, reject) => {
         let membersIds = [userId]
-        if (projectsIds.length === 0) {
+        if (roomsIds.length === 0) {
             resolve(membersIds)
         } else {
             app.db.select({
-                id: 'projects.id',
+                id: 'rooms.id',
                 memberId: 'users.id',
                 memberName: 'users.name',
                 memberTime: 'users.created_at'
-            }).from('projects')
-                .leftJoin('teams', 'teams.projectId', 'projects.id')
+            }).from('rooms')
+                .leftJoin('teams', 'teams.roomId', 'rooms.id')
                 .leftJoin('users', 'teams.userId', 'users.id')
-                .whereIn('projects.id', projectsIds)
-                .then(projects => {
-                    if (projects.length > 0) {
-                        const team = getTeam(projects)
+                .whereIn('rooms.id', roomsIds)
+                .then(rooms => {
+                    if (rooms.length > 0) {
+                        const team = getTeam(rooms)
                         const usersMap = array2map(team, 'userId')
                         membersIds = Object.keys(usersMap)
                     }

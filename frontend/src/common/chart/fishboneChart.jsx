@@ -24,7 +24,7 @@ export default props => {
         <Chart
             cols={props.cols}
             icon='fa fa-bug'
-            title={`CAUSE AND EFFECT - ${props.project}`}
+            title={`CAUSE AND EFFECT - ${props.room}`}
             footerText='Radar of average score per category'>
              <FishboneChart data={props.data} />
         </Chart>

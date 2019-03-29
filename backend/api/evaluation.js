@@ -4,7 +4,7 @@ module.exports = app => {
     const save = (req, res) => {
         const evaluation = {
             id: req.body.id,
-            projectId: req.body.projectId,
+            roomId: req.body.roomId,
             userId: req.decoded.id,
             equipments: req.body.equipments,
             chairDirection: req.body.chairDirection,
@@ -15,7 +15,7 @@ module.exports = app => {
         if (req.params.id) evaluation.id = req.params.id
 
         try {
-            existsOrError(evaluation.projectId, 'Room was not informed!')
+            existsOrError(evaluation.roomId, 'Room was not informed!')
             existsOrError(evaluation.chairDirection, 'Chair direction was not informed!')
             existsOrError(evaluation.userId, 'User was not informed!')
         } catch (msg) {
@@ -136,10 +136,10 @@ module.exports = app => {
         app.db.select(
             {
                 id: 'evaluations.id',
-                projectId: 'evaluations.projectId',
+                roomId: 'evaluations.roomId',
                 userId: 'evaluations.userId',
                 date: 'evaluations.created_at',
-                projectName: 'projects.name',
+                roomName: 'rooms.name',
                 chairDirection: 'evaluations.chairDirection',
                 x: 'evaluations.x',
                 y: 'evaluations.y',
@@ -147,7 +147,7 @@ module.exports = app => {
                 equipmentSpecification: 'answers.specification'
             }
         ).from('evaluations')
-            .leftJoin('projects', 'evaluations.projectId', 'projects.id')
+            .leftJoin('rooms', 'evaluations.roomId', 'rooms.id')
             .leftJoin('answers', 'answers.evaluationId', 'evaluations.id')
             .where({ 'evaluations.userId': req.decoded.id })
             .orderBy('evaluations.created_at', 'desc')
@@ -160,15 +160,15 @@ module.exports = app => {
     const getOfficeData = (req, res) => {
         app.db.select(
             {
-                room: 'projects.name',
+                room: 'rooms.name',
                 id: 'evaluations.id',
                 chairPosition: 'evaluations.chairDirection',
                 x: 'evaluations.x',
                 y: 'evaluations.y',
             }
         ).from('evaluations')
-            .leftJoin('projects', 'evaluations.projectId', 'projects.id')
-            .where({ 'evaluations.userId': req.decoded.id, 'projects.id': req.params.id })
+            .leftJoin('rooms', 'evaluations.roomId', 'rooms.id')
+            .where({ 'evaluations.userId': req.decoded.id, 'rooms.id': req.params.id })
             .orderBy('evaluations.created_at', 'desc')
             .then(evaluations => {
                 const officeData = evaluations && evaluations.reduce((data, evaluation) => {
@@ -183,8 +183,8 @@ module.exports = app => {
     const getById = (req, res) => {
         app.db.select(
             {
-                room: 'projects.name',
-                projectId: 'projects.id',
+                room: 'rooms.name',
+                roomId: 'rooms.id',
                 id: 'evaluations.id',
                 chairDirection: 'evaluations.chairDirection',
                 x: 'evaluations.x',
@@ -193,7 +193,7 @@ module.exports = app => {
                 equipmentSpecification: 'answers.specification'
             }
         ).from('evaluations')
-            .leftJoin('projects', 'evaluations.projectId', 'projects.id')
+            .leftJoin('rooms', 'evaluations.roomId', 'rooms.id')
             .leftJoin('answers', 'answers.evaluationId', 'evaluations.id')
             .where({ 'evaluations.id': req.params.id })
             .then(evaluations => res.json(getEvaluationsWithEquipments(evaluations)[0]))

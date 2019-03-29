@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { reduxForm, Field } from 'redux-form'
 
-import { init } from './projectActions'
+import { init } from './roomActions'
 import LabelAndInput from '../common/form/labelAndInput'
 import Select from '../common/form/select'
 
@@ -36,7 +36,7 @@ class ProjectForm extends Component {
     }
 }
 
-ProjectForm = reduxForm({ form: 'projectForm', destroyOnUnmount: false })(ProjectForm)
+ProjectForm = reduxForm({ form: 'roomForm', destroyOnUnmount: false })(ProjectForm)
 
 const mapStateToProps = state => ({ userList: state.user.list })
 const mapDispatchToProps = dispatch => bindActionCreators({ init, getUserList }, dispatch)

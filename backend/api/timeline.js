@@ -42,23 +42,23 @@ module.exports = app => {
         const userId = summary.userId
 
         app.db.select({
-            id: 'projects.id',
-        }).from('projects')
-            .leftJoin('teams', 'teams.projectId', 'projects.id')
+            id: 'rooms.id',
+        }).from('rooms')
+            .leftJoin('teams', 'teams.roomId', 'rooms.id')
             .leftJoin('users', 'teams.userId', 'users.id')
-            .where({ 'projects.userId': userId })
+            .where({ 'rooms.userId': userId })
             .orWhere({ 'users.id': userId })
-            .then(projects => {
-                const projectsMap = array2map(projects, 'id')
-                summary.projectsIds = Object.keys(projectsMap)
+            .then(rooms => {
+                const roomsMap = array2map(rooms, 'id')
+                summary.roomsIds = Object.keys(roomsMap)
                 resolve(summary)
             })
             .catch(err => reject(err))
     })
 
-    const getTeam = projects => {
+    const getTeam = rooms => {
         const distinctUsers = {}
-        return projects && projects.reduce((users, member) => {
+        return rooms && rooms.reduce((users, member) => {
             if (!distinctUsers[member.memberId]) {
                 distinctUsers[member.memberId] = 1
                 users.push({ userId: member.memberId, user: member.memberName, time: member.memberTime })
@@ -69,31 +69,31 @@ module.exports = app => {
 
     const getProjects = (summary) => new Promise((resolve, reject) => {
         app.db.select({
-            id: 'projects.id',
-            project: 'projects.name',
-            userId: 'projects.userId',
-            time: 'projects.created_at',
+            id: 'rooms.id',
+            room: 'rooms.name',
+            userId: 'rooms.userId',
+            time: 'rooms.created_at',
             memberId: 'users.id',
             memberName: 'users.name',
             memberTime: 'users.created_at'
-        }).from('projects')
-            .leftJoin('teams', 'teams.projectId', 'projects.id')
+        }).from('rooms')
+            .leftJoin('teams', 'teams.roomId', 'rooms.id')
             .leftJoin('users', 'teams.userId', 'users.id')
-            .whereIn('projects.id', summary.projectsIds)
-            .then(projects => {
-                if (projects.length > 0) {
-                    summary.team = getTeam(projects)
+            .whereIn('rooms.id', summary.roomsIds)
+            .then(rooms => {
+                if (rooms.length > 0) {
+                    summary.team = getTeam(rooms)
 
                     summary.timeline.data = buildTimeline(summary.timeline.data, 'user', summary.team)
                     summary.usersMap = array2map(summary.team, 'userId')
                     summary.membersIds = Object.keys(summary.usersMap)
 
-                    const projectsMap = array2map(projects, 'id')
-                    buildUserName(projectsMap, summary.usersMap, summary.user)
+                    const roomsMap = array2map(rooms, 'id')
+                    buildUserName(roomsMap, summary.usersMap, summary.user)
 
-                    summary.projectsIds = Object.keys(projectsMap)
-                    summary.projects = Object.values(projectsMap)
-                    summary.timeline.data = buildTimeline(summary.timeline.data, 'project', summary.projects)
+                    summary.roomsIds = Object.keys(roomsMap)
+                    summary.rooms = Object.values(roomsMap)
+                    summary.timeline.data = buildTimeline(summary.timeline.data, 'room', summary.rooms)
                 }
 
                 resolve(summary)
@@ -120,13 +120,13 @@ module.exports = app => {
     const getEvaluations = (summary) => new Promise((resolve, reject) => {
         app.db.select({
             id: 'evaluations.id',
-            project: 'projects.name',
+            room: 'rooms.name',
             user: 'users.name',
             time: 'evaluations.created_at',
         }).from('evaluations')
-            .leftJoin('projects', 'evaluations.projectId', 'projects.id')
+            .leftJoin('rooms', 'evaluations.roomId', 'rooms.id')
             .leftJoin('users', 'evaluations.userId', 'users.id')
-            .whereIn('evaluations.projectId', summary.projectsIds)
+            .whereIn('evaluations.roomId', summary.roomsIds)
             .then(evaluations => {
                 summary.timeline.data = buildTimeline(summary.timeline.data, 'evaluation', evaluations)
                 resolve(summary)
@@ -148,7 +148,7 @@ module.exports = app => {
     })
 
     const getSingleUser = (summary) => new Promise((resolve, reject) => {
-        if (Object.keys(summary.projects).length < 1 || !summary.membersIds.includes(`${summary.userId}`) ) {
+        if (Object.keys(summary.rooms).length < 1 || !summary.membersIds.includes(`${summary.userId}`) ) {
             summary.timeline.data = buildTimeline(summary.timeline.data, 'user', [summary.user])
         }
         resolve(summary)        
@@ -156,7 +156,7 @@ module.exports = app => {
 
     const get = (req, res) => {
         const userId = req.decoded.id
-        const summary = { timeline: { data: {} }, userId, membersIds: [userId], projects: [] }
+        const summary = { timeline: { data: {} }, userId, membersIds: [userId], rooms: [] }
 
         getLoggedUser(summary)
             .then(getProjectsIds)

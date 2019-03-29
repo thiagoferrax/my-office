@@ -18,11 +18,11 @@ module.exports = app => {
     protectedApi.delete('/checklists/:id', app.api.checklist.remove)
     protectedApi.get('/checklists/:id', app.api.checklist.getById)
 
-    protectedApi.post('/projects', app.api.project.save)
-    protectedApi.get('/projects', app.api.project.get)
-    protectedApi.put('/projects/:id', app.api.project.save)
-    protectedApi.delete('/projects/:id', app.api.project.remove)
-    protectedApi.get('/projects/:id', app.api.project.getById)
+    protectedApi.post('/rooms', app.api.room.save)
+    protectedApi.get('/rooms', app.api.room.get)
+    protectedApi.put('/rooms/:id', app.api.room.save)
+    protectedApi.delete('/rooms/:id', app.api.room.remove)
+    protectedApi.get('/rooms/:id', app.api.room.getById)
 
     protectedApi.post('/evaluations', app.api.evaluation.save)
     protectedApi.get('/evaluations', app.api.evaluation.get)

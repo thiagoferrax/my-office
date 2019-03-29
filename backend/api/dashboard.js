@@ -4,22 +4,22 @@ module.exports = app => {
     const { existsOrError } = app.api.validation
 
     const getProjects = (userId) => new Promise((resolve, reject) => {
-        const summary = { projects: 0, evaluations: 0, number_evaluations: 0, members: 0, comments: 0, userId }
+        const summary = { rooms: 0, evaluations: 0, number_evaluations: 0, members: 0, comments: 0, userId }
 
         app.db.select({
-            id: 'projects.id',
-            name: 'projects.name',
-            userId: 'projects.userId',
+            id: 'rooms.id',
+            name: 'rooms.name',
+            userId: 'rooms.userId',
             memberId: 'users.id'
-        }).from('projects')
-            .leftJoin('teams', 'teams.projectId', 'projects.id')
+        }).from('rooms')
+            .leftJoin('teams', 'teams.roomId', 'rooms.id')
             .leftJoin('users', 'teams.userId', 'users.id')
-            .where({ 'projects.userId': userId })
+            .where({ 'rooms.userId': userId })
             .orWhere({ 'users.id': userId })
-            .then(projects => {
-                const projectsMap = array2map(projects, 'id')
-                summary.projectsIds = Object.keys(projectsMap)
-                summary.projects = Object.values(projectsMap)
+            .then(rooms => {
+                const roomsMap = array2map(rooms, 'id')
+                summary.roomsIds = Object.keys(roomsMap)
+                summary.rooms = Object.values(roomsMap)
 
                 resolve(summary)
             })
@@ -28,11 +28,11 @@ module.exports = app => {
 
     const getTeam = (summary) => new Promise((resolve, reject) => {
         app.db('teams').distinct('userId')
-            .whereIn('projectId', summary.projectsIds)
+            .whereIn('roomId', summary.roomsIds)
             .then(members => {
                 summary.members = members.map(member => ({
                     userId: member.userId,
-                    projectId: member.projectId
+                    roomId: member.roomId
                 }
                 ))
 
@@ -44,8 +44,8 @@ module.exports = app => {
     const getEvaluations = (summary) => new Promise((resolve, reject) => {
         app.db.select({
             id: 'evaluations.id',
-            projectId: 'evaluations.projectId',
-            room: 'projects.name',
+            roomId: 'evaluations.roomId',
+            room: 'rooms.name',
             chairPosition: 'evaluations.chairDirection',
             x: 'evaluations.x',
             y: 'evaluations.y',
@@ -54,13 +54,13 @@ module.exports = app => {
             equipmentName: 'answers.name',
             equipmentSpecification: 'answers.specification'
         }).from('evaluations')
-            .leftJoin('projects', 'evaluations.projectId', 'projects.id')
+            .leftJoin('rooms', 'evaluations.roomId', 'rooms.id')
             .leftJoin('answers', 'answers.evaluationId', 'evaluations.id')               
-            .whereIn('evaluations.projectId', summary.projectsIds)
+            .whereIn('evaluations.roomId', summary.roomsIds)
             .then(evaluations => {
                 let number_evaluations = 0
                 summary.officeData = evaluations && evaluations.reduce((data, evaluation) => {
-                    const room = evaluation.projectId
+                    const room = evaluation.roomId
 
                     if(!Object.keys(data).includes(`${room}`)) {
                         data[room] = []

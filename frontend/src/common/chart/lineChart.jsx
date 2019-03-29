@@ -27,7 +27,7 @@ export default props => {
         <Chart
             cols={props.cols}
             icon='fa fa-area-chart'
-            title={`COMPARISON - ${props.project}`}
+            title={`COMPARISON - ${props.room}`}
             footerText='Comparison of average score per category'>
             <Line
                 data={props.data}

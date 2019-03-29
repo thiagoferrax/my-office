@@ -5,7 +5,7 @@ import { reduxForm, Field, formValueSelector } from 'redux-form'
 
 import { init, selectChecklist, updateScore, getOfficeData, prepareToShow, showUpdate } from './evaluationActions'
 import { getList as getChecklists, getTree } from '../checklist/checklistActions'
-import { getList as getProjects } from '../project/projectActions'
+import { getList as getProjects } from '../room/roomActions'
 import Tree from 'tree-slide-bar'
 import If from '../common/operator/if'
 import Grid from '../common/layout/grid'
@@ -51,14 +51,14 @@ class EvaluationForm extends Component {
 
     render() {
 
-        const { projects, checklist, handleSubmit, readOnly, getOfficeData, officeData, showUpdate, equipments } = this.props
+        const { rooms, checklist, handleSubmit, readOnly, getOfficeData, officeData, showUpdate, equipments } = this.props
 
         return (
             <form role='form' onSubmit={handleSubmit}>
                 <div className='box-body'>
-                    <Field name='projectId' label='Room' cols='12 3'
+                    <Field name='roomId' label='Room' cols='12 3'
                         component={Select} readOnly={readOnly}
-                        options={projects} optionValue='id' optionLabel='name' autoFocus={true}
+                        options={rooms} optionValue='id' optionLabel='name' autoFocus={true}
                         inputOnChange={getOfficeData} />
                     <Field name='chairDirection' label='Chair direction' cols='12 3'
                         component={Select} readOnly={readOnly}
@@ -109,7 +109,7 @@ EvaluationForm = reduxForm({ form: 'evaluationForm', destroyOnUnmount: false })(
 const selector = formValueSelector('evaluationForm')
 
 const mapStateToProps = state => ({
-    projects: state.project.list,
+    rooms: state.room.list,
     checklists: state.checklist.list,
     checklist: state.evaluation.checklist,
     score: state.evaluation.score,

@@ -24,14 +24,14 @@ class Dashboard extends Component {
     }
 
     render() {
-        const { projects, number_evaluations, members, officeData } = this.props.summary
+        const { rooms, number_evaluations, members, officeData } = this.props.summary
         return (
             <div>
                 <ContentHeader title='Dashboard' small='Control Panel' />
                 <Content>
                     <Row>
                         <InfoBox cols='12 6 4' color='aqua' icon='cube'
-                            value={projects.length} text='Rooms' />
+                            value={rooms.length} text='Rooms' />
                         <InfoBox cols='12 6 4' color='red' icon='people '
                             value={members.length} text='Managers' />
                         <InfoBox cols='12 6 4' color='green' icon='desktop'
@@ -39,15 +39,15 @@ class Dashboard extends Component {
                     </Row>
                     <Row>
                         {
-                            officeData && Object.keys(officeData).map((project => {
-                                return (<Grid key={`room_${project}`} cols='12'>
+                            officeData && Object.keys(officeData).map((room => {
+                                return (<Grid key={`room_${room}`} cols='12'>
                                     <div className="box_ box-default">
                                         <div className="box-header with-border">
                                             <i className="fa fa-building-o"></i>
-                                            <h3 className="box-title">MY OFFICE - {officeData[project][0] && officeData[project][0].room}</h3>
+                                            <h3 className="box-title">MY OFFICE - {officeData[room][0] && officeData[room][0].room}</h3>
                                         </div>
                                         <div className="box-body">
-                                            <OfficeMap data={officeData[project]} minHorizontalSize={6} />
+                                            <OfficeMap data={officeData[room]} minHorizontalSize={6} />
                                         </div>
                                     </div>
                                 </Grid >)

@@ -24,7 +24,7 @@ class EvaluatonList extends Component {
                 <td>{evaluation.chairDirection}</td>                
                 <td>{evaluation.x}</td>                
                 <td>{evaluation.y}</td>                
-                <td>{evaluation.projectName}</td>                
+                <td>{evaluation.roomName}</td>                
                 <td>{this.getFormatedDate(evaluation.date)}</td>
                 <td>
                     <button className='btn btn-default' onClick={() => this.props.showUpdate(evaluation)}>

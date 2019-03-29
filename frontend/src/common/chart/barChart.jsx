@@ -11,7 +11,7 @@ export default props => {
         <Chart
             cols={props.cols}
             icon={'fa fa-bar-chart'}
-            title={`PROGRESS - ${props.project}`}
+            title={`PROGRESS - ${props.room}`}
             bodyTitle={`Average score per sprint: ${props.dateInterval}`}
             summaryData={props.summaryData}>
             <Bar

@@ -9,12 +9,12 @@ import TabsHeader from '../common/tab/tabsHeader'
 import TabsContent from '../common/tab/tabsContent'
 import TabHeader from '../common/tab/tabHeader'
 import TabContent from '../common/tab/tabContent'
-import { init, create, update, remove } from './projectActions'
+import { init, create, update, remove } from './roomActions'
 
-import List from './projectList'
-import Form from './projectForm'
+import List from './roomList'
+import Form from './roomForm'
 
-class Project extends Component {
+class Room extends Component {
 
     componentWillMount() {
         this.props.init()
@@ -59,4 +59,4 @@ class Project extends Component {
 const mapDispatchToProps = dispatch => bindActionCreators({
     init, create, update, remove
 }, dispatch)
-export default connect(null, mapDispatchToProps)(Project)
+export default connect(null, mapDispatchToProps)(Room)

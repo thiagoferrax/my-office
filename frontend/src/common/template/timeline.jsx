@@ -23,7 +23,7 @@ export default props => {
 }
 
 const getTimelineItems = (data) => {
-    const functions = {projectItem, userItem, evaluationItem, checklistItem}
+    const functions = {roomItem, userItem, evaluationItem, checklistItem}
 
     let dates = data && Object.keys(data)
     dates = dates && dates.sort((d1, d2) => new Date(d2) - new Date(d1))
@@ -35,13 +35,13 @@ const getTimelineItems = (data) => {
     }, [])
 }
 
-const projectItem = ({ project, user, formattedTime }) => {
+const roomItem = ({ room, user, formattedTime }) => {
     return (
         <TimelineItem
-            key={`projects_${project}_${user}_${formattedTime}`}
+            key={`rooms_${room}_${user}_${formattedTime}`}
             time={formattedTime}
             icon="cube" color="aqua">
-            <a href="/#/projects">{project}</a> was created by <a href="#">{user}</a>
+            <a href="/#/rooms">{room}</a> was created by <a href="#">{user}</a>
         </TimelineItem>
     )
 }
@@ -57,13 +57,13 @@ const userItem = ({ user, formattedTime }) => {
     )
 }
 
-const evaluationItem = ({ sprint, project, user, checklist, formattedTime }) => {
+const evaluationItem = ({ sprint, room, user, checklist, formattedTime }) => {
     return (
         <TimelineItem
-            key={`evaluations_${sprint}_${project}_${user}_${checklist}_${formattedTime}`}
+            key={`evaluations_${sprint}_${room}_${user}_${checklist}_${formattedTime}`}
             time={formattedTime}
             icon="desktop" color="green">
-            A new desk in <a href="/#/projects">{project}</a> was created by <a href="#">{user}</a>
+            A new desk in <a href="/#/rooms">{room}</a> was created by <a href="#">{user}</a>
         </TimelineItem>
     )
 }

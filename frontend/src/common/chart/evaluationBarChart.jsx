@@ -2,9 +2,9 @@ import React from 'react'
 import BarChart from './barChart'
 
 export default props => {
-    const data = getBarChartData(props.evaluations, props.project.id)
+    const data = getBarChartData(props.evaluations, props.room.id)
 
-    const dateInterval = getDateInterval(props.evaluations, props.project.id)
+    const dateInterval = getDateInterval(props.evaluations, props.room.id)
 
     if (!data) {
         return <React.Fragment />
@@ -14,7 +14,7 @@ export default props => {
         <BarChart
             cols={props.cols}
             data={data}
-            project={props.project.name}
+            room={props.room.name}
             summaryData={props.summaryData}
             dateInterval={dateInterval} />
     )
@@ -69,19 +69,19 @@ const getFormatedDate = (isoDate) => {
     return date.toLocaleDateString('en-US', options)
 }
 
-const getDateInterval = (evaluations, projectId) => {
-    const projectEvaluations =
-        evaluations.filter(evaluation => evaluation.projectId === projectId).sort((e1, e2) => e1.sprint - e2.sprint)
+const getDateInterval = (evaluations, roomId) => {
+    const roomEvaluations =
+        evaluations.filter(evaluation => evaluation.roomId === roomId).sort((e1, e2) => e1.sprint - e2.sprint)
 
-    if (!projectEvaluations.length) {
+    if (!roomEvaluations.length) {
         return
     }
 
-    const startDate = getFormatedDate(projectEvaluations[0].date)
-    if (projectEvaluations.length === 1) {
+    const startDate = getFormatedDate(roomEvaluations[0].date)
+    if (roomEvaluations.length === 1) {
         return startDate
     } else {
-        const endDate = getFormatedDate(projectEvaluations[projectEvaluations.length - 1].date)
+        const endDate = getFormatedDate(roomEvaluations[roomEvaluations.length - 1].date)
         if(startDate === endDate) {
             return startDate
         }
@@ -90,16 +90,16 @@ const getDateInterval = (evaluations, projectId) => {
     }
 }
 
-const getBarChartData = (evaluations, projectId) => {
-    const projectEvaluations =
-        evaluations.filter(evaluation => evaluation.projectId === projectId).sort((e1, e2) => e1.sprint - e2.sprint)
+const getBarChartData = (evaluations, roomId) => {
+    const roomEvaluations =
+        evaluations.filter(evaluation => evaluation.roomId === roomId).sort((e1, e2) => e1.sprint - e2.sprint)
 
-    if (!projectEvaluations.length) {
+    if (!roomEvaluations.length) {
         return
     }
 
     let color = 0
-    const barChartData = projectEvaluations.reduce((map, evaluation) => {
+    const barChartData = roomEvaluations.reduce((map, evaluation) => {
         const sprint = 'Sprint ' + evaluation.sprint
         const checklist = evaluation.checklistDescription
 

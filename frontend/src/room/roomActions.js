@@ -7,7 +7,7 @@ import consts from '../consts'
 const INITIAL_VALUES = {}
 
 export function getList() {
-    const request = axios.get(`${consts.API_URL}/projects`)
+    const request = axios.get(`${consts.API_URL}/rooms`)
     return {
         type: 'PROJECTS_FETCHED',
         payload: request
@@ -29,7 +29,7 @@ export function remove(values) {
 function submit(values, method) {
     return dispatch => {
         const id = values.id ? values.id : ''
-        axios[method](`${consts.API_URL}/projects/${id}`, values)
+        axios[method](`${consts.API_URL}/rooms/${id}`, values)
             .then(resp => {
                 toastr.success('Sucess', 'Successful operation.')
                 dispatch(init())
@@ -40,29 +40,29 @@ function submit(values, method) {
     }
 }
 
-export function prepareToShow(projectId, callback) {
+export function prepareToShow(roomId, callback) {
     return dispatch => {
-        axios['get'](`${consts.API_URL}/projects/${projectId}`)
-            .then(project => { dispatch(callback(project.data)) })
+        axios['get'](`${consts.API_URL}/rooms/${roomId}`)
+            .then(room => { dispatch(callback(room.data)) })
             .catch(e => {
                 e.response.data.errors.forEach(error => toastr.error('Error', error))
             })
     }
 }
 
-export function showUpdate(project) {
+export function showUpdate(room) {
     return [
         showTabs('tabUpdate'),
         selectTab('tabUpdate'),
-        initialize('projectForm', project)
+        initialize('roomForm', room)
     ]
 }
 
-export function showDelete(project) {
+export function showDelete(room) {
     return [
         showTabs('tabDelete'),
         selectTab('tabDelete'),
-        initialize('projectForm', project)
+        initialize('roomForm', room)
     ]
 }
 
@@ -71,6 +71,6 @@ export function init() {
         showTabs('tabList', 'tabCreate'),
         selectTab('tabList'),
         getList(),
-        initialize('projectForm', INITIAL_VALUES)
+        initialize('roomForm', INITIAL_VALUES)
     ]
 }
