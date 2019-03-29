@@ -22,8 +22,6 @@ export default class ItemList extends Component {
     renderRows = ({ fields, meta: { touched, error, submitFailed } }) => {
 
         return fields.map((member, index) => {
-            console.log('renderRows', index)
-
             return (
                 <Row key={index}>
 
@@ -40,11 +38,7 @@ export default class ItemList extends Component {
                         readOnly={this.props.readOnly}
                     />
                     <If test={!index}>
-                        <button type='button' className='btn btn-info' cols='12 1'
-                            onClick={() => {
-                                console.log('clicked')
-                                fields.unshift({})
-                            }}>
+                        <button type='button' className='btn btn-info' cols='12 1' onClick={() => fields.unshift({})}>
                             <i className="fa fa-plus"></i>
                         </button>
                         {(touched || submitFailed) && error && <span>{error}</span>}
