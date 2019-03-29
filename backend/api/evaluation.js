@@ -15,9 +15,8 @@ module.exports = app => {
         if (req.params.id) evaluation.id = req.params.id
 
         try {
-            //existsOrError(evaluation.projectId, 'Project was not informed!')
-            //existsOrError(evaluation.sprint, 'Sprint was not informed!')
-            //existsOrError(evaluation.checklistId, 'Checklist was not informed!')
+            existsOrError(evaluation.projectId, 'Room was not informed!')
+            existsOrError(evaluation.chairDirection, 'Chair direction was not informed!')
             existsOrError(evaluation.userId, 'User was not informed!')
         } catch (msg) {
             return res.status(400).json({ errors: [msg] })
