@@ -50,7 +50,13 @@ module.exports = app => {
                 app.db('evaluations')
                     .insert(evaluation)
                     .returning('id')
-                    .then(evaluationId => insertEquipments(evaluationId[0], equipments, res))
+                    .then(evaluationId => {
+                        if (equipments && equipments.length > 0) {    
+                            insertEquipments(evaluationId[0], equipments, res)
+                        } else {
+                            res.status(204).send()
+                        }
+                    })
                     .catch(err => {
                         res.status(500).json({ errors: [err] })
                     })
@@ -111,9 +117,15 @@ module.exports = app => {
             const foundEvaluation = evaluationsList.filter(e => e.id == evaluation.id)
             if (foundEvaluation.length > 0) {
                 const index = evaluationsList.indexOf(foundEvaluation[0])
-                evaluationsList[index].equipments.push({ name: evaluation.equipmentName, specification: evaluation.equipmentSpecification })
+                if(evaluation.equipmentName &&  evaluation.equipmentSpecification) {
+                    evaluationsList[index].equipments.push({ name: evaluation.equipmentName, specification: evaluation.equipmentSpecification })
+                }
             } else {
-                evaluation.equipments = [{ name: evaluation.equipmentName, specification: evaluation.equipmentSpecification }]
+                if(evaluation.equipmentName &&  evaluation.equipmentSpecification) {
+                    evaluation.equipments = [{ name: evaluation.equipmentName, specification: evaluation.equipmentSpecification }]
+                } else {
+                    evaluation.equipments = [{}]
+                }
                 evaluationsList.push({ ...evaluation })
             }
             return evaluationsList

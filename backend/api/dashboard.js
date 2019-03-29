@@ -69,10 +69,14 @@ module.exports = app => {
                     const foundEvaluation = data[room].filter(e => e.id == evaluation.id)
                     if(foundEvaluation.length > 0) {
                         const index = data[room].indexOf(foundEvaluation[0])
-                        data[room][index].equipments[evaluation.equipmentName] = evaluation.equipmentSpecification
+                        if(evaluation.equipmentName && evaluation.equipmentSpecification) {
+                            data[room][index].equipments[evaluation.equipmentName] = evaluation.equipmentSpecification
+                        }
                     } else {
                         evaluation.equipments = {}
-                        evaluation.equipments[evaluation.equipmentName] = evaluation.equipmentSpecification
+                        if(evaluation.equipmentName && evaluation.equipmentSpecification) {
+                            evaluation.equipments[evaluation.equipmentName] = evaluation.equipmentSpecification
+                        }
                         data[room].push({ ...evaluation })
                         number_evaluations++    
                     }
