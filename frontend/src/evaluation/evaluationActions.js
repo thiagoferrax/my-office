@@ -91,7 +91,8 @@ export function showUpdate(evaluation) {
     return [ 
         showTabs('tabUpdate'),
         selectTab('tabUpdate'),        
-        initialize('evaluationForm', evaluation)
+        initialize('evaluationForm', evaluation),
+        getOfficeData(evaluation.projectId)
     ]
 }
 

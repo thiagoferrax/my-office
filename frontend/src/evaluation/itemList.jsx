@@ -4,19 +4,30 @@ import Grid from '../common/layout/grid'
 import Input from '../common/form/input'
 import If from '../common/operator/if'
 import Row from '../common/layout/row'
+import Select from '../common/form/select'
+
+const getPossibleEquipments = () => {
+    const equipments = []
+    equipments.push({ id: 'Computer', name: 'Computer' })
+    equipments.push({ id: 'Monitor', name: 'Monitor' })
+    equipments.push({ id: 'Keyboard', name: 'Keyboard' })
+    equipments.push({ id: 'Mouse', name: 'Mouse' })
+    equipments.push({ id: 'Phone', name: 'Phone' })
+    equipments.push({ id: 'Drawer', name: 'Drawer' })
+    equipments.push({ id: 'Chair', name: 'Chair' })
+
+    return equipments
+}
 
 export default props => {
     const renderRows = ({ fields, meta: { touched, error, submitFailed } }) => {
         return fields.map((member, index) => (
             <Row key={index}>
-                <Field autoFocus={true} cols='12 3'
-                    name={`${member}.name`}
-                    type="text"
-                    component={Input}
-                    label="Name"
-                    placeholder="Equipment name"
-                    readOnly={props.readOnly}
-                />
+
+            <Field name={`${member}.name`} cols='12 3'
+                        component={Select}
+                        options={getPossibleEquipments()} optionValue='id' optionLabel='name' placeholder="Equipment name" readOnly={props.readOnly} />
+
                 <Field cols='12 8'
                     name={`${member}.specification`}
                     type="text"

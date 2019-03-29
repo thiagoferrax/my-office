@@ -20,6 +20,10 @@ class EvaluatonList extends Component {
         const list = this.props.list || []
         return list.map(evaluation => (
             <tr key={evaluation.id}>
+                <td>{evaluation.id}</td>                
+                <td>{evaluation.chairDirection}</td>                
+                <td>{evaluation.x}</td>                
+                <td>{evaluation.y}</td>                
                 <td>{evaluation.projectName}</td>                
                 <td>{this.getFormatedDate(evaluation.date)}</td>
                 <td>
@@ -40,6 +44,10 @@ class EvaluatonList extends Component {
                 <table className='table'>
                     <thead>
                         <tr>
+                            <th>Desk identifier</th>
+                            <th>Chair direction</th>
+                            <th>X position</th>
+                            <th>Y position</th>
                             <th>Room</th>
                             <th>Created at</th>
                             <th className='table-actions'>Actions</th>

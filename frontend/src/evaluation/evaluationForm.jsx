@@ -85,10 +85,10 @@ class EvaluationForm extends Component {
                         <Grid key={`checklist_${checklist.id}`} cols='12'>
                             <div className="box_ box-default">
                                 <div className="box-header with-border">
-                                    <i className="fa fa-check"></i>
+                                    <i className="fa fa-building-o"></i>
                                     <h3 className="box-title">MY OFFICE - {officeData[0] && officeData[0].room}</h3>
                                 </div>
-                                <div className="box-body box-body_desks">
+                                <div className="box-body">
                                     <OfficeMap data={officeData} onSelect={deskId => this.props.prepareToShow(deskId, showUpdate)} minHorizontalSize={6} />
                                 </div>
                             </div>

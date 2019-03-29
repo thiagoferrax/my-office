@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import Grid from '../layout/grid'
 import ReactSelect from 'react-select';
+import If from '../operator/if'
 
 export default class Select extends Component {    
 
@@ -70,7 +71,7 @@ export default class Select extends Component {
         return (            
             <Grid cols={cols}>
                 <div className='form-group'>
-                    <label htmlFor={name}>{label}</label>
+                    <If test={label}><label htmlFor={name}>{label}</label></If>
                     <ReactSelect {...this.props} 
                         styles={this.getCustomStyles()} 
                         onChange={e => this.handleChange(e)} 

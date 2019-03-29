@@ -23,8 +23,7 @@ module.exports = app => {
             return res.status(400).json({ errors: [msg] })
         }
 
-        const equipments = evaluation.equipments
-        equipments && Object.keys(equipments[0]).length === 0 && equipments.shift()
+        const equipments = getNotEmptyEquipments(evaluation.equipments || [])
         delete evaluation.equipments
 
         if (evaluation.id) {
@@ -46,8 +45,6 @@ module.exports = app => {
         } else {
 
             try {
-                existsOrError(equipments, 'You need to inform the equipments!')
-
                 evaluation.created_at = new Date()
                 evaluation.updated_at = null
 
@@ -62,6 +59,16 @@ module.exports = app => {
                 return res.status(400).json({ errors: [msg] })
             }
         }
+    }
+
+    const getNotEmptyEquipments = (equipments) => {
+        return equipments.reduce((notEmptyEquipments, equipment) => {
+            const keys = Object.keys(equipments[0])
+            if (keys.length > 0 && equipments.name && equipments.specification) {
+                notEmptyEquipments.push(equipment)
+            }
+            return notEmptyEquipments
+        }, [])
     }
 
     const updateEquipments = (evaluationId, equipments, res) => {

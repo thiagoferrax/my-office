@@ -34,7 +34,7 @@ class Dashboard extends Component {
                             value={projects.length} text='Rooms' />
                         <InfoBox cols='12 6 4' color='red' icon='people '
                             value={members.length} text='Managers' />
-                        <InfoBox cols='12 6 4' color='green' icon='options'
+                        <InfoBox cols='12 6 4' color='green' icon='desktop'
                             value={number_evaluations} text='Desks' />
                     </Row>
                     <Row>
@@ -43,7 +43,7 @@ class Dashboard extends Component {
                                 return (<Grid key={`room_${project}`} cols='12'>
                                     <div className="box_ box-default">
                                         <div className="box-header with-border">
-                                            <i className="fa fa-check"></i>
+                                            <i className="fa fa-building-o"></i>
                                             <h3 className="box-title">MY OFFICE - {officeData[project][0] && officeData[project][0].room}</h3>
                                         </div>
                                         <div className="box-body">

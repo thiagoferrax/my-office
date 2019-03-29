@@ -62,7 +62,7 @@ const evaluationItem = ({ sprint, project, user, checklist, formattedTime }) => 
         <TimelineItem
             key={`evaluations_${sprint}_${project}_${user}_${checklist}_${formattedTime}`}
             time={formattedTime}
-            icon="sliders" color="green">
+            icon="desktop" color="green">
             A new desk in <a href="/#/projects">{project}</a> was created by <a href="#">{user}</a>
         </TimelineItem>
     )
