@@ -37,7 +37,6 @@ export function updateScore(score) {
 }
 
 export function create(values) {
-    console.log('create', values)
     return submit(values, 'post')
 }
 

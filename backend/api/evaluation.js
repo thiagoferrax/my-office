@@ -24,60 +24,56 @@ module.exports = app => {
         }
 
         const equipments = evaluation.equipments
-        equipments && equipments.shift()
+        equipments && Object.keys(equipments[0]).length === 0 && equipments.shift()
         delete evaluation.equipments
 
-        console.log('equipments', equipments)
-
-        if (evaluation.id) {  
+        if (evaluation.id) {
             evaluation.updated_at = new Date()
 
             app.db('evaluations')
                 .update(evaluation)
                 .where({ id: evaluation.id })
                 .then(_ => {
-                    if(equipments && equipments.length > 0) {
+                    if (equipments && equipments.length > 0) {
                         updateEquipments(evaluation.id, equipments, res)
                     } else {
                         res.status(204).send()
                     }
-                })                                                                                                    
+                })
                 .catch(err => res.status(500).json({ errors: [err] }))
 
-              
+
         } else {
 
             try {
-                 existsOrError(equipments, 'You need to inform the equipments!')
+                existsOrError(equipments, 'You need to inform the equipments!')
 
-                 evaluation.created_at = new Date()
-                 evaluation.updated_at = null
-     
-                 app.db('evaluations')
-                     .insert(evaluation)
-                     .returning('id')
-                     .then(evaluationId => insertEquipments(evaluationId[0], equipments, res))
-                     .catch(err => {
-                         res.status(500).json({ errors: [err] })
-                     })
+                evaluation.created_at = new Date()
+                evaluation.updated_at = null
+
+                app.db('evaluations')
+                    .insert(evaluation)
+                    .returning('id')
+                    .then(evaluationId => insertEquipments(evaluationId[0], equipments, res))
+                    .catch(err => {
+                        res.status(500).json({ errors: [err] })
+                    })
             } catch (msg) {
-                 return res.status(400).json({ errors: [msg] })
-            }           
+                return res.status(400).json({ errors: [msg] })
+            }
         }
     }
 
-    const updateEquipments = (evaluationId, checklist, res) => {
+    const updateEquipments = (evaluationId, equipments, res) => {
         app.db('answers').where({ evaluationId: evaluationId }).del().then(
-            rowsDeleted => {               
-                insertEquipments(evaluationId, checklist, res)            
-            }    
-        )           
-    }    
+            rowsDeleted => {
+                insertEquipments(evaluationId, equipments, res)
+            }
+        )
+    }
 
     const insertEquipments = (evaluationId, equipments, res) => {
         const rows = getEquipmentsToInsert(evaluationId, equipments)
-
-        console.log('insertEquipments rows', rows)
         const chunkSize = rows.lenght
         app.db.batchInsert('answers', rows, chunkSize)
             .then(_ => res.status(204).send())
@@ -90,18 +86,32 @@ module.exports = app => {
             existsOrError(evaluationId, "Evaluation id was not informed!")
 
             app.db('answers').where({ evaluationId }).del().then(
-                answersDeleted => {                                    
+                answersDeleted => {
                     app.db('evaluations').where({ id: evaluationId }).del().then(
                         rowsDeleted => {
-                            existsOrError(rowsDeleted, "Evaluation was not found!")              
-                            res.status(204).send()                
+                            existsOrError(rowsDeleted, "Evaluation was not found!")
+                            res.status(204).send()
                         }
-                    ).catch(err => res.status(500).json({ errors: [err] }))                    
-                }    
+                    ).catch(err => res.status(500).json({ errors: [err] }))
+                }
             )
         } catch (msg) {
             res.status(400).send(msg)
         }
+    }
+
+    const getEvaluationsWithEquipments = (evaluations) => {
+        return evaluations && evaluations.reduce((evaluationsList, evaluation) => {
+            const foundEvaluation = evaluationsList.filter(e => e.id == evaluation.id)
+            if (foundEvaluation.length > 0) {
+                const index = evaluationsList.indexOf(foundEvaluation[0])
+                evaluationsList[index].equipments.push({ name: evaluation.equipmentName, specification: evaluation.equipmentSpecification })
+            } else {
+                evaluation.equipments = [{ name: evaluation.equipmentName, specification: evaluation.equipmentSpecification }]
+                evaluationsList.push({ ...evaluation })
+            }
+            return evaluationsList
+        }, [])
     }
 
     const get = (req, res) => {
@@ -109,18 +119,23 @@ module.exports = app => {
             {
                 id: 'evaluations.id',
                 projectId: 'evaluations.projectId',
-                userId: 'evaluations.userId',                
+                userId: 'evaluations.userId',
                 date: 'evaluations.created_at',
                 projectName: 'projects.name',
                 chairDirection: 'evaluations.chairDirection',
                 x: 'evaluations.x',
-                y: 'evaluations.y'
+                y: 'evaluations.y',
+                equipmentName: 'answers.name',
+                equipmentSpecification: 'answers.specification'
             }
         ).from('evaluations')
             .leftJoin('projects', 'evaluations.projectId', 'projects.id')
-            .where({'evaluations.userId': req.decoded.id})
+            .leftJoin('answers', 'answers.evaluationId', 'evaluations.id')
+            .where({ 'evaluations.userId': req.decoded.id })
             .orderBy('evaluations.created_at', 'desc')
-            .then(evaluations => res.json(evaluations))
+            .then(evaluations => {
+                res.json(getEvaluationsWithEquipments(evaluations))
+            })
             .catch(err => res.status(500).json({ errors: [err] }))
     }
 
@@ -135,23 +150,35 @@ module.exports = app => {
             }
         ).from('evaluations')
             .leftJoin('projects', 'evaluations.projectId', 'projects.id')
-            .where({'evaluations.userId': req.decoded.id, 'projects.id': req.params.id })
+            .where({ 'evaluations.userId': req.decoded.id, 'projects.id': req.params.id })
             .orderBy('evaluations.created_at', 'desc')
             .then(evaluations => {
                 const officeData = evaluations && evaluations.reduce((data, evaluation) => {
-                    data.push({ ...evaluation })    
-                    return data                
-                }, []) 
+                    data.push({ ...evaluation })
+                    return data
+                }, [])
                 res.json(officeData)
             })
             .catch(err => res.status(500).json({ errors: [err] }))
     }
 
     const getById = (req, res) => {
-        app.db('evaluations')
-            .where({ id: req.params.id })
-            .first()
-            .then(evaluation => res.json(evaluation))
+        app.db.select(
+            {
+                room: 'projects.name',
+                projectId: 'projects.id',
+                id: 'evaluations.id',
+                chairDirection: 'evaluations.chairDirection',
+                x: 'evaluations.x',
+                y: 'evaluations.y',
+                equipmentName: 'answers.name',
+                equipmentSpecification: 'answers.specification'
+            }
+        ).from('evaluations')
+            .leftJoin('projects', 'evaluations.projectId', 'projects.id')
+            .leftJoin('answers', 'answers.evaluationId', 'evaluations.id')
+            .where({ 'evaluations.id': req.params.id })
+            .then(evaluations => res.json(getEvaluationsWithEquipments(evaluations)[0]))
             .catch(err => res.status(500).json({ errors: [err] }))
     }
 
@@ -160,13 +187,10 @@ module.exports = app => {
             {
                 id: 'answers.id',
                 evaluationId: 'answers.evaluationId',
-                checklistId: 'answers.checklistId',
-                description: 'checklists.description',
-                parentId: 'checklists.parentId',
-                value: 'answers.value'       
+                name: 'answers.name',
+                specification: 'answers.specification',
             }
         ).from('answers')
-            .leftJoin('checklists', 'answers.checklistId', 'checklists.id')
             .where({ 'answers.evaluationId': req.params.id })
             .then(answers => res.json(answers))
             .catch(err => res.status(500).json({ errors: [err] }))
@@ -174,7 +198,7 @@ module.exports = app => {
 
     const getEquipmentsToInsert = (evaluationId, equipments) => {
         return equipments.reduce((rows, equipment) => {
-            rows.push({evaluationId, name: equipment.name, specification: equipment.specification})
+            rows.push({ evaluationId, name: equipment.name, specification: equipment.specification })
             return rows
         }, [])
     }

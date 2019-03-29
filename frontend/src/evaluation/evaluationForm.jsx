@@ -71,7 +71,7 @@ class EvaluationForm extends Component {
                         options={this.getPossiblePositions()} optionValue='id' optionLabel='name' />
 
                     <ItemList cols='12' list={equipments || [{}]} readOnly={readOnly}
-                        field='equipments' legend='EQUIPMENTS' />
+                        field='equipments' legend='Equipments' />
                 </div>
                 <div className='box-footer text-right'>
                     <button type='submit' className={`btn btn-${this.props.submitClass}`}>
@@ -89,7 +89,7 @@ class EvaluationForm extends Component {
                                     <h3 className="box-title">MY OFFICE - {officeData[0] && officeData[0].room}</h3>
                                 </div>
                                 <div className="box-body box-body_desks">
-                                    <OfficeMap data={officeData} onSelect={deskId => this.props.prepareToShow(deskId, showUpdate)} />
+                                    <OfficeMap data={officeData} onSelect={deskId => this.props.prepareToShow(deskId, showUpdate)} minHorizontalSize={6} />
                                 </div>
                             </div>
                         </Grid >

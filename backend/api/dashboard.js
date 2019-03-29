@@ -50,23 +50,36 @@ module.exports = app => {
             x: 'evaluations.x',
             y: 'evaluations.y',
             userId: 'evaluations.userId',
-            date: 'evaluations.created_at'
+            date: 'evaluations.created_at',
+            equipmentName: 'answers.name',
+            equipmentSpecification: 'answers.specification'
         }).from('evaluations')
-            .whereIn('evaluations.projectId', summary.projectsIds)
             .leftJoin('projects', 'evaluations.projectId', 'projects.id')
+            .leftJoin('answers', 'answers.evaluationId', 'evaluations.id')               
+            .whereIn('evaluations.projectId', summary.projectsIds)
             .then(evaluations => {
-                summary.number_evaluations = evaluations.length
-
+                let number_evaluations = 0
                 summary.officeData = evaluations && evaluations.reduce((data, evaluation) => {
                     const room = evaluation.projectId
 
                     if(!Object.keys(data).includes(`${room}`)) {
                         data[room] = []
                     }
-                    data[room].push({ ...evaluation })    
+
+                    const foundEvaluation = data[room].filter(e => e.id == evaluation.id)
+                    if(foundEvaluation.length > 0) {
+                        const index = data[room].indexOf(foundEvaluation[0])
+                        data[room][index].equipments[evaluation.equipmentName] = evaluation.equipmentSpecification
+                    } else {
+                        evaluation.equipments = {}
+                        evaluation.equipments[evaluation.equipmentName] = evaluation.equipmentSpecification
+                        data[room].push({ ...evaluation })
+                        number_evaluations++    
+                    }
+
                     return data                
                 }, {}) 
-
+                summary.number_evaluations = number_evaluations
                 resolve(summary)
             }).catch(err => reject(err))
     })

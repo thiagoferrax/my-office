@@ -38,21 +38,21 @@ class Dashboard extends Component {
                             value={number_evaluations} text='Desks' />
                     </Row>
                     <Row>
-                    {
-                        officeData && Object.keys(officeData).map((project => {
-                            return (<Grid key={`room_${project}`} cols='12'>
-                                <div className="box_ box-default">
-                                    <div className="box-header with-border">
-                                        <i className="fa fa-check"></i>
-                                        <h3 className="box-title">MY OFFICE - {officeData[project][0] && officeData[project][0].room}</h3>
+                        {
+                            officeData && Object.keys(officeData).map((project => {
+                                return (<Grid key={`room_${project}`} cols='12'>
+                                    <div className="box_ box-default">
+                                        <div className="box-header with-border">
+                                            <i className="fa fa-check"></i>
+                                            <h3 className="box-title">MY OFFICE - {officeData[project][0] && officeData[project][0].room}</h3>
+                                        </div>
+                                        <div className="box-body">
+                                            <OfficeMap data={officeData[project]} minHorizontalSize={6} />
+                                        </div>
                                     </div>
-                                    <div className="box-body">
-                                        <OfficeMap data={officeData[project]} />
-                                    </div>
-                                </div>
-                            </Grid >)
-                        }))
-                    }
+                                </Grid >)
+                            }))
+                        }
 
                     </Row>
                 </Content>
