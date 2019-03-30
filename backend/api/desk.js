@@ -162,7 +162,7 @@ module.exports = app => {
             {
                 room: 'rooms.name',
                 id: 'desks.id',
-                chairPosition: 'desks.chairDirection',
+                chairDirection: 'desks.chairDirection',
                 x: 'desks.x',
                 y: 'desks.y',
             }

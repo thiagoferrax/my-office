@@ -46,7 +46,7 @@ module.exports = app => {
             id: 'desks.id',
             roomId: 'desks.roomId',
             room: 'rooms.name',
-            chairPosition: 'desks.chairDirection',
+            chairDirection: 'desks.chairDirection',
             x: 'desks.x',
             y: 'desks.y',
             userId: 'desks.userId',
@@ -70,12 +70,12 @@ module.exports = app => {
                     if(foundDesk.length > 0) {
                         const index = data[room].indexOf(foundDesk[0])
                         if(desk.equipmentName && desk.equipmentSpecification) {
-                            data[room][index].equipments[desk.equipmentName] = desk.equipmentSpecification
+                            data[room][index].equipments.push({name:desk.equipmentName, specification: desk.equipmentSpecification})
                         }
                     } else {
-                        desk.equipments = {}
+                        desk.equipments = []
                         if(desk.equipmentName && desk.equipmentSpecification) {
-                            desk.equipments[desk.equipmentName] = desk.equipmentSpecification
+                            desk.equipments.push({name:desk.equipmentName, specification: desk.equipmentSpecification})
                         }
                         data[room].push({ ...desk })
                         number_desks++    
