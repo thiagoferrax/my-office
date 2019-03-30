@@ -165,17 +165,16 @@ module.exports = app => {
                 chairDirection: 'desks.chairDirection',
                 x: 'desks.x',
                 y: 'desks.y',
+                equipmentName: 'answers.name',
+                equipmentSpecification: 'answers.specification'
             }
         ).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
+            .leftJoin('answers', 'answers.deskId', 'desks.id')
             .where({ 'desks.userId': req.decoded.id, 'rooms.id': req.params.id })
             .orderBy('desks.created_at', 'desc')
             .then(desks => {
-                const officeData = desks && desks.reduce((data, desk) => {
-                    data.push({ ...desk })
-                    return data
-                }, [])
-                res.json(officeData)
+                res.json(getDesksWithEquipments(desks))
             })
             .catch(err => res.status(500).json({ errors: [err] }))
     }
