@@ -30,7 +30,7 @@ module.exports = app => {
     protectedApi.put('/desks/:id', app.api.desk.save)
     protectedApi.delete('/desks/:id', app.api.desk.remove)
     protectedApi.get('/desks/:id', app.api.desk.getById)
-    protectedApi.get('/desks/:id/answers', app.api.desk.getAnswers)
+    protectedApi.get('/desks/:id/equipments', app.api.desk.getEquipments)
 
     protectedApi.get('/dashboard/summary', app.api.dashboard.get)
 

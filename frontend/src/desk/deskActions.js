@@ -63,10 +63,10 @@ function submit(values, method) {
     }
 }
 
-export function getAnswers(desk) {
-    const request = axios.get(`${consts.API_URL}/desks/${desk.id}/answers`)
+export function getEquipments(desk) {
+    const request = axios.get(`${consts.API_URL}/desks/${desk.id}/equipments`)
     return {
-        type: 'ANSWERS_FETCHED',
+        type: 'EQUIPMENTS_FETCHED',
         payload: request
     }
 }

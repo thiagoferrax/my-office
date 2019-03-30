@@ -77,7 +77,7 @@ module.exports = app => {
     }
 
     const updateEquipments = (deskId, equipments, res) => {
-        app.db('answers').where({ deskId: deskId }).del().then(
+        app.db('equipments').where({ deskId: deskId }).del().then(
             rowsDeleted => {
                 insertEquipments(deskId, equipments, res)
             }
@@ -87,7 +87,7 @@ module.exports = app => {
     const insertEquipments = (deskId, equipments, res) => {
         const rows = getEquipmentsToInsert(deskId, equipments)
         const chunkSize = rows.lenght
-        app.db.batchInsert('answers', rows, chunkSize)
+        app.db.batchInsert('equipments', rows, chunkSize)
             .then(_ => res.status(204).send())
             .catch(err => res.status(500).json({ errors: [err] }))
     }
@@ -97,8 +97,8 @@ module.exports = app => {
         try {
             existsOrError(deskId, "Desk id was not informed!")
 
-            app.db('answers').where({ deskId }).del().then(
-                answersDeleted => {
+            app.db('equipments').where({ deskId }).del().then(
+                equipmentsDeleted => {
                     app.db('desks').where({ id: deskId }).del().then(
                         rowsDeleted => {
                             existsOrError(rowsDeleted, "Desk was not found!")
@@ -143,12 +143,12 @@ module.exports = app => {
                 chairDirection: 'desks.chairDirection',
                 x: 'desks.x',
                 y: 'desks.y',
-                equipmentName: 'answers.name',
-                equipmentSpecification: 'answers.specification'
+                equipmentName: 'equipments.name',
+                equipmentSpecification: 'equipments.specification'
             }
         ).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
-            .leftJoin('answers', 'answers.deskId', 'desks.id')
+            .leftJoin('equipments', 'equipments.deskId', 'desks.id')
             .where({ 'desks.userId': req.decoded.id })
             .orderBy('desks.created_at', 'desc')
             .then(desks => {
@@ -165,12 +165,12 @@ module.exports = app => {
                 chairDirection: 'desks.chairDirection',
                 x: 'desks.x',
                 y: 'desks.y',
-                equipmentName: 'answers.name',
-                equipmentSpecification: 'answers.specification'
+                equipmentName: 'equipments.name',
+                equipmentSpecification: 'equipments.specification'
             }
         ).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
-            .leftJoin('answers', 'answers.deskId', 'desks.id')
+            .leftJoin('equipments', 'equipments.deskId', 'desks.id')
             .where({ 'desks.userId': req.decoded.id, 'rooms.id': req.params.id })
             .orderBy('desks.created_at', 'desc')
             .then(desks => {
@@ -188,28 +188,28 @@ module.exports = app => {
                 chairDirection: 'desks.chairDirection',
                 x: 'desks.x',
                 y: 'desks.y',
-                equipmentName: 'answers.name',
-                equipmentSpecification: 'answers.specification'
+                equipmentName: 'equipments.name',
+                equipmentSpecification: 'equipments.specification'
             }
         ).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
-            .leftJoin('answers', 'answers.deskId', 'desks.id')
+            .leftJoin('equipments', 'equipments.deskId', 'desks.id')
             .where({ 'desks.id': req.params.id })
             .then(desks => res.json(getDesksWithEquipments(desks)[0]))
             .catch(err => res.status(500).json({ errors: [err] }))
     }
 
-    const getAnswers = (req, res) => {
+    const getEquipments = (req, res) => {
         app.db.select(
             {
-                id: 'answers.id',
-                deskId: 'answers.deskId',
-                name: 'answers.name',
-                specification: 'answers.specification',
+                id: 'equipments.id',
+                deskId: 'equipments.deskId',
+                name: 'equipments.name',
+                specification: 'equipments.specification',
             }
-        ).from('answers')
-            .where({ 'answers.deskId': req.params.id })
-            .then(answers => res.json(answers))
+        ).from('equipments')
+            .where({ 'equipments.deskId': req.params.id })
+            .then(equipments => res.json(equipments))
             .catch(err => res.status(500).json({ errors: [err] }))
     }
 
@@ -220,5 +220,5 @@ module.exports = app => {
         }, [])
     }
 
-    return { save, remove, get, getById, getAnswers, getOfficeData }
+    return { save, remove, get, getById, getEquipments, getOfficeData }
 }

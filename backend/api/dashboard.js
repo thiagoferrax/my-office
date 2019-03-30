@@ -51,11 +51,11 @@ module.exports = app => {
             y: 'desks.y',
             userId: 'desks.userId',
             date: 'desks.created_at',
-            equipmentName: 'answers.name',
-            equipmentSpecification: 'answers.specification'
+            equipmentName: 'equipments.name',
+            equipmentSpecification: 'equipments.specification'
         }).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
-            .leftJoin('answers', 'answers.deskId', 'desks.id')               
+            .leftJoin('equipments', 'equipments.deskId', 'desks.id')               
             .whereIn('desks.roomId', summary.roomsIds)
             .then(desks => {
                 let number_desks = 0

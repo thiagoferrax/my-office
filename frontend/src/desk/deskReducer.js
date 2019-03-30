@@ -36,15 +36,15 @@ export default (state = INITIAL_STATE, action) => {
                 parseInt(100* itemsQuantitative.withValue / itemsQuantitative.total) : 0 
 
             return { ...state, score, completion }
-        case 'ANSWERS_FETCHED':
-            let answers = action.payload.data
-            answers = answers.reduce((map, answer) => {
-                map[answer.checklistId] = { value: answer.value }
+        case 'EQUIPMENTS_FETCHED':
+            let equipments = action.payload.data
+            equipments = equipments.reduce((map, equipment) => {
+                map[equipment.checklistId] = { value: equipment.value }
                 return map
             }, {})
 
-            let checklistWithAnswers = state.checklist
-            if (answers) {
+            let checklistWithEquipments = state.checklist
+            if (equipments) {
                 const refreshTree = (tree, valuesMap) => {
                     return tree.map(
                         node => {
@@ -53,9 +53,9 @@ export default (state = INITIAL_STATE, action) => {
                         })
                 }
 
-                checklistWithAnswers = refreshTree(state.checklist, answers)
+                checklistWithEquipments = refreshTree(state.checklist, equipments)
             }
-            return { ...state, checklist: checklistWithAnswers }
+            return { ...state, checklist: checklistWithEquipments }
         case 'CHECKLIST_INITIALIZED':
             return { ...state, checklist: [] }
         default:
