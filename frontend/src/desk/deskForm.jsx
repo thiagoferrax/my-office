@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { reduxForm, Field, formValueSelector } from 'redux-form'
 
-import { init, selectChecklist, updateScore, getOfficeData, prepareToShow, showUpdate } from './deskActions'
+import { init, selectChecklist, updateScore, getOfficeData, prepareToShow, showUpdate, update } from './deskActions'
 import { getList as getChecklists, getTree } from '../checklist/checklistActions'
 import { getList as getRooms } from '../room/roomActions'
 import If from '../common/operator/if'
@@ -92,7 +92,7 @@ class DeskForm extends Component {
                                             data={officeData}
                                             minHorizontalSize={6}  
                                             onSelect={desk => this.props.prepareToShow(desk, showUpdate)} 
-                                            onDrag={desk => this.props.prepareToShow(desk, showUpdate)}/>
+                                            onMove={desk => this.props.update(desk, showUpdate)}/>
                                     </If>    
                                     <If test={this.props.submitLabel !== 'Update'}>
                                         <OfficeMap data={officeData} minHorizontalSize={6} />
@@ -119,5 +119,5 @@ const mapStateToProps = state => ({
     officeData: state.desk.officeData,
     equipments: state.desk.equipments
 })
-const mapDispatchToProps = dispatch => bindActionCreators({ init, getChecklists, selectChecklist, getTree, getRooms, updateScore, getOfficeData, prepareToShow, showUpdate }, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({ init, getChecklists, selectChecklist, getTree, getRooms, updateScore, getOfficeData, prepareToShow, showUpdate, update }, dispatch)
 export default connect(mapStateToProps, mapDispatchToProps)(DeskForm)
