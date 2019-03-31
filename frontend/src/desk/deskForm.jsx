@@ -3,8 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { reduxForm, Field, formValueSelector } from 'redux-form'
 
-import { init, selectChecklist, updateScore, getOfficeData, prepareToShow, showUpdate, update } from './deskActions'
-import { getList as getChecklists, getTree } from '../checklist/checklistActions'
+import { init, getOfficeData, prepareToShow, showUpdate, update } from './deskActions'
 import { getList as getRooms } from '../room/roomActions'
 import If from '../common/operator/if'
 import Grid from '../common/layout/grid'
@@ -18,8 +17,6 @@ import './desk.css'
 class DeskForm extends Component {
 
     componentWillMount() {
-        this.props.getChecklists()
-        this.props.getTree()
         this.props.getRooms()
     }
 
@@ -49,7 +46,7 @@ class DeskForm extends Component {
 
     render() {
 
-        const { rooms, checklist, handleSubmit, readOnly, getOfficeData, officeData, showUpdate, equipments } = this.props
+        const { rooms, handleSubmit, readOnly, getOfficeData, officeData, showUpdate, equipments } = this.props
 
         return (
             <form role='form' onSubmit={handleSubmit}>
@@ -80,7 +77,7 @@ class DeskForm extends Component {
                 </div>
                 <If test={officeData && officeData.length > 0}>
                     <div className='box-footer'>
-                        <Grid key={`checklist_${checklist.id}`} cols='12'>
+                        <Grid key="key_office_data" cols='12'>
                             <div className="box_ box-default">
                                 <div className="box-header with-border">
                                     <i className="fa fa-building-o"></i>
@@ -89,7 +86,8 @@ class DeskForm extends Component {
                                 <div className="box-body">
                                         <OfficeMap 
                                             data={officeData}
-                                            minHorizontalSize={6}  
+                                            minHorizontalSize={5}  
+                                            minVerticalSize={5}
                                             onSelect={desk => this.props.prepareToShow(desk, showUpdate)} 
                                             onMove={desk => this.props.update(desk, showUpdate)}/>
                                 </div>
@@ -107,12 +105,8 @@ const selector = formValueSelector('deskForm')
 
 const mapStateToProps = state => ({
     rooms: state.room.list,
-    checklists: state.checklist.list,
-    checklist: state.desk.checklist,
-    score: state.desk.score,
-    completion: state.desk.completion,
     officeData: state.desk.officeData,
     equipments: state.desk.equipments
 })
-const mapDispatchToProps = dispatch => bindActionCreators({ init, getChecklists, selectChecklist, getTree, getRooms, updateScore, getOfficeData, prepareToShow, showUpdate, update }, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({ init,  getRooms, getOfficeData, prepareToShow, showUpdate, update }, dispatch)
 export default connect(mapStateToProps, mapDispatchToProps)(DeskForm)

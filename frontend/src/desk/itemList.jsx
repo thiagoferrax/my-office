@@ -10,8 +10,6 @@ const getPossibleEquipments = () => {
     const equipments = []
     equipments.push({ id: 'Computer', name: 'Computer' })
     equipments.push({ id: 'Monitor', name: 'Monitor' })
-    equipments.push({ id: 'Keyboard', name: 'Keyboard' })
-    equipments.push({ id: 'Mouse', name: 'Mouse' })
     equipments.push({ id: 'Phone', name: 'Phone' })
     equipments.push({ id: 'Drawer', name: 'Drawer' })
     equipments.push({ id: 'Chair', name: 'Chair' })
@@ -27,8 +25,8 @@ export default class ItemList extends Component {
 
                     <Field name={`${member}.name`} cols='12 3'
                         component={Select}
-                        options={getPossibleEquipments()} 
-                        optionValue='id' optionLabel='name' 
+                        options={getPossibleEquipments()}
+                        optionValue='id' optionLabel='name'
                         placeholder="Name" readOnly={this.props.readOnly} />
 
                     <Field cols='12 8'

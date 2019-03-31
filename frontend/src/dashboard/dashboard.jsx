@@ -47,7 +47,9 @@ class Dashboard extends Component {
                                             <h3 className="box-title">MY OFFICE - {officeData[room][0] && officeData[room][0].room}</h3>
                                         </div>
                                         <div className="box-body">
-                                            <OfficeMap data={officeData[room]} minHorizontalSize={6} />
+                                            <OfficeMap
+                                                data={officeData[room]}
+                                                minHorizontalSize={5} />
                                         </div>
                                     </div>
                                 </Grid >)
