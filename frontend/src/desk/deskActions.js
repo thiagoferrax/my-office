@@ -113,7 +113,7 @@ export function showDelete(desk) {
 export function init() {
     return [
         showTabs('tabCreate', 'tabList'),
-        selectTab('tabList'),
+        selectTab('tabCreate'),
         getList(),
         initialize('deskForm', INITIAL_VALUES),
     ]

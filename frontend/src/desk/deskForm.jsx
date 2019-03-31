@@ -87,16 +87,11 @@ class DeskForm extends Component {
                                     <h3 className="box-title">MY OFFICE - {officeData[0] && officeData[0].room}</h3>
                                 </div>
                                 <div className="box-body">
-                                    <If test={this.props.submitLabel === 'Update'}>
                                         <OfficeMap 
                                             data={officeData}
                                             minHorizontalSize={6}  
                                             onSelect={desk => this.props.prepareToShow(desk, showUpdate)} 
                                             onMove={desk => this.props.update(desk, showUpdate)}/>
-                                    </If>    
-                                    <If test={this.props.submitLabel !== 'Update'}>
-                                        <OfficeMap data={officeData} minHorizontalSize={6} />
-                                    </If>
                                 </div>
                             </div>
                         </Grid >

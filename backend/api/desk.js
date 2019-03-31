@@ -160,6 +160,7 @@ module.exports = app => {
     const getOfficeData = (req, res) => {
         app.db.select(
             {
+                roomId: 'rooms.id',
                 room: 'rooms.name',
                 id: 'desks.id',
                 chairDirection: 'desks.chairDirection',

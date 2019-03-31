@@ -27,14 +27,16 @@ export default class ItemList extends Component {
 
                     <Field name={`${member}.name`} cols='12 3'
                         component={Select}
-                        options={getPossibleEquipments()} optionValue='id' optionLabel='name' placeholder="Equipment name" readOnly={this.props.readOnly} />
+                        options={getPossibleEquipments()} 
+                        optionValue='id' optionLabel='name' 
+                        placeholder="Name" readOnly={this.props.readOnly} />
 
                     <Field cols='12 8'
                         name={`${member}.specification`}
                         type="text"
                         component={Input}
                         label="Specification"
-                        placeholder="Equipment specification"
+                        placeholder="Specification"
                         readOnly={this.props.readOnly}
                     />
                     <If test={!index}>
