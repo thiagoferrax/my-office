@@ -77,10 +77,16 @@ export function initializeChecklist() {
     }
 }
 
-export function prepareToShow(deskId, callback) {
+export function prepareToShow(desk, callback) {
     return dispatch => {
-        axios['get'](`${consts.API_URL}/desks/${deskId}`)
-            .then(desk => { dispatch(callback(desk.data)) })
+        axios['get'](`${consts.API_URL}/desks/${desk.id}`)
+            .then(d => { 
+                const deskToUpdate = d.data
+                if(desk.x >= 0 && desk.y >= 0) {
+                    deskToUpdate.x = desk.x
+                    deskToUpdate.y = desk.y
+                }
+                dispatch(callback(deskToUpdate)) })
             .catch(e => {
                 e.response.data.errors.forEach(error => toastr.error('Error', error))
             })

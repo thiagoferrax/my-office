@@ -88,7 +88,11 @@ class DeskForm extends Component {
                                 </div>
                                 <div className="box-body">
                                     <If test={this.props.submitLabel === 'Update'}>
-                                        <OfficeMap data={officeData} onSelect={deskId => this.props.prepareToShow(deskId, showUpdate)} minHorizontalSize={6} />
+                                        <OfficeMap 
+                                            data={officeData}
+                                            minHorizontalSize={6}  
+                                            onSelect={desk => this.props.prepareToShow(desk, showUpdate)} 
+                                            onDrag={desk => this.props.prepareToShow(desk, showUpdate)}/>
                                     </If>    
                                     <If test={this.props.submitLabel !== 'Update'}>
                                         <OfficeMap data={officeData} minHorizontalSize={6} />
