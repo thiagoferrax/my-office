@@ -55,37 +55,62 @@ module.exports = app => {
             equipmentSpecification: 'equipments.specification'
         }).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
-            .leftJoin('equipments', 'equipments.deskId', 'desks.id')               
+            .leftJoin('equipments', 'equipments.deskId', 'desks.id')
             .whereIn('desks.roomId', summary.roomsIds)
             .then(desks => {
                 let number_desks = 0
                 summary.officeData = desks && desks.reduce((data, desk) => {
                     const room = desk.roomId
 
-                    if(!Object.keys(data).includes(`${room}`)) {
+                    if (!Object.keys(data).includes(`${room}`)) {
                         data[room] = []
                     }
 
                     const foundDesk = data[room].filter(e => e.id == desk.id)
-                    if(foundDesk.length > 0) {
+                    if (foundDesk.length > 0) {
                         const index = data[room].indexOf(foundDesk[0])
-                        if(desk.equipmentName && desk.equipmentSpecification) {
-                            data[room][index].equipments.push({name:desk.equipmentName, specification: desk.equipmentSpecification})
+                        if (desk.equipmentName && desk.equipmentSpecification) {
+                            data[room][index].equipments.push({ name: desk.equipmentName, specification: desk.equipmentSpecification })
                         }
                     } else {
                         desk.equipments = []
-                        if(desk.equipmentName && desk.equipmentSpecification) {
-                            desk.equipments.push({name:desk.equipmentName, specification: desk.equipmentSpecification})
+                        if (desk.equipmentName && desk.equipmentSpecification) {
+                            desk.equipments.push({ name: desk.equipmentName, specification: desk.equipmentSpecification })
                         }
                         data[room].push({ ...desk })
-                        number_desks++    
+                        number_desks++
                     }
 
-                    return data                
-                }, {}) 
+                    return data
+                }, {})
                 summary.number_desks = number_desks
                 resolve(summary)
             }).catch(err => reject(err))
+    })
+
+    const getEquipmentsSummary = (summary) => new Promise((resolve, reject) => {
+        const roomsIds = Object.keys(summary.officeData)
+        summary.equipmentsSummary = roomsIds.reduce((data, roomId) => {
+            if (!Object.keys(data).includes(`${roomId}`)) {
+                data[roomId] = {}
+            }
+            const desks = summary.officeData[roomId]
+
+            desks.forEach(desk => {
+                const equipments = desk.equipments
+
+                equipments && equipments.forEach(equipment => {
+                    if (!Object.keys(data[roomId]).includes(`${equipment.name}`)) {
+                        data[roomId][equipment.name] = 1
+                    } else {
+                        data[roomId][equipment.name] += 1
+                    }
+                })
+            })
+            return data
+        }, {})
+
+        resolve(summary)
     })
 
     const get = (req, res) => {
@@ -94,6 +119,7 @@ module.exports = app => {
         getProjects(userId)
             .then(getTeam)
             .then(getDesks)
+            .then(getEquipmentsSummary)
             .then(summary => res.json(summary))
             .catch(err => res.status(500).json({ errors: [err] }))
     }
