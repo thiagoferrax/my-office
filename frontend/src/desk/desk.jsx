@@ -38,15 +38,15 @@ class Desk extends Component {
                             </TabContent>
                             <TabContent id='tabCreate'>
                                 <Form onSubmit={this.props.create}
-                                    submitLabel='Create' submitClass='primary' />
+                                    submitLabel='Create' submitClass='primary' cancelLabel='Clean'/>
                             </TabContent>
                             <TabContent id='tabUpdate'>
                                 <Form onSubmit={this.props.update}
-                                    submitLabel='Update' submitClass='info' />
+                                    submitLabel='Update' submitClass='info' cancelLabel='Cancel'/>
                             </TabContent>
                             <TabContent id='tabDelete'>
                                 <Form onSubmit={this.props.remove} readOnly={true}
-                                    submitLabel='Delete' submitClass='danger' />
+                                    submitLabel='Delete' submitClass='danger' cancelLabel='Cancel'/>
                             </TabContent>
                         </TabsContent> 
                     </Tabs> 

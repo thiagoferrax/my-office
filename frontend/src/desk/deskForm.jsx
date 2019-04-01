@@ -73,8 +73,8 @@ class DeskForm extends Component {
                         {this.props.submitLabel}
                     </button>
                     <button type='button' className='btn btn-default'
-                        onClick={this.props.init}>Cancel</button>
-                </div>
+                        onClick={this.props.init}>{this.props.cancelLabel}</button>
+                </div>  
                 <If test={officeData && officeData.length > 0}>
                     <div className='box-footer'>
                         <Grid key="key_office_data" cols='12'>
