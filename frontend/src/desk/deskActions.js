@@ -80,7 +80,6 @@ export function prepareToShow(desk, callback) {
 }
 
 export function showUpdate(desk) {
-    console.log('showUpdate', desk)
     return [ 
         showTabs('tabUpdate'),
         selectTab('tabUpdate'),        

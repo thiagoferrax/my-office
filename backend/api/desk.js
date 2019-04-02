@@ -22,8 +22,6 @@ module.exports = app => {
             y: req.body.y || 0
         }
 
-        console.log('equipments', desk.equipments)
-
         if (req.params.id) desk.id = req.params.id
 
         try {
