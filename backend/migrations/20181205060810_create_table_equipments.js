@@ -3,7 +3,9 @@ exports.up = function(knex, Promise) {
         table.increments('id').primary()
         table.integer('deskId').references('id').inTable('desks').notNull()
         table.string('name').notNull()
-        table.string('specification').notNull()        
+        table.string('specification').notNull() 
+        table.string('patrimony')
+        table.timestamp('expirationDate')
     })
 };
 

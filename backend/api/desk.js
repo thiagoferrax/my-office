@@ -1,6 +1,16 @@
 module.exports = app => {
     const { existsOrError } = app.api.validation
 
+    const getFormatedDate = (isoDate) => {
+        if(!isoDate) {
+            return undefined
+        }
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' }
+    
+        const date = new Date(isoDate)
+        return date.toLocaleDateString('en-US', options)
+    }
+
     const save = (req, res) => {
         const desk = {
             id: req.body.id,
@@ -11,6 +21,8 @@ module.exports = app => {
             x: req.body.x || 0,
             y: req.body.y || 0
         }
+
+        console.log('equipments', desk.equipments)
 
         if (req.params.id) desk.id = req.params.id
 
@@ -51,7 +63,7 @@ module.exports = app => {
                     .insert(desk)
                     .returning('id')
                     .then(deskId => {
-                        if (equipments && equipments.length > 0) {    
+                        if (equipments && equipments.length > 0) {
                             insertEquipments(deskId[0], equipments, res)
                         } else {
                             res.status(204).send()
@@ -117,12 +129,12 @@ module.exports = app => {
             const foundDesk = desksList.filter(e => e.id == desk.id)
             if (foundDesk.length > 0) {
                 const index = desksList.indexOf(foundDesk[0])
-                if(desk.equipmentName &&  desk.equipmentSpecification) {
-                    desksList[index].equipments.push({ name: desk.equipmentName, specification: desk.equipmentSpecification })
+                if (desk.equipmentName && desk.equipmentSpecification) {
+                    desksList[index].equipments.push({ name: desk.equipmentName, specification: desk.equipmentSpecification, patrimony: desk.equipmentPatrimony, expirationDate: desk.equipmentExpirationDate })
                 }
             } else {
-                if(desk.equipmentName &&  desk.equipmentSpecification) {
-                    desk.equipments = [{ name: desk.equipmentName, specification: desk.equipmentSpecification }]
+                if (desk.equipmentName && desk.equipmentSpecification) {
+                    desk.equipments = [{ name: desk.equipmentName, specification: desk.equipmentSpecification, patrimony: desk.equipmentPatrimony, expirationDate: getFormatedDate(desk.equipmentExpirationDate)  }]
                 } else {
                     desk.equipments = [{}]
                 }
@@ -144,7 +156,9 @@ module.exports = app => {
                 x: 'desks.x',
                 y: 'desks.y',
                 equipmentName: 'equipments.name',
-                equipmentSpecification: 'equipments.specification'
+                equipmentSpecification: 'equipments.specification',
+                equipmentPatrimony: 'equipments.patrimony',
+                equipmentExpirationDate: 'equipments.expirationDate'
             }
         ).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
@@ -190,7 +204,9 @@ module.exports = app => {
                 x: 'desks.x',
                 y: 'desks.y',
                 equipmentName: 'equipments.name',
-                equipmentSpecification: 'equipments.specification'
+                equipmentSpecification: 'equipments.specification',
+                equipmentPatrimony: 'equipments.patrimony',
+                equipmentExpirationDate: 'equipments.expirationDate'
             }
         ).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
@@ -207,6 +223,8 @@ module.exports = app => {
                 deskId: 'equipments.deskId',
                 name: 'equipments.name',
                 specification: 'equipments.specification',
+                patrimony: 'equipments.patrimony',
+                expirationDate: 'equipments.expirationDate'
             }
         ).from('equipments')
             .where({ 'equipments.deskId': req.params.id })
@@ -216,7 +234,13 @@ module.exports = app => {
 
     const getEquipmentsToInsert = (deskId, equipments) => {
         return equipments.reduce((rows, equipment) => {
-            rows.push({ deskId, name: equipment.name, specification: equipment.specification })
+            rows.push({
+                deskId,
+                name: equipment.name,
+                specification: equipment.specification,
+                patrimony: equipment.patrimony,
+                expirationDate: equipment.expirationDate
+            })
             return rows
         }, [])
     }

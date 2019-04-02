@@ -11,4 +11,7 @@ import 'admin-lte/dist/css/AdminLTE.css'
 import 'admin-lte/dist/css/skins/_all-skins.css'
 import 'admin-lte/plugins/iCheck/flat/blue.css'
 
+import 'bootstrap-datepicker/dist/css/bootstrap-datepicker.css'
+import 'bootstrap-datepicker/js/bootstrap-datepicker'
+
 import './custom.css'

@@ -9,7 +9,7 @@ const INITIAL_VALUES = { rooms: [], officeData:  [], equipments: [{}]}
 export function getList() {
     const request = axios.get(`${consts.API_URL}/desks`)
     return {
-        type: 'EVALUATIONS_FETCHED',
+        type: 'DESKS_FETCHED',
         payload: request
     }
 }
@@ -19,20 +19,6 @@ export function getOfficeData(roomId) {
     return {
         type: 'OFFICE_DATA_FETCHED',
         payload: request
-    }
-}
-
-export function selectChecklist(checklistId) {
-    return {
-        type: 'CHECKLIST_SELECTED',
-        payload: checklistId
-    }
-}
-
-export function updateScore(score) {
-    return {
-        type: 'SCORE_UPDATED',
-        payload: score
     }
 }
 
@@ -94,6 +80,7 @@ export function prepareToShow(desk, callback) {
 }
 
 export function showUpdate(desk) {
+    console.log('showUpdate', desk)
     return [ 
         showTabs('tabUpdate'),
         selectTab('tabUpdate'),        
