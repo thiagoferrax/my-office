@@ -4,7 +4,7 @@ import { initialize } from 'redux-form'
 import { showTabs, selectTab } from '../common/tab/tabActions'
 import consts from '../consts'
 
-const INITIAL_VALUES = { rooms: [], officeData:  [], equipments: [{}]}
+const INITIAL_VALUES = { rooms: [], officeData:  [], equipments: [{}], employee: [{}]}
 
 export function getList() {
     const request = axios.get(`${consts.API_URL}/desks`)

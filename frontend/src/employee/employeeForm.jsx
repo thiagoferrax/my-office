@@ -42,12 +42,12 @@ class EmployeeForm extends Component {
     cloneEmployee() {
         let { tree, parentId } = this.props
 
-        if(!parentId) {
+        if (!parentId) {
             parentId = undefined
         }
 
         const employee = this.getEmployeeById(tree || [], parentId)
-            this.props.clone(employee)
+        this.props.clone(employee)
     }
 
     getEmployees(tree) {
@@ -67,8 +67,8 @@ class EmployeeForm extends Component {
                                 tree={[employee]}
                                 hideSlideBar={true}
                                 onEdit={showUpdate}
-                                onDelete={showDelete} 
-                                shrink={true}/>
+                                onDelete={showDelete}
+                                shrink={true} />
                         </div>
                     </div>
                 </Grid >
@@ -84,42 +84,27 @@ class EmployeeForm extends Component {
                     <Field name='description' value={description} component={LabelAndInput} readOnly={readOnly}
                         label='Name' cols='12 4' placeholder='Enter the item description' autoFocus={true} />
 
-                    <Field name='parentId' value={parentId} component={Select} readOnly={readOnly}
-                        label='Parent path' cols='12 6' options={list}
-                        optionValue='id' optionLabel='path' inputOnChange={this.props.selectParent} />
+                    <Field name='identification' component={LabelAndInput} readOnly={readOnly}
+                        label='Identification' cols='12 4' placeholder='Enter the identification' autoFocus={true} />
 
-                    <Grid cols='12 2'>
-                        <If test={readOnly}>
-                            <div className='buttons_employee_form'>
-                                <button type='submit' className='btn btn-danger'>
-                                    <i className="icon ion-md-trash"></i>
-                                </button>
-                                <button type='button' className='btn btn-default'
-                                    onClick={init}>
-                                    <i className="icon ion-md-close"></i>
-                                </button>
-                            </div>
-                        </If>
-                        <If test={!readOnly}>
-                            <div className='buttons_employee_form'>
-                                <button type='submit' className='btn btn-primary' title="Save">
-                                    <i className="fa fa-check"></i>
-                                </button>
-                                <button type='button' className='btn btn-warning' onClick={this.cloneEmployee} title="Clone Parent path">
-                                    <i className="fa fa-copy"></i>
-                                </button>
-                                <button type='button' className='btn btn-default'
-                                    onClick={init} title="Clear">
-                                    <i className="icon ion-md-close"></i>
-                                </button>
-                            </div>
-                        </If>
-                    </Grid>
+                    <Field name='email' component={LabelAndInput} readOnly={readOnly}
+                        label='Email' cols='12 4' placeholder='Enter the email' autoFocus={true} />
+
+                    <Field name='phone' component={LabelAndInput} readOnly={readOnly}
+                        label='Phone' cols='12 4' placeholder='Enter the phone' autoFocus={true} />
+
+                    <Field name='role' component={LabelAndInput} readOnly={readOnly}
+                        label='Role' cols='12 4' placeholder='Enter the role' autoFocus={true} />
+
+                    <Field name='department' component={LabelAndInput} readOnly={readOnly}
+                        label='Department' cols='12 4' placeholder='Enter the department' autoFocus={true} />
                 </div>
-                <div className='box-footer'>
-                    <If test={!readOnly}>
-                        {this.getEmployees(tree)}
-                    </If>
+                <div className='box-footer text-right'>
+                    <button type='submit' className={`btn btn-${this.props.submitClass}`}>
+                        {this.props.submitLabel}
+                    </button>
+                    <button type='button' className='btn btn-default'
+                        onClick={this.props.init}>Cancel</button>
                 </div>
             </form>
         )

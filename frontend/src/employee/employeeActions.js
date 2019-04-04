@@ -88,7 +88,7 @@ export function showDelete(employee) {
 export function init() {
     return [
         showTabs('tabList', 'tabCreate'),
-        selectTab('tabCreate'),
+        selectTab('tabList'),
         getList(),
         getTree(),
         initialize('employeeForm', INITIAL_VALUES)

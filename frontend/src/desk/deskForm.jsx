@@ -11,6 +11,7 @@ import OfficeMap from 'office-map'
 
 import Select from '../common/form/select'
 import ItemList from './itemList'
+import EmployeeList from './employeeList'
 
 import './desk.css'
 
@@ -46,7 +47,7 @@ class DeskForm extends Component {
 
     render() {
 
-        const { rooms, handleSubmit, readOnly, getOfficeData, officeData, showUpdate, equipments } = this.props
+        const { rooms, handleSubmit, readOnly, getOfficeData, officeData, showUpdate, equipments, employee } = this.props
 
         return (
             <form role='form' onSubmit={handleSubmit}>
@@ -65,8 +66,12 @@ class DeskForm extends Component {
                         component={Select} readOnly={readOnly}
                         options={this.getPossiblePositions()} optionValue='id' optionLabel='name' />
 
-                    <ItemList cols='12' list={equipments || [{}]} readOnly={readOnly}
-                        field='equipments' legend='Equipments' />
+                    <ItemList cols='12' list={equipments} readOnly={readOnly}
+                        field='equipments' legend='Equipments' icon='laptop'/>
+
+                    <EmployeeList cols='12' list={employee} readOnly={readOnly}
+                        field='employee' legend='Employee' icon='user'/>
+
                 </div>
                 <div className='box-footer text-right'>
                     <button type='submit' className={`btn btn-${this.props.submitClass}`}>
@@ -74,7 +79,7 @@ class DeskForm extends Component {
                     </button>
                     <button type='button' className='btn btn-default'
                         onClick={this.props.init}>{this.props.cancelLabel}</button>
-                </div>  
+                </div>
                 <If test={officeData && officeData.length > 0}>
                     <div className='box-footer'>
                         <Grid key="key_office_data" cols='12'>
@@ -84,12 +89,12 @@ class DeskForm extends Component {
                                     <h3 className="box-title">MY OFFICE - {officeData[0] && officeData[0].room}</h3>
                                 </div>
                                 <div className="box-body">
-                                        <OfficeMap 
-                                            data={officeData}
-                                            minHorizontalSize={5}  
-                                            minVerticalSize={5}
-                                            onSelect={desk => this.props.prepareToShow(desk, showUpdate)} 
-                                            onMove={desk => this.props.update(desk, showUpdate)}/>
+                                    <OfficeMap
+                                        data={officeData}
+                                        minHorizontalSize={5}
+                                        minVerticalSize={5}
+                                        onSelect={desk => this.props.prepareToShow(desk, showUpdate)}
+                                        onMove={desk => this.props.update(desk, showUpdate)} />
                                 </div>
                             </div>
                         </Grid >
@@ -108,5 +113,5 @@ const mapStateToProps = state => ({
     officeData: state.desk.officeData,
     equipments: state.desk.equipments
 })
-const mapDispatchToProps = dispatch => bindActionCreators({ init,  getRooms, getOfficeData, prepareToShow, showUpdate, update }, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({ init, getRooms, getOfficeData, prepareToShow, showUpdate, update }, dispatch)
 export default connect(mapStateToProps, mapDispatchToProps)(DeskForm)
