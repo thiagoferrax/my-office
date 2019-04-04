@@ -6,6 +6,7 @@ import Date from '../common/form/date'
 import If from '../common/operator/if'
 import Row from '../common/layout/row'
 import Select from '../common/form/select'
+import './itemList.css'
 
 const getPossibleEquipments = () => {
     const equipments = []
@@ -56,19 +57,22 @@ export default class ItemList extends Component {
                         placeholder="Expiration date"
                         readOnly={this.props.readOnly}
                     />
-                    
-                    <If test={!index}>
-                        <button type='button' className='btn btn-info' cols='12 1' onClick={() => fields.unshift({})}>
-                            <i className="fa fa-plus"></i>
-                        </button>
-                        {(touched || submitFailed) && error && <span>{error}</span>}
-                    </If>
-                    <If test={index}>
-                        <button type='button' className='btn btn-danger' cols='12 1'
-                            onClick={() => fields.remove(index)}>
-                            <i className="icon ion-md-trash"></i>
-                        </button>
-                    </If>
+
+
+                    <Grid cols='12 1'>
+                        <If test={!index}>
+                            <button type='button' className='btn btn-default marginBottom' onClick={() => fields.unshift({})}>
+                                <i className="fa fa-plus"></i>
+                            </button>
+                            {(touched || submitFailed) && error && <span>{error}</span>}
+                        </If>
+                        <If test={index}>
+                            <button type='button' className='btn btn-danger' cols='12 1'
+                                onClick={() => fields.remove(index)}>
+                                <i className="icon ion-md-trash"></i>
+                            </button>
+                        </If>
+                    </Grid>
                 </Row>)
         })
     }

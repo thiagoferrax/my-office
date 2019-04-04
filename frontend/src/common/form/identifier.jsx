@@ -11,12 +11,12 @@ export default props => (
             </If>
             <div class="input-group removeZIndex">
                 <div class="input-group-addon">
-                    <i class="fa fa-envelope"></i>
+                    <i class="fa fa-id-card"></i>
                 </div>
                 <input {...props.input}
                     placeholder={props.placeholder}
                     readOnly={props.readOnly}
-                    type="email" class="form-control" />
+                    type="text" class="form-control" />
             </div>
         </div>
     </Grid>

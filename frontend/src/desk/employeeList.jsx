@@ -7,6 +7,7 @@ import If from '../common/operator/if'
 import Row from '../common/layout/row'
 import Phone from '../common/form/phone'
 import Email from '../common/form/email'
+import Identifier from '../common/form/identifier'
 
 const getPossibleEquipments = () => {
     const equipments = []
@@ -25,7 +26,7 @@ export default class UserList extends Component {
         return fields.map((member, index) => {
             return (
                 <Row key={index}>
-   <Field cols='12 4'
+                    <Field cols='12 4'
                         name={`${member}.name`}
                         type="text"
                         component={Input}
@@ -37,12 +38,11 @@ export default class UserList extends Component {
                     <Field cols='12 2'
                         name={`${member}.identifier`}
                         type="text"
-                        component={Input}
-                        label="Identifier"
+                        component={Identifier}
                         placeholder="Identifier"
                         readOnly={this.props.readOnly}
                     />
-                 
+
                     <Field cols='12 3'
                         name={`${member}.email`}
                         type="text"

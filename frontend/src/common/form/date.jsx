@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import Grid from '../layout/grid'
 import If from '../operator/if'
 import $ from 'jquery'
+import './form.css'
 
 export default class ItemList extends Component {
     componentDidMount() {
@@ -22,7 +23,7 @@ export default class ItemList extends Component {
                     <If test={this.props.label}>
                         <label>{this.props.label}</label>
                     </If>
-                    <div className="input-group date">
+                    <div className="input-group date removeZIndex">
                         <div className="input-group-addon">
                             <i className="fa fa-calendar"></i>
                         </div>

@@ -1,61 +1,62 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Grid from '../layout/grid'
 import ReactSelect from 'react-select';
 import If from '../operator/if'
 
-export default class Select extends Component {    
+export default class Select extends Component {
 
     handleChange(selectedOption) {
-        const {input, optionValue, inputOnChange} = this.props
+        const { input, optionValue, inputOnChange } = this.props
 
         if (Array.isArray(selectedOption)) {
             let values = []
-                selectedOption.forEach(option => values.push(option[optionValue || 'value']))
+            selectedOption.forEach(option => values.push(option[optionValue || 'value']))
 
             input.onChange(values)
-            if(inputOnChange) {
+            if (inputOnChange) {
                 inputOnChange(values)
             }
         } else {
             input.onChange(selectedOption[optionValue || 'value'])
-            if(inputOnChange) {
+            if (inputOnChange) {
                 inputOnChange(selectedOption[optionValue || 'value'])
             }
         }
     }
 
     getCustomStyles() {
-        const {input} = this.props
+        const { input } = this.props
 
         let customStyles = {
-            'min-height': 34, 
+            'min-height': 34,
             height: 34,
-            'border-radius': 0}
+            'border-radius': 0
+        }
 
-        if(Array.isArray(input.value) && input.value.length > 1) {
+        if (Array.isArray(input.value) && input.value.length > 1) {
             delete customStyles.height
         }
 
         return {
             option: provided => ({
-              ...provided,
+                ...provided,
             }),
             control: provided => ({
-                ...provided, ...customStyles                
+                ...provided, ...customStyles
             }),
             singleValue: provided => ({
-                ...provided,            
+                ...provided,
             })
         }
     }
 
     getValue() {
-        const {options, optionValue, input} = this.props
+        const { options, optionValue, input } = this.props
 
         if (Array.isArray(input.value)) {
             return options && options.filter(opt => {
-                for(let i=0; i < input.value.length; i++) {
-                    if(input.value[i] == opt[optionValue || 'value']) {
+                for (let i = 0; i < input.value.length; i++) {
+                    if (input.value[i] == opt[optionValue || 'value']) {
                         return true
                     }
                 }
@@ -67,19 +68,31 @@ export default class Select extends Component {
     }
 
     render() {
-        const {cols, name, label, optionValue, optionLabel, autoFocus, readOnly} = this.props
-        return (            
-            <Grid cols={cols}>
-                <div className='form-group'>
-                    <If test={label}><label htmlFor={name}>{label}</label></If>
-                    <ReactSelect {...this.props} 
-                        styles={this.getCustomStyles()} 
-                        onChange={e => this.handleChange(e)} 
-                        getOptionValue={opt=>opt[optionValue || 'value']} 
-                        getOptionLabel={opt=>opt[optionLabel || 'label']} 
-                        value={this.getValue()} autoFocus={autoFocus} readOnly={readOnly}/>
-                </div>
-            </Grid>
+        const { cols, name, label, optionValue, optionLabel, autoFocus, readOnly, onlyCombo } = this.props
+        return (
+            <React.Fragment>
+                <If test={onlyCombo}>
+                    <ReactSelect {...this.props}
+                        styles={this.getCustomStyles()}
+                        onChange={e => this.handleChange(e)}
+                        getOptionValue={opt => opt[optionValue || 'value']}
+                        getOptionLabel={opt => opt[optionLabel || 'label']}
+                        value={this.getValue()} autoFocus={autoFocus} readOnly={readOnly} />
+                </If>
+                <If test={!onlyCombo}>
+                    <Grid cols={cols}>
+                        <div className='form-group'>
+                            <If test={label}><label htmlFor={name}>{label}</label></If>
+                            <ReactSelect {...this.props}
+                                styles={this.getCustomStyles()}
+                                onChange={e => this.handleChange(e)}
+                                getOptionValue={opt => opt[optionValue || 'value']}
+                                getOptionLabel={opt => opt[optionLabel || 'label']}
+                                value={this.getValue()} autoFocus={autoFocus} readOnly={readOnly} />
+                        </div>
+                    </Grid>
+                </If>
+            </React.Fragment>
         )
     }
 }

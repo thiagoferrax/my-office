@@ -12,6 +12,7 @@ import OfficeMap from 'office-map'
 import Select from '../common/form/select'
 import ItemList from './itemList'
 import EmployeeList from './employeeList'
+import Map from '../common/form/map'
 
 import './desk.css'
 
@@ -60,10 +61,10 @@ class DeskForm extends Component {
                         component={Select} readOnly={readOnly}
                         options={this.getPossibleDirections()} optionValue='id' optionLabel='name' />
                     <Field name='x' label='X position' cols='12 3'
-                        component={Select} readOnly={readOnly}
+                        component={Map} readOnly={readOnly}
                         options={this.getPossiblePositions()} optionValue='id' optionLabel='name' />
                     <Field name='y' label='Y position' cols='12 3'
-                        component={Select} readOnly={readOnly}
+                        component={Map} readOnly={readOnly}
                         options={this.getPossiblePositions()} optionValue='id' optionLabel='name' />
 
                     <ItemList cols='12' list={equipments} readOnly={readOnly}
