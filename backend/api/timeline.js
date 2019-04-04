@@ -101,18 +101,18 @@ module.exports = app => {
             .catch(err => reject(err))
     })
 
-    const getChecklists = (summary) => new Promise((resolve, reject) => {
+    const getEmployees = (summary) => new Promise((resolve, reject) => {
         app.db.select({
-            id: 'checklists.id',
-            checklist: 'checklists.description',
+            id: 'employees.id',
+            employee: 'employees.description',
             user: 'users.name',
-            time: 'checklists.created_at',
-        }).from('checklists')
-            .leftJoin('users', 'checklists.userId', 'users.id')
-            .whereIn('checklists.userId', summary.membersIds)
-            .where('checklists.parentId', null)
-            .then(checklists => {
-                summary.timeline.data = buildTimeline(summary.timeline.data, 'checklist', checklists)
+            time: 'employees.created_at',
+        }).from('employees')
+            .leftJoin('users', 'employees.userId', 'users.id')
+            .whereIn('employees.userId', summary.membersIds)
+            .where('employees.parentId', null)
+            .then(employees => {
+                summary.timeline.data = buildTimeline(summary.timeline.data, 'employee', employees)
                 resolve(summary)
             }).catch(err => reject(err))
     })

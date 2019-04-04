@@ -8,7 +8,7 @@ import Auth from '../auth/auth'
 import { validateToken } from '../auth/authActions'
 import Dashboard from '../dashboard/dashboard'
 import Room from '../room/room'
-import Checklist from '../checklist/checklist'
+import Employee from '../employee/employee'
 import Desk from '../desk/desk'
 import Timeline from '../timeline/timeline'
 
@@ -27,7 +27,7 @@ class AuthOrApp extends Component {
             axios.defaults.headers.common['authorization'] = user.token
             return [<Route exact key='route_dashboard' path='/' component={Dashboard}/>,
             <Route key='route_rooms' path='/rooms' component={Room} />,
-            <Route key='route_checklists' path='/checklists' component={Checklist} />,
+            <Route key='route_employees' path='/employees' component={Employee} />,
             <Route key='route_desks' path='/desks' component={Desk} />,
             <Route key='route_timeline' path='/timeline' component={Timeline} />]
         } else if (!user && !validToken) {

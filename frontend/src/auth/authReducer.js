@@ -1,4 +1,4 @@
-const userKey = '_mychecklist_user'
+const userKey = '_myemployee_user'
 const INITIAL_STATE = {
     user: JSON.parse(localStorage.getItem(userKey)),
     validToken: false

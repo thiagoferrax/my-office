@@ -11,7 +11,7 @@ export default class SummaryChart extends Component {
         this.state = INITIAL_STATE
     }
 
-    nextChecklist(step) {
+    nextEmployee(step) {
         let index = this.state.index
         index += step
 
@@ -46,7 +46,7 @@ export default class SummaryChart extends Component {
                 <If test={this.props.summaryData.length > 1} >
                     <Grid cols='1'>
                         <div className="carousel_controller">
-                            <a href="javascript:;" onClick={() => this.nextChecklist(-1)}>
+                            <a href="javascript:;" onClick={() => this.nextEmployee(-1)}>
                                 <span className="fa fa-angle-left fa-2x"></span>
                             </a>
                         </div>
@@ -63,7 +63,7 @@ export default class SummaryChart extends Component {
                     <Grid cols={grids[0]}>
                         <div className="description-block border-right carousel-inner">
                             <span className="description-percentage text-muted">Sprint {this.props.summaryData[this.state.index].currentSprint}</span>
-                            <h5 className="description-header">{this.props.summaryData[this.state.index].checklist}</h5>
+                            <h5 className="description-header">{this.props.summaryData[this.state.index].employee}</h5>
                             <span className="description-text">MY OFFICE</span>
                         </div>
                     </Grid>
@@ -99,7 +99,7 @@ export default class SummaryChart extends Component {
                 <If test={this.props.summaryData.length > 1} >
                     <Grid cols='1'>
                         <div className="carousel_controller">
-                            <a href="javascript:;" onClick={() => this.nextChecklist(1)}>
+                            <a href="javascript:;" onClick={() => this.nextEmployee(1)}>
                                 <span className="fa fa-angle-right fa-2x"></span>
                             </a>
                         </div>

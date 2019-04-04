@@ -6,7 +6,7 @@ export default props => (
     <Grid cols={props.cols}>
         <div className='form-group'>
             <label htmlFor={props.name}>{props.label}</label>
-            <input {...props.input} readOnly={props.readOnly} type='checkbox' className='form-checklist-control' checked={props.input.value}/>
+            <input {...props.input} readOnly={props.readOnly} type='checkbox' className='form-employee-control' checked={props.input.value}/>
         </div>
     </Grid>
 )

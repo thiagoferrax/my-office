@@ -14,7 +14,7 @@ button {
     width: 150px;
 }
 
-.form-checklist-control {
+.form-employee-control {
     display: block;
     width: 34px;
     height: 34px;
@@ -29,7 +29,7 @@ input[type=checkbox], input[type=radio] {
     margin: 0px;
 }
 
-.buttons_checklist_form {
+.buttons_employee_form {
     padding-top: 25px;
     background-color: #ffffff;
 }

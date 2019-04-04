@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "Backend of Agile Checklist Tool",
+  "description": "Backend of Agile Employee Tool",
   "main": "index.js",
   "scripts": {
     "start": "nodemon",
@@ -14,7 +14,7 @@
   "keywords": [
     "backend",
     "agile",
-    "checklist"
+    "employee"
   ],
   "author": "Thiago Ferraz (thiagoferrax@gmail.com)",
   "license": "ISC",

@@ -6,15 +6,15 @@ import Tree from 'tree-slide-bar'
 import If from '../common/operator/if'
 import PropTypes from 'prop-types'
 
-import { init, getTree, showDelete, clone, showUpdate, selectParent } from './checklistActions'
+import { init, getTree, showDelete, clone, showUpdate, selectParent } from './employeeActions'
 import LabelAndInput from '../common/form/labelAndInput'
 import Select from '../common/form/select'
 import Grid from '../common/layout/grid'
 
-class ChecklistForm extends Component {
+class EmployeeForm extends Component {
     constructor(props) {
         super(props)
-        this.cloneChecklist = this.cloneChecklist.bind(this)
+        this.cloneEmployee = this.cloneEmployee.bind(this)
     }
 
     static contextTypes = {
@@ -25,12 +25,12 @@ class ChecklistForm extends Component {
         this.props.getTree()
     }
 
-    getChecklistById(tree, checklistId, found = undefined) {
-        return tree.reduce((found, checklist) => {
-            if (checklist.id === checklistId) {
-                found = checklist
-            } else if (checklist.children) {
-                const foundInChildren = this.getChecklistById(checklist.children, checklistId)
+    getEmployeeById(tree, employeeId, found = undefined) {
+        return tree.reduce((found, employee) => {
+            if (employee.id === employeeId) {
+                found = employee
+            } else if (employee.children) {
+                const foundInChildren = this.getEmployeeById(employee.children, employeeId)
                 if (foundInChildren) {
                     found = foundInChildren
                 }
@@ -39,32 +39,32 @@ class ChecklistForm extends Component {
         }, found)
     }
 
-    cloneChecklist() {
+    cloneEmployee() {
         let { tree, parentId } = this.props
 
         if(!parentId) {
             parentId = undefined
         }
 
-        const checklist = this.getChecklistById(tree || [], parentId)
-            this.props.clone(checklist)
+        const employee = this.getEmployeeById(tree || [], parentId)
+            this.props.clone(employee)
     }
 
-    getChecklists(tree) {
+    getEmployees(tree) {
         const { showDelete, showUpdate } = this.props
-        return tree && tree.map(checklist => {
+        return tree && tree.map(employee => {
             return (
-                <Grid key={`checklist_${checklist.id}`} cols='12'>
+                <Grid key={`employee_${employee.id}`} cols='12'>
                     <div className="box_ box-default">
                         <div className="box-header with-border">
                             <i className="fa fa-check"></i>
-                            <h3 className="box-title">&nbsp;&nbsp;MY OFFICE - {checklist.description}</h3>
+                            <h3 className="box-title">&nbsp;&nbsp;MY OFFICE - {employee.description}</h3>
                         </div>
                         <div className="box-body">
                             <Field
-                                name={`checklist_${checklist.id}`}
+                                name={`employee_${employee.id}`}
                                 component={Tree}
-                                tree={[checklist]}
+                                tree={[employee]}
                                 hideSlideBar={true}
                                 onEdit={showUpdate}
                                 onDelete={showDelete} 
@@ -82,7 +82,7 @@ class ChecklistForm extends Component {
             <form role='form' onSubmit={handleSubmit}>
                 <div className='box-body'>
                     <Field name='description' value={description} component={LabelAndInput} readOnly={readOnly}
-                        label='Item description' cols='12 4' placeholder='Enter the item description' autoFocus={true} />
+                        label='Name' cols='12 4' placeholder='Enter the item description' autoFocus={true} />
 
                     <Field name='parentId' value={parentId} component={Select} readOnly={readOnly}
                         label='Parent path' cols='12 6' options={list}
@@ -90,7 +90,7 @@ class ChecklistForm extends Component {
 
                     <Grid cols='12 2'>
                         <If test={readOnly}>
-                            <div className='buttons_checklist_form'>
+                            <div className='buttons_employee_form'>
                                 <button type='submit' className='btn btn-danger'>
                                     <i className="icon ion-md-trash"></i>
                                 </button>
@@ -101,11 +101,11 @@ class ChecklistForm extends Component {
                             </div>
                         </If>
                         <If test={!readOnly}>
-                            <div className='buttons_checklist_form'>
+                            <div className='buttons_employee_form'>
                                 <button type='submit' className='btn btn-primary' title="Save">
                                     <i className="fa fa-check"></i>
                                 </button>
-                                <button type='button' className='btn btn-warning' onClick={this.cloneChecklist} title="Clone Parent path">
+                                <button type='button' className='btn btn-warning' onClick={this.cloneEmployee} title="Clone Parent path">
                                     <i className="fa fa-copy"></i>
                                 </button>
                                 <button type='button' className='btn btn-default'
@@ -118,7 +118,7 @@ class ChecklistForm extends Component {
                 </div>
                 <div className='box-footer'>
                     <If test={!readOnly}>
-                        {this.getChecklists(tree)}
+                        {this.getEmployees(tree)}
                     </If>
                 </div>
             </form>
@@ -126,14 +126,14 @@ class ChecklistForm extends Component {
     }
 }
 
-ChecklistForm = reduxForm({ form: 'checklistForm', destroyOnUnmount: false })(ChecklistForm)
+EmployeeForm = reduxForm({ form: 'employeeForm', destroyOnUnmount: false })(EmployeeForm)
 
 const mapStateToProps = state => ({
-    description: state.checklist.description,
-    parentId: state.checklist.parentId,
-    list: state.checklist.list,
-    tree: state.checklist.tree
+    description: state.employee.description,
+    parentId: state.employee.parentId,
+    list: state.employee.list,
+    tree: state.employee.tree
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators({ init, getTree, showDelete, showUpdate, clone, selectParent }, dispatch)
-export default connect(mapStateToProps, mapDispatchToProps)(ChecklistForm)
+export default connect(mapStateToProps, mapDispatchToProps)(EmployeeForm)

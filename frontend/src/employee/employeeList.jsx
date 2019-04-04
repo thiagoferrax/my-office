@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { getList, showUpdate, showDelete } from './checklistActions'
+import { getList, showUpdate, showDelete } from './employeeActions'
 import If from '../common/operator/if'
 
-class ChecklistList extends Component {
+class EmployeeList extends Component {
 
     componentWillMount() {
         this.props.getList()
@@ -12,15 +12,15 @@ class ChecklistList extends Component {
 
     renderRows() {
         const list = this.props.list || []
-        return list.map(checklist => (
-            <tr key={checklist.id}>
-                <td>{checklist.description}</td>
-                <td>{checklist.parentPath}</td>
+        return list.map(employee => (
+            <tr key={employee.id}>
+                <td>{employee.description}</td>
+                <td>{employee.parentPath}</td>
                 <td>
-                    <button className='btn btn-default' onClick={() => this.props.showUpdate(checklist)}>
+                    <button className='btn btn-default' onClick={() => this.props.showUpdate(employee)}>
                         <i className='icon ion-md-create'></i>
                     </button>
-                    <button className='btn btn-danger' onClick={() => this.props.showDelete(checklist)}>
+                    <button className='btn btn-danger' onClick={() => this.props.showDelete(employee)}>
                         <i className='icon ion-md-trash'></i>
                     </button>
                 </td>
@@ -49,7 +49,7 @@ class ChecklistList extends Component {
 }
 
 const mapStateToProps = state => ({
-    list: state.checklist.list
+    list: state.employee.list
 })
 const mapDispatchToProps = dispatch => bindActionCreators({ getList, showUpdate, showDelete }, dispatch)
-export default connect(mapStateToProps, mapDispatchToProps)(ChecklistList)
+export default connect(mapStateToProps, mapDispatchToProps)(EmployeeList)

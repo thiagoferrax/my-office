@@ -8,9 +8,9 @@ export default props => {
     }
 
     const sprints = Object.values(props.data)
-    const checklists = Object.values(sprints)
+    const employees = Object.values(sprints)
     let hasData = false
-    checklists.forEach(data => {
+    employees.forEach(data => {
         if (Object.values(data).length > 0) {
             hasData = true
         }

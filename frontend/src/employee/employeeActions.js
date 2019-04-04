@@ -7,24 +7,24 @@ import consts from '../consts'
 const INITIAL_VALUES = {description: '', parentId: undefined, list: [], tree:[]}
 
 export function getList() {
-    const request = axios.get(`${consts.API_URL}/checklists`)
+    const request = axios.get(`${consts.API_URL}/employees`)
     return {
-        type: 'CHECKLISTS_FETCHED',
+        type: 'EMPLOYEES_FETCHED',
         payload: request
     }
 }
 
 export function getTree() {  
-    const request = axios.get(`${consts.API_URL}/checklists/tree`)
+    const request = axios.get(`${consts.API_URL}/employees/tree`)
     return {
         type: 'TREE_FETCHED',
         payload: request
     }
 }
 
-export function clone(checklist) {  
+export function clone(employee) {  
     return dispatch => {
-        axios['post'](`${consts.API_URL}/checklists/clone`, {checklist})
+        axios['post'](`${consts.API_URL}/employees/clone`, {employee})
             .then(resp => {
                 toastr.success('Sucess', 'Successful operation.')
                 dispatch(init())
@@ -57,7 +57,7 @@ export function remove(values) {
 function submit(values, method) {
     return dispatch => {
         const id = values.id ? values.id : ''
-        axios[method](`${consts.API_URL}/checklists/${id}`, values)
+        axios[method](`${consts.API_URL}/employees/${id}`, values)
             .then(resp => {
                 toastr.success('Sucess', 'Successful operation.')
                 dispatch(init())
@@ -68,20 +68,20 @@ function submit(values, method) {
     }
 }
 
-export function showUpdate(checklist) {
+export function showUpdate(employee) {
     return [ 
         showTabs('tabUpdate'),
         selectTab('tabUpdate'),        
-        initialize('checklistForm', checklist),
-        selectParent(checklist.parentId)
+        initialize('employeeForm', employee),
+        selectParent(employee.parentId)
     ]
 }
 
-export function showDelete(checklist) {
+export function showDelete(employee) {
     return [ 
         showTabs('tabDelete'),
         selectTab('tabDelete'),
-        initialize('checklistForm', checklist)
+        initialize('employeeForm', employee)
     ]
 }
 
@@ -91,6 +91,6 @@ export function init() {
         selectTab('tabCreate'),
         getList(),
         getTree(),
-        initialize('checklistForm', INITIAL_VALUES)
+        initialize('employeeForm', INITIAL_VALUES)
     ]
 }

@@ -5,7 +5,7 @@ import { reducer as toastrReducer } from 'react-redux-toastr'
 import DashboardReducer from '../dashboard/dashboardReducer'
 import TabReducer from '../common/tab/tabReducer'
 import ProjectReducer from '../room/roomReducer'
-import ChecklistReducer from '../checklist/checklistReducer'
+import EmployeeReducer from '../employee/employeeReducer'
 import DeskReducer from '../desk/deskReducer'
 import AuthReducer from '../auth/authReducer'
 import UserReducer from '../user/userReducer'
@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
     dashboard: DashboardReducer,
     tab: TabReducer,
     room: ProjectReducer,
-    checklist: ChecklistReducer,
+    employee: EmployeeReducer,
     desk: DeskReducer,
     form: formReducer,    
     toastr: toastrReducer,

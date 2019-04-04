@@ -4,31 +4,31 @@ module.exports = app => {
     const { existsOrError, notExistsOrError } = app.api.validation
 
     const save = (req, res) => {
-        const checklist = {
+        const employee = {
             id: req.body.id,
             description: req.body.description,
             parentId: req.body.parentId,
             userId: req.decoded.id
         }
 
-        if (req.params.id) checklist.id = req.params.id
+        if (req.params.id) employee.id = req.params.id
 
         try {
-            existsOrError(checklist.description, 'Item description was not informed!')
-            existsOrError(checklist.userId, 'User was not informed!')
+            existsOrError(employee.description, 'Item description was not informed!')
+            existsOrError(employee.userId, 'User was not informed!')
 
         } catch (msg) {
             return res.status(400).json({ errors: [msg] })
         }
 
-        if (checklist.id) {
-            if (checklist.parentId) {
-                if (+checklist.id === +checklist.parentId) {
+        if (employee.id) {
+            if (employee.parentId) {
+                if (+employee.id === +employee.parentId) {
                     res.status(400).json({ errors: ['Circular reference is not permitted!'] })
                 } else {
-                    app.db('checklists').then(checklists => withPath(checklists)).then(tree => {
-                        const parentIds = tree.filter(c => c.id === checklist.parentId)[0].parentPathIds
-                        if (parentIds.includes(+checklist.id)) {
+                    app.db('employees').then(employees => withPath(employees)).then(tree => {
+                        const parentIds = tree.filter(c => c.id === employee.parentId)[0].parentPathIds
+                        if (parentIds.includes(+employee.id)) {
                             res.status(400).json({ errors: ['Circular reference is not permitted!'] })
                         } else {
                             update(req, res)
@@ -39,49 +39,49 @@ module.exports = app => {
                 update(req, res)
             }
         } else {
-            checklist.created_at = new Date()
-            checklist.updated_at = null
+            employee.created_at = new Date()
+            employee.updated_at = null
 
-            app.db('checklists')
-                .insert(checklist, 'id')
-                .then(id => res.json({ ...checklist, id: Number(id[0]) }))
+            app.db('employees')
+                .insert(employee, 'id')
+                .then(id => res.json({ ...employee, id: Number(id[0]) }))
                 .catch(err => res.status(500).json({ errors: [err] }))
         }
     }
 
     const update = (req, res) => {
-        const checklist = {
+        const employee = {
             id: req.body.id,
             description: req.body.description,
             parentId: req.body.parentId,
         }
 
-        if (req.params.id) checklist.id = req.params.id
+        if (req.params.id) employee.id = req.params.id
 
-        checklist.updated_at = new Date()
+        employee.updated_at = new Date()
 
-        app.db('checklists')
-            .update(checklist)
-            .where({ id: checklist.id })
-            .then(id => res.json({ ...checklist, id: Number(checklist.id) }))
+        app.db('employees')
+            .update(employee)
+            .where({ id: employee.id })
+            .then(id => res.json({ ...employee, id: Number(employee.id) }))
             .catch(err => res.status(500).json({ errors: [err] }))
     }
 
     const remove = async (req, res) => {
         try {
-            existsOrError(req.params.id, "Checklist id was not informed!")
+            existsOrError(req.params.id, "Employee id was not informed!")
 
-            const subChecklists = await app.db('checklists').where({ parentId: req.params.id })
+            const subEmployees = await app.db('employees').where({ parentId: req.params.id })
 
-            notExistsOrError(subChecklists, "This checklist has items!")
+            notExistsOrError(subEmployees, "This employee has items!")
 
-            const desks = await app.db('desks').where({ checklistId: req.params.id })
+            const desks = await app.db('desks').where({ employeeId: req.params.id })
 
-            notExistsOrError(desks, "There are desks with this checklist!")
+            notExistsOrError(desks, "There are desks with this employee!")
 
-            const rowsDeleted = await app.db('checklists').where({ id: req.params.id }).del()
+            const rowsDeleted = await app.db('employees').where({ id: req.params.id }).del()
 
-            existsOrError(rowsDeleted, "Checklist was not found!")
+            existsOrError(rowsDeleted, "Employee was not found!")
 
             res.status(204).send()
         } catch (msg) {
@@ -89,34 +89,34 @@ module.exports = app => {
         }
     }
 
-    const withPath = checklists => {
-        const getParent = (checklists, parentId) => {
-            const parent = checklists.filter(parent => parent.id === parentId)
+    const withPath = employees => {
+        const getParent = (employees, parentId) => {
+            const parent = employees.filter(parent => parent.id === parentId)
             return parent.length ? parent[0] : null
         }
 
-        const checklistsWithPath = checklists.map(checklist => {
-            let path = checklist.description
+        const employeesWithPath = employees.map(employee => {
+            let path = employee.description
             const parentPathIds = []
             let parentPath = ''
-            let parent = getParent(checklists, checklist.parentId)
+            let parent = getParent(employees, employee.parentId)
 
             while (parent) {
                 path = `${parent.description} > ${path}`
                 parentPath = parentPath ? `${parent.description} > ${parentPath}` : parent.description
                 parentPathIds.push(parent.id)
-                parent = getParent(checklists, parent.parentId)
+                parent = getParent(employees, parent.parentId)
             }
 
-            return { ...checklist, path, parentPath, parentPathIds }
+            return { ...employee, path, parentPath, parentPathIds }
         })
 
-        checklistsWithPath.sort((a, b) => {
+        employeesWithPath.sort((a, b) => {
             if (a.path < b.path) return -1
             if (a.path > b.path) return 1
             return 0
         })
-        return checklistsWithPath
+        return employeesWithPath
     }
 
     const getProjectsIds = (userId) => new Promise((resolve, reject) => {
@@ -177,22 +177,22 @@ module.exports = app => {
 
     })
 
-    const getChecklists = (membersIds) => new Promise((resolve, reject) => {
-        app.db('checklists')
-            .whereIn('checklists.userId', membersIds)
-            .then(checklists => resolve(withPath(checklists)))
+    const getEmployees = (membersIds) => new Promise((resolve, reject) => {
+        app.db('employees')
+            .whereIn('employees.userId', membersIds)
+            .then(employees => resolve(withPath(employees)))
             .catch(err => reject(err))
     })
 
-    const removeItemsWithoutRoot = (checklists) => new Promise((resolve, reject) => {
+    const removeItemsWithoutRoot = (employees) => new Promise((resolve, reject) => {
         const getNewList = (tree, initialList = []) => {
-            return tree && tree.reduce((newList, checklist) => {
-                newList.push(checklist)
-                return getNewList(checklist.children, newList)
+            return tree && tree.reduce((newList, employee) => {
+                newList.push(employee)
+                return getNewList(employee.children, newList)
             }, initialList)
         }
 
-        const itemsWithRoot = toTree(checklists)
+        const itemsWithRoot = toTree(employees)
         const newList = getNewList(itemsWithRoot)
 
         resolve(newList)
@@ -201,25 +201,25 @@ module.exports = app => {
     const get = (req, res) => {
         return getProjectsIds(req.decoded.id)
             .then(getMembersIds)
-            .then(getChecklists)
+            .then(getEmployees)
             .then(removeItemsWithoutRoot)
-            .then(checklists => res.json(withPath(checklists)))
+            .then(employees => res.json(withPath(employees)))
             .catch(err => res.status(500).json({ errors: [err] }))
     }
 
     const getById = (req, res) => {
-        app.db('checklists')
+        app.db('employees')
             .where({ id: req.params.id })
             .first()
-            .then(checklist => res.json(checklist))
+            .then(employee => res.json(employee))
             .catch(err => res.status(500).json({ errors: [err] }))
     }
 
-    const toTree = (checklists, tree) => {
-        if (!tree) tree = checklists.filter(c => !c.parentId)
+    const toTree = (employees, tree) => {
+        if (!tree) tree = employees.filter(c => !c.parentId)
         tree = tree.map(parentNode => {
             const isChild = node => node.parentId === parentNode.id
-            parentNode.children = toTree(checklists, checklists.filter(isChild))
+            parentNode.children = toTree(employees, employees.filter(isChild))
             return parentNode
         })
         return tree
@@ -228,19 +228,19 @@ module.exports = app => {
     const getTree = (req, res) => {
         return getProjectsIds(req.decoded.id)
             .then(getMembersIds)
-            .then(getChecklists)
-            .then(checklists => res.json(toTree(checklists)))
+            .then(getEmployees)
+            .then(employees => res.json(toTree(employees)))
             .catch(err => res.status(500).json({ errors: [err] }))
     }
 
     const clone = (req, res) => {
-        const checklist = req.body.checklist
+        const employee = req.body.employee
 
         try {
-            existsOrError(checklist, 'Parent path was not informed!')
+            existsOrError(employee, 'Parent path was not informed!')
 
-            checklist.description += ' (NEW)'
-            saveChecklist(checklist, checklist.parentId, res)
+            employee.description += ' (NEW)'
+            saveEmployee(employee, employee.parentId, res)
 
             res.status(204).send()
         } catch (msg) {
@@ -248,7 +248,7 @@ module.exports = app => {
         }
     }
 
-    const saveChecklist = (item, parentId, res) => {
+    const saveEmployee = (item, parentId, res) => {
 
         item.parentId = parentId
 
@@ -257,21 +257,21 @@ module.exports = app => {
         delete item.id
         delete item.children
 
-        app.db('checklists').insert(item, 'id').then(newId => {
+        app.db('employees').insert(item, 'id').then(newId => {
             if (children) {
                 children.forEach(child => {
-                    saveChecklist(child, newId[0], res)
+                    saveEmployee(child, newId[0], res)
                 })
             }
         })
             .catch(err => res.status(500).json({ errors: [err] }))
     }
 
-    const getChecklistsToInsert = (checklist, initialChecklists = []) => {
-        return checklist.reduce((checklists, item) => {
-            checklists.push({ description: item.description, parentId: item.parentId })
-            return getChecklistsToInsert(item.children, checklists)
-        }, initialChecklists)
+    const getEmployeesToInsert = (employee, initialEmployees = []) => {
+        return employee.reduce((employees, item) => {
+            employees.push({ description: item.description, parentId: item.parentId })
+            return getEmployeesToInsert(item.children, employees)
+        }, initialEmployees)
     }
 
     return { save, remove, get, getById, getTree, clone }

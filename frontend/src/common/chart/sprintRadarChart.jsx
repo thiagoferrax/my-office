@@ -13,8 +13,8 @@ export default props => {
     }
 }
 
-const getDataSet = (datasets, checklistId) => {
-    return datasets.filter(dataset => dataset.label === checklistId)
+const getDataSet = (datasets, employeeId) => {
+    return datasets.filter(dataset => dataset.label === employeeId)
 }
 
 const getChartColor = (index) => {
@@ -60,15 +60,15 @@ const getRadarChartData = (desks) => {
     let datasets = 0
     const RadarChartData = desks && desks.reduce((map, desk) => {
         const sprint = 'Sprint ' + desk.sprint
-        const checklist = desk.checklistDescription
+        const employee = desk.employeeDescription
 
-        if (!map.labels.includes(checklist)) {
-            map.labels.push(checklist)
+        if (!map.labels.includes(employee)) {
+            map.labels.push(employee)
             map.categories++
         }
 
         const dataset = getDataSet(map.datasets, sprint)
-        const index = map.labels.indexOf(checklist)
+        const index = map.labels.indexOf(employee)
         if (dataset && dataset.length) {
             dataset[0].data[index] = desk.score
         } else {

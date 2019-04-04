@@ -10,13 +10,13 @@ module.exports = app => {
 
     protectedApi.use(auth)
 
-    protectedApi.post('/checklists', app.api.checklist.save)
-    protectedApi.get('/checklists', app.api.checklist.get)
-    protectedApi.post('/checklists/clone', app.api.checklist.clone)       
-    protectedApi.get('/checklists/tree', app.api.checklist.getTree)
-    protectedApi.put('/checklists/:id', app.api.checklist.save)
-    protectedApi.delete('/checklists/:id', app.api.checklist.remove)
-    protectedApi.get('/checklists/:id', app.api.checklist.getById)
+    protectedApi.post('/employees', app.api.employee.save)
+    protectedApi.get('/employees', app.api.employee.get)
+    protectedApi.post('/employees/clone', app.api.employee.clone)       
+    protectedApi.get('/employees/tree', app.api.employee.getTree)
+    protectedApi.put('/employees/:id', app.api.employee.save)
+    protectedApi.delete('/employees/:id', app.api.employee.remove)
+    protectedApi.get('/employees/:id', app.api.employee.getById)
 
     protectedApi.post('/rooms', app.api.room.save)
     protectedApi.get('/rooms', app.api.room.get)

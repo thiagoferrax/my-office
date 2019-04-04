@@ -57,9 +57,9 @@ export function getEquipments(desk) {
     }
 }
 
-export function initializeChecklist() {
+export function initializeEmployee() {
     return {
-        type: 'CHECKLIST_INITIALIZED'
+        type: 'EMPLOYEE_INITIALIZED'
     }
 }
 

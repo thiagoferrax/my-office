@@ -9,11 +9,11 @@ export default (state = INITIAL_STATE, action) => {
         case 'EQUIPMENTS_FETCHED':
             let equipments = action.payload.data
             equipments = equipments.reduce((map, equipment) => {
-                map[equipment.checklistId] = { value: equipment.value }
+                map[equipment.employeeId] = { value: equipment.value }
                 return map
             }, {})
 
-            let checklistWithEquipments = state.checklist
+            let employeeWithEquipments = state.employee
             if (equipments) {
                 const refreshTree = (tree, valuesMap) => {
                     return tree.map(
@@ -23,9 +23,9 @@ export default (state = INITIAL_STATE, action) => {
                         })
                 }
 
-                checklistWithEquipments = refreshTree(state.checklist, equipments)
+                employeeWithEquipments = refreshTree(state.employee, equipments)
             }
-            return { ...state, checklist: checklistWithEquipments }
+            return { ...state, employee: employeeWithEquipments }
         default:
             return state
     }
