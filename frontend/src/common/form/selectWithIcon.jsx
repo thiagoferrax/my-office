@@ -11,7 +11,7 @@ export default props => (
             </If>
             <div class="input-group">
                 <div class="input-group-addon">
-                    <i class="fa fa-map-marker"></i>
+                    <i class={`fa fa-${props.icon}`}></i>
                 </div>
                 <Select {...props} onlyCombo={true}/>
             </div>

@@ -12,7 +12,7 @@ import OfficeMap from 'office-map'
 import Select from '../common/form/select'
 import ItemList from './itemList'
 import EmployeeList from './employeeList'
-import Map from '../common/form/map'
+import SelectWithIcon from '../common/form/selectWithIcon'
 
 import './desk.css'
 
@@ -58,13 +58,13 @@ class DeskForm extends Component {
                         options={rooms} optionValue='id' optionLabel='name' autoFocus={true}
                         inputOnChange={getOfficeData} />
                     <Field name='chairDirection' label='Chair direction' cols='12 3'
-                        component={Select} readOnly={readOnly}
+                        component={SelectWithIcon} icon="compass" readOnly={readOnly}
                         options={this.getPossibleDirections()} optionValue='id' optionLabel='name' />
                     <Field name='x' label='X position' cols='12 3'
-                        component={Map} readOnly={readOnly}
+                        component={SelectWithIcon} icon="map-marker" readOnly={readOnly}
                         options={this.getPossiblePositions()} optionValue='id' optionLabel='name' />
                     <Field name='y' label='Y position' cols='12 3'
-                        component={Map} readOnly={readOnly}
+                        component={SelectWithIcon} icon="map-marker" readOnly={readOnly}
                         options={this.getPossiblePositions()} optionValue='id' optionLabel='name' />
 
                     <ItemList cols='12' list={equipments} readOnly={readOnly}
