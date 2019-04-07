@@ -30,7 +30,15 @@ export default class Select extends Component {
         let customStyles = {
             'min-height': 34,
             height: 34,
-            'border-radius': 0
+            'border-radius': 0,
+            '&:link': { border: '1px solid #3c8dbc', lineHeight: 1.42857143 },
+            '&:visited': { border: '1px solid #3c8dbc', lineHeight: 1.42857143 },
+            '&:hover': { border: '1px solid #3c8dbc', lineHeight: 1.42857143 },
+            '&:active': { border: '1px solid #3c8dbc', lineHeight: 1.42857143 },
+            '&:focus    ': { border: '1px solid #3c8dbc', lineHeight: 1.42857143 },
+            '&:focus-visible': { border: '1px solid #3c8dbc', lineHeight: 1.42857143 },
+            '&:focus-within ': { border: '1px solid #3c8dbc', lineHeight: 1.42857143 },
+            '&:enabled ': { border: '1px solid #3c8dbc', lineHeight: 1.42857143 },
         }
 
         if (Array.isArray(input.value) && input.value.length > 1) {

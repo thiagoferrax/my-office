@@ -84,8 +84,8 @@ class EmployeeForm extends Component {
                     <Field name='description' value={description} component={LabelAndInput} readOnly={readOnly}
                         label='Name' cols='12 4' placeholder='Enter the item description' autoFocus={true} />
 
-                    <Field name='identification' component={LabelAndInput} readOnly={readOnly}
-                        label='Identification' cols='12 4' placeholder='Enter the identification' autoFocus={true} />
+                    <Field name='identifier' component={LabelAndInput} readOnly={readOnly}
+                        label='Identifier' cols='12 4' placeholder='Enter the identifier' autoFocus={true} />
 
                     <Field name='email' component={LabelAndInput} readOnly={readOnly}
                         label='Email' cols='12 4' placeholder='Enter the email' autoFocus={true} />

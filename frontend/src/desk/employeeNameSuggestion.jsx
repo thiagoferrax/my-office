@@ -3,20 +3,6 @@ import Autosuggest from 'react-autosuggest';
 import If from '../common/operator/if'
 import Grid from '../common/layout/grid'
 
-// Imagine you have a list of list that you'd like to autosuggest.
-
-// When suggestion is clicked, Autosuggest needs to populate the input
-// based on the clicked suggestion. Teach Autosuggest how to calculate the
-// input value for every given suggestion.
-const getSuggestionValue = suggestion => suggestion.description;
-
-// Use your imagination to render suggestions.
-const renderSuggestion = suggestion => (
-  <div>
-    {suggestion.description}
-  </div>
-);
-
 const theme = {
   container: {
     position: 'relative'
@@ -38,7 +24,7 @@ const theme = {
   },
   inputFocused: {
     outline: 'none',
-    border: '1px solid #3c8dbc'    
+    border: '1px solid #3c8dbc'
   },
   inputOpen: {
     borderBottomLeftRadius: 0,
@@ -92,15 +78,24 @@ export default class Example extends React.Component {
     };
   }
 
+  getSuggestionValue = suggestion => suggestion[this.props.field];
+
+  // Use your imagination to render suggestions.
+  renderSuggestion = suggestion => (
+    <div>
+      {suggestion[this.props.field]}
+    </div>
+  );
+
   // Teach Autosuggest how to calculate suggestions for any given input value.
   getSuggestions = value => {
     const inputValue = value.trim().toLowerCase();
     const inputLength = inputValue.length;
-  
+
     const list = this.props.list || []
 
     return inputLength === 0 ? [] : list.filter(element =>
-      element.description.toLowerCase().slice(0, inputLength) === inputValue
+      element[this.props.field].toLowerCase().slice(0, inputLength) === inputValue
     );
   };
 
@@ -138,25 +133,25 @@ export default class Example extends React.Component {
     // Finally, render it!
     return (
       <Grid cols={this.props.cols || 12}>
-        <div class="form-group">
+        <div className="form-group">
           <If test={this.props.label}>
             <label>{this.props.label}</label>
           </If>
-          <div class="input-group">
-            <div class="input-group-addon">
-              <i class="fa fa-user"></i>
+          <div className="input-group">
+            <div className="input-group-addon">
+              <i className="fa fa-user"></i>
             </div>
             <Autosuggest
               suggestions={suggestions}
               onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
               onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-              getSuggestionValue={getSuggestionValue}
-              renderSuggestion={renderSuggestion}
+              getSuggestionValue={this.getSuggestionValue}
+              renderSuggestion={this.renderSuggestion}
               inputProps={inputProps}
               {...this.props.input}
               placeholder={this.props.placeholder}
               readOnly={this.props.readOnly}
-              class="form-control"
+              className="form-control"
               theme={theme} />
           </div>
         </div>

@@ -15,6 +15,8 @@ const getPossibleEquipments = () => {
     const equipments = []
     equipments.push({ id: 'Computer', name: 'Computer' })
     equipments.push({ id: 'Monitor', name: 'Monitor' })
+    equipments.push({ id: 'Keyboard', name: 'Keyboard' })
+    equipments.push({ id: 'Mouse', name: 'Mouse' })
     equipments.push({ id: 'Phone', name: 'Phone' })
     equipments.push({ id: 'Drawer', name: 'Drawer' })
     equipments.push({ id: 'Chair', name: 'Chair' })
@@ -33,6 +35,7 @@ export default class EmployeeList extends Component {
                     <Field cols='12 4'
                         name={`${member}.name`}
                         type="text"
+                        field="description"
                         list={this.props.list} 
                         placeholder="Name"
                         readOnly={this.props.readOnly}
