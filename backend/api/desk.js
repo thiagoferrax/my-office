@@ -2,16 +2,18 @@ module.exports = app => {
     const { existsOrError } = app.api.validation
 
     const getFormatedDate = (isoDate) => {
-        if(!isoDate) {
+        if (!isoDate) {
             return undefined
         }
         const options = { year: 'numeric', month: '2-digit', day: '2-digit' }
-    
+
         const date = new Date(isoDate)
         return date.toLocaleDateString('en-US', options)
     }
 
-    const save = (req, res) => {
+    const validate = (req, res) => new Promise((resolve, reject) => {
+        const carrier = { req, res }
+
         const desk = {
             id: req.body.id,
             roomId: req.body.roomId,
@@ -28,11 +30,41 @@ module.exports = app => {
             existsOrError(desk.roomId, 'Room was not informed!')
             existsOrError(desk.chairDirection, 'Chair direction was not informed!')
             existsOrError(desk.userId, 'User was not informed!')
-        } catch (msg) {
-            return res.status(400).json({ errors: [msg] })
-        }
 
+            carrier.desk = desk
+
+            resolve(carrier)
+        } catch (err) {
+            reject(err)
+        }
+    })
+
+    const insertDesk = (carrier) => new Promise((resolve, reject) => {
+        const desk = carrier.desk
         const equipments = getNotEmptyEquipments(desk.equipments || [])
+
+        delete desk.equipments
+
+        if (!desk.id) {
+            desk.created_at = new Date()
+            desk.updated_at = null
+
+            app.db('desks')
+                .insert(desk)
+                .returning('id')
+                .then(deskId => {
+                    carrier.deskId = deskId[0]
+                    carrier.equipments = equipments
+                    resolve(carrier)
+                })
+                .catch(err => reject(err))
+        }
+    })
+
+    const updateDesk = (carrier) => new Promise((resolve, reject) => {
+        const desk = carrier.desk
+        const equipments = getNotEmptyEquipments(desk.equipments || [])
+
         delete desk.equipments
 
         if (desk.id) {
@@ -42,64 +74,123 @@ module.exports = app => {
                 .update(desk)
                 .where({ id: desk.id })
                 .then(_ => {
-                    if (equipments && equipments.length > 0) {
-                        updateEquipments(desk.id, equipments, res)
-                    } else {
-                        res.status(204).send()
-                    }
+                    carrier.deskId = desk.id
+                    carrier.equipments = equipments
+                    resolve(carrier)
                 })
-                .catch(err => res.status(500).json({ errors: [err] }))
-
-
-        } else {
-
-            try {
-                desk.created_at = new Date()
-                desk.updated_at = null
-
-                app.db('desks')
-                    .insert(desk)
-                    .returning('id')
-                    .then(deskId => {
-                        if (equipments && equipments.length > 0) {
-                            insertEquipments(deskId[0], equipments, res)
-                        } else {
-                            res.status(204).send()
-                        }
-                    })
-                    .catch(err => {
-                        res.status(500).json({ errors: [err] })
-                    })
-            } catch (msg) {
-                return res.status(400).json({ errors: [msg] })
-            }
+                .catch(err => reject(err))
         }
+    })
+
+    const analyzeEquipments = (carrier) => new Promise((resolve, reject) => {
+
+        const deskId = carrier.deskId
+        const equipments = carrier.equipments
+
+        if (equipments && equipments.length > 0) {
+            const patrimonies = equipments.map(equipment => ({
+                patrimony: equipment.patrimony, equipment
+            }))
+
+            app.db('equipments').whereIn('patrimony', Object.keys(patrimonies))
+                .then(equipmentsFound => {
+                    console.log('analyzeEquipments', Object.keys(patrimonies), equipmentsFound)
+                    const equipmentsToUpdate = equipmentsFound.map(e => ({ ...e, ...patrimonies[e.patrimony] }))
+                    const patrimoniesFound = equipmentsFound.map(e => e.patrimony)
+                    const equipmentsToInsert = equipments.filter(e => !patrimoniesFound.includes(e.patrimony))
+
+                    carrier.equipmentsToUpdate = equipmentsToUpdate
+                    carrier.equipmentsToInsert = equipmentsToInsert
+
+                    console.log('analyzeEquipments', equipmentsToInsert, equipmentsToUpdate)
+                    resolve(carrier)
+                }
+                ).catch(err => reject(err))
+        } else {
+            resolve(carrier)
+        }
+    })
+
+    const insertEquipments = (carrier) => new Promise((resolve, reject) => {
+        const equipments = carrier.equipmentsToInsert
+
+        if (equipments && equipments.length > 0) {
+            const rows = getEquipmentsToInsert(equipments)
+            const chunkSize = rows.length
+
+            app.db.batchInsert('equipments', rows, chunkSize)
+                .returning('id')
+                .then(ids => {
+                    carrier.equipmentsIds = ids
+                    resolve(carrier)
+                })
+                .catch(err => reject(err))
+        } else {
+            resolve(carrier)
+        }
+    })
+
+    const updateEquipments = (carrier) => new Promise((resolve, reject) => {
+        const equipments = carrier.equipmentsToUpdate
+
+        if (equipments && equipments.length > 0) {
+            const rows = getEquipmentsToUpdate(equipments)
+            const chunkSize = rows.length
+
+            app.db.batchUpdate('equipments', rows, chunkSize)
+                .returning('id')
+                .then(ids => {
+                    carrier.equipmentsIds =
+                        carrier.equipmentsIds ?
+                            [...carrier.equipmentsIds, ...ids] : ids
+                    resolve(carrier)
+                })
+                .catch(err => reject(err))
+        } else {
+            resolve(carrier)
+        }
+    })
+
+    const insertDesksEquipments = (carrier) => new Promise((resolve, reject) => {
+        const equipmentsIds = carrier.equipmentsIds
+        const deskId = carrier.deskId
+
+        if (equipmentsIds && equipmentsIds.length > 0) {
+            app.db('desks_equipments').where({ deskId }).del().then(
+                rowsDeleted => {
+                    const rows = getDesksEquipmentsToInsert(deskId, equipmentsIds)
+                    const chunkSize = rows.length
+                    app.db.batchInsert('desks_equipments', rows, chunkSize)
+                        .then(_ => resolve(carrier))
+                        .catch(err => reject(err))
+
+                    resolve(carrier)
+                }
+            ).catch(err => reject(err))
+        } else {
+            resolve(carrier)
+        }
+    })
+
+    const save = (req, res) => {
+        validate(req, res)
+            .then(insertDesk)
+            .then(analyzeEquipments)
+            .then(insertEquipments)
+            .then(updateEquipments)
+            .then(insertDesksEquipments)
+            .then(_ => res.status(204).send())
+            .catch(err => res.status(400).json({ errors: [err] }))
     }
 
     const getNotEmptyEquipments = (equipments) => {
         return equipments.reduce((notEmptyEquipments, equipment) => {
             const keys = Object.keys(equipment)
-            if (keys.length > 0 && equipment.name && equipment.specification) {
+            if (keys.length > 0 && equipment.type && equipment.specification) {
                 notEmptyEquipments.push(equipment)
             }
             return notEmptyEquipments
         }, [])
-    }
-
-    const updateEquipments = (deskId, equipments, res) => {
-        app.db('equipments').where({ deskId: deskId }).del().then(
-            rowsDeleted => {
-                insertEquipments(deskId, equipments, res)
-            }
-        )
-    }
-
-    const insertEquipments = (deskId, equipments, res) => {
-        const rows = getEquipmentsToInsert(deskId, equipments)
-        const chunkSize = rows.lenght
-        app.db.batchInsert('equipments', rows, chunkSize)
-            .then(_ => res.status(204).send())
-            .catch(err => res.status(500).json({ errors: [err] }))
     }
 
     const remove = (req, res) => {
@@ -107,7 +198,7 @@ module.exports = app => {
         try {
             existsOrError(deskId, "Desk id was not informed!")
 
-            app.db('equipments').where({ deskId }).del().then(
+            app.db('desks_equipments').where({ deskId }).del().then(
                 equipmentsDeleted => {
                     app.db('desks').where({ id: deskId }).del().then(
                         rowsDeleted => {
@@ -127,12 +218,12 @@ module.exports = app => {
             const foundDesk = desksList.filter(e => e.id == desk.id)
             if (foundDesk.length > 0) {
                 const index = desksList.indexOf(foundDesk[0])
-                if (desk.equipmentName && desk.equipmentSpecification) {
-                    desksList[index].equipments.push({ name: desk.equipmentName, specification: desk.equipmentSpecification, patrimony: desk.equipmentPatrimony, expirationDate: desk.equipmentExpirationDate })
+                if (desk.equipmentType && desk.equipmentSpecification) {
+                    desksList[index].equipments.push({ type: desk.equipmentType, specification: desk.equipmentSpecification, patrimony: desk.equipmentPatrimony, expirationDate:  getFormatedDate(desk.equipmentExpirationDate) })
                 }
             } else {
-                if (desk.equipmentName && desk.equipmentSpecification) {
-                    desk.equipments = [{ name: desk.equipmentName, specification: desk.equipmentSpecification, patrimony: desk.equipmentPatrimony, expirationDate: getFormatedDate(desk.equipmentExpirationDate)  }]
+                if (desk.equipmentType && desk.equipmentSpecification) {
+                    desk.equipments = [{ type: desk.equipmentType, specification: desk.equipmentSpecification, patrimony: desk.equipmentPatrimony, expirationDate: getFormatedDate(desk.equipmentExpirationDate) }]
                 } else {
                     desk.equipments = [{}]
                 }
@@ -153,14 +244,15 @@ module.exports = app => {
                 chairDirection: 'desks.chairDirection',
                 x: 'desks.x',
                 y: 'desks.y',
-                equipmentName: 'equipments.name',
+                equipmentType: 'equipments.type',
                 equipmentSpecification: 'equipments.specification',
                 equipmentPatrimony: 'equipments.patrimony',
                 equipmentExpirationDate: 'equipments.expirationDate'
             }
         ).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
-            .leftJoin('equipments', 'equipments.deskId', 'desks.id')
+            .leftJoin('desks_equipments', 'desks_equipments.deskId', 'desks.id')
+            .leftJoin('equipments', 'desks_equipments.equipmentId', 'equipments.id')
             .where({ 'desks.userId': req.decoded.id })
             .orderBy('desks.created_at', 'desc')
             .then(desks => {
@@ -178,12 +270,13 @@ module.exports = app => {
                 chairDirection: 'desks.chairDirection',
                 x: 'desks.x',
                 y: 'desks.y',
-                equipmentName: 'equipments.name',
+                equipmentType: 'equipments.type',
                 equipmentSpecification: 'equipments.specification'
             }
         ).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
-            .leftJoin('equipments', 'equipments.deskId', 'desks.id')
+            .leftJoin('desks_equipments', 'desks_equipments.deskId', 'desks.id')
+            .leftJoin('equipments', 'desks_equipments.equipmentId', 'equipments.id')
             .where({ 'desks.userId': req.decoded.id, 'rooms.id': req.params.id })
             .orderBy('desks.created_at', 'desc')
             .then(desks => {
@@ -201,14 +294,15 @@ module.exports = app => {
                 chairDirection: 'desks.chairDirection',
                 x: 'desks.x',
                 y: 'desks.y',
-                equipmentName: 'equipments.name',
+                equipmentType: 'equipments.type',
                 equipmentSpecification: 'equipments.specification',
                 equipmentPatrimony: 'equipments.patrimony',
                 equipmentExpirationDate: 'equipments.expirationDate'
             }
         ).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
-            .leftJoin('equipments', 'equipments.deskId', 'desks.id')
+            .leftJoin('desks_equipments', 'desks_equipments.deskId', 'desks.id')
+            .leftJoin('equipments', 'desks_equipments.equipmentId', 'equipments.id')
             .where({ 'desks.id': req.params.id })
             .then(desks => res.json(getDesksWithEquipments(desks)[0]))
             .catch(err => res.status(500).json({ errors: [err] }))
@@ -217,31 +311,61 @@ module.exports = app => {
     const getEquipments = (req, res) => {
         app.db.select(
             {
-                id: 'equipments.id',
-                deskId: 'equipments.deskId',
-                name: 'equipments.name',
+                id: 'desks_equipments.id',
+                deskId: 'desks_equipments.deskId',
+                type: 'equipments.type',
                 specification: 'equipments.specification',
                 patrimony: 'equipments.patrimony',
                 expirationDate: 'equipments.expirationDate'
             }
-        ).from('equipments')
-            .where({ 'equipments.deskId': req.params.id })
+        ).from('desks_equipments')
+            .leftJoin('equipments', 'desks_equipments.equipmentId', 'equipments.id')
+            .where({ 'desks_equipments.deskId': req.params.id })
             .then(equipments => res.json(equipments))
             .catch(err => res.status(500).json({ errors: [err] }))
     }
 
-    const getEquipmentsToInsert = (deskId, equipments) => {
+    const getEquipmentsToInsert = equipments => {
         return equipments.reduce((rows, equipment) => {
+            const expirationDate = equipment.expirationDate ?
+                new Date(equipment.expirationDate) : undefined
+
             rows.push({
-                deskId,
-                name: equipment.name,
+                type: equipment.type,
                 specification: equipment.specification,
                 patrimony: equipment.patrimony,
-                expirationDate: equipment.expirationDate
+                expirationDate
             })
             return rows
         }, [])
     }
+
+    const getEquipmentsToUpdate = equipments => {
+        return equipments.reduce((rows, equipment) => {
+            const expirationDate = equipment.expirationDate ?
+                new Date(equipment.expirationDate) : undefined
+
+            rows.push({
+                id: equipment.id,
+                type: equipment.type,
+                specification: equipment.specification,
+                patrimony: equipment.patrimony,
+                expirationDate
+            })
+            return rows
+        }, [])
+    }
+
+    const getDesksEquipmentsToInsert = (deskId, equipmentsIds) => {
+        return equipmentsIds.reduce((rows, equipmentId) => {
+            rows.push({
+                deskId,
+                equipmentId
+            })
+            return rows
+        }, [])
+    }
+
 
     return { save, remove, get, getById, getEquipments, getOfficeData }
 }

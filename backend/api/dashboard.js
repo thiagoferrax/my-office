@@ -51,11 +51,12 @@ module.exports = app => {
             y: 'desks.y',
             userId: 'desks.userId',
             date: 'desks.created_at',
-            equipmentName: 'equipments.name',
+            equipmentName: 'equipments.type',
             equipmentSpecification: 'equipments.specification'
         }).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
-            .leftJoin('equipments', 'equipments.deskId', 'desks.id')
+            .leftJoin('desks_equipments', 'desks_equipments.deskId', 'desks.id')
+            .leftJoin('equipments', 'desks_equipments.equipmentId', 'equipments.id')
             .whereIn('desks.roomId', summary.roomsIds)
             .then(desks => {
                 let number_desks = 0
@@ -100,10 +101,10 @@ module.exports = app => {
                 const equipments = desk.equipments
 
                 equipments && equipments.forEach(equipment => {
-                    if (!Object.keys(data[roomId]).includes(`${equipment.name}`)) {
-                        data[roomId][equipment.name] = 1
+                    if (!Object.keys(data[roomId]).includes(`${equipment.type}`)) {
+                        data[roomId][equipment.type] = 1
                     } else {
-                        data[roomId][equipment.name] += 1
+                        data[roomId][equipment.type] += 1
                     }
                 })
             })
@@ -119,7 +120,7 @@ module.exports = app => {
         getProjects(userId)
             .then(getTeam)
             .then(getDesks)
-            .then(getEquipmentsSummary)
+            //.then(getEquipmentsSummary)
             .then(summary => res.json(summary))
             .catch(err => res.status(500).json({ errors: [err] }))
     }
