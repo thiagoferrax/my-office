@@ -5,6 +5,7 @@ import { reduxForm, Field, formValueSelector } from 'redux-form'
 
 import { init, getOfficeData, prepareToShow, showUpdate, update } from './deskActions'
 import { getList as getRooms } from '../room/roomActions'
+import { getList as getEmployees } from '../employee/employeeActions'
 import If from '../common/operator/if'
 import Grid from '../common/layout/grid'
 import OfficeMap from 'office-map'
@@ -20,6 +21,7 @@ class DeskForm extends Component {
 
     componentWillMount() {
         this.props.getRooms()
+        this.props.getEmployees()
     }
 
     getPossibleDirections() {
@@ -48,7 +50,7 @@ class DeskForm extends Component {
 
     render() {
 
-        const { rooms, handleSubmit, readOnly, getOfficeData, officeData, showUpdate, equipments, employee } = this.props
+        const { rooms, handleSubmit, readOnly, getOfficeData, officeData, showUpdate, equipments, employees } = this.props
 
         return (
             <form role='form' onSubmit={handleSubmit}>
@@ -70,7 +72,7 @@ class DeskForm extends Component {
                     <ItemList cols='12' list={equipments} readOnly={readOnly}
                         field='equipments' legend='Equipments' icon='laptop'/>
 
-                    <EmployeeList cols='12' list={employee} readOnly={readOnly}
+                    <EmployeeList cols='12' list={employees} readOnly={readOnly}
                         field='employee' legend='Employee' icon='user'/>
 
                 </div>
@@ -112,7 +114,8 @@ const selector = formValueSelector('deskForm')
 const mapStateToProps = state => ({
     rooms: state.room.list,
     officeData: state.desk.officeData,
-    equipments: state.desk.equipments
+    equipments: state.desk.equipments,
+    employees: state.employee.list
 })
-const mapDispatchToProps = dispatch => bindActionCreators({ init, getRooms, getOfficeData, prepareToShow, showUpdate, update }, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({ init, getRooms, getEmployees, getOfficeData, prepareToShow, showUpdate, update }, dispatch)
 export default connect(mapStateToProps, mapDispatchToProps)(DeskForm)

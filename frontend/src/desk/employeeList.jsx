@@ -21,7 +21,7 @@ const getPossibleEquipments = () => {
     return equipments
 }
 
-export default class UserList extends Component {
+export default class EmployeeList extends Component {
 
     renderRows = ({ fields, meta: { touched, error, submitFailed } }) => {
 
@@ -30,13 +30,14 @@ export default class UserList extends Component {
                 <Row key={index}>
 
 
-<Field cols='12 4'
+                    <Field cols='12 4'
                         name={`${member}.name`}
                         type="text"
+                        list={this.props.list} 
                         placeholder="Name"
                         readOnly={this.props.readOnly}
-                        component={EmployeeNameSuggestion}  />
-                    
+                        component={EmployeeNameSuggestion} />
+
                     <Field cols='12 2'
                         name={`${member}.identifier`}
                         type="text"
