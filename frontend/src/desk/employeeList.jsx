@@ -30,18 +30,7 @@ export default class EmployeeList extends Component {
         return fields.map((member, index) => {
             return (
                 <Row key={index}>
-
-
                     <Field cols='12 4'
-                        name={`${member}.name`}
-                        type="text"
-                        field="description"
-                        list={this.props.list} 
-                        placeholder="Name"
-                        readOnly={this.props.readOnly}
-                        component={EmployeeNameSuggestion} />
-
-                    <Field cols='12 2'
                         name={`${member}.identifier`}
                         type="text"
                         component={Identifier}
@@ -49,21 +38,14 @@ export default class EmployeeList extends Component {
                         readOnly={this.props.readOnly}
                     />
 
-                    <Field cols='12 3'
-                        name={`${member}.email`}
+                    <Field cols='12 8'
+                        name={`${member}.name`}
                         type="text"
-                        component={Email}
-                        placeholder="Email"
+                        field="description"
+                        list={this.props.list}
+                        placeholder="Name"
                         readOnly={this.props.readOnly}
-                    />
-
-                    <Field cols='12 3'
-                        name={`${member}.phone`}
-                        type="text"
-                        component={Phone}
-                        placeholder="Phone"
-                        readOnly={this.props.readOnly}
-                    />
+                        component={EmployeeNameSuggestion} />
 
                     <If test={index}>
                         <button type='button' className='btn btn-danger' cols='12 1'

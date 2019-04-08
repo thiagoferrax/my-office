@@ -26,7 +26,7 @@ export default class ItemList extends Component {
             return (
                 <Row key={index}>
 
-                    <Field cols='12 2'
+                    <Field cols='12 4'
                         name={`${member}.patrimony`}
                         type="text"
                         component={Input}
@@ -35,31 +35,13 @@ export default class ItemList extends Component {
                         readOnly={this.props.readOnly}
                     />
 
-                    <Field name={`${member}.type`} cols='12 2'
+                    <Field name={`${member}.type`} cols='12 6'
                         component={Select}
                         options={getPossibleEquipments()}
                         optionValue='id' optionLabel='type'
                         placeholder="Type" readOnly={this.props.readOnly} />
 
-                    <Field cols='12 5'
-                        name={`${member}.specification`}
-                        type="text"
-                        component={Input}
-                        label="Specification"
-                        placeholder="Specification"
-                        readOnly={this.props.readOnly}
-                    />
-
-
-                    <Field cols='12 2'
-                        id={`expirationDate_${index}`}
-                        name={`${member}.expirationDate`}
-                        component={Date}
-                        placeholder="Expiration date"
-                        readOnly={this.props.readOnly}
-                    />
-
-                    <Grid cols='12 1'>
+                    <Grid cols='12 2'>
                         <If test={!index}>
                             <button type='button' className='btn btn-default marginBottom' onClick={() => fields.unshift({})}>
                                 <i className="fa fa-plus"></i>

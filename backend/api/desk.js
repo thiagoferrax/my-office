@@ -177,7 +177,7 @@ module.exports = app => {
     const getNotEmptyEquipments = (equipments) => {
         return equipments.reduce((notEmptyEquipments, equipment) => {
             const keys = Object.keys(equipment)
-            if (keys.length > 0 && equipment.type && equipment.specification) {
+            if (keys.length > 0 && equipment.type && equipment.patrimony) {
                 notEmptyEquipments.push(equipment)
             }
             return notEmptyEquipments

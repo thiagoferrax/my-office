@@ -41,7 +41,7 @@ class DeskForm extends Component {
     getPossiblePositions() {
         const positions = []
 
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 26; i++) {
             positions.push({ id: i, name: i })
         }
 
@@ -55,25 +55,25 @@ class DeskForm extends Component {
         return (
             <form role='form' onSubmit={handleSubmit}>
                 <div className='box-body'>
-                    <Field name='roomId' label='Room' cols='12 3'
+                    <Field name='roomId' label='Room' cols='12 6'
                         component={Select} readOnly={readOnly}
                         options={rooms} optionValue='id' optionLabel='name' autoFocus={true}
                         inputOnChange={getOfficeData} />
-                    <Field name='chairDirection' label='Chair direction' cols='12 3'
+                    <Field name='chairDirection' label='Chair direction' cols='12 2'
                         component={SelectWithIcon} icon="compass" readOnly={readOnly}
                         options={this.getPossibleDirections()} optionValue='id' optionLabel='name' />
-                    <Field name='x' label='X position' cols='12 3'
+                    <Field name='x' label='X position' cols='12 2'
                         component={SelectWithIcon} icon="map-marker" readOnly={readOnly}
                         options={this.getPossiblePositions()} optionValue='id' optionLabel='name' />
-                    <Field name='y' label='Y position' cols='12 3'
+                    <Field name='y' label='Y position' cols='12 2'
                         component={SelectWithIcon} icon="map-marker" readOnly={readOnly}
                         options={this.getPossiblePositions()} optionValue='id' optionLabel='name' />
 
-                    <ItemList cols='12' list={equipments} readOnly={readOnly}
-                        field='equipments' legend='Equipments' icon='laptop'/>
+                    <EmployeeList cols='12 6' list={employees} readOnly={readOnly}
+                        field='employee' legend='Employee' icon='user-plus' />
 
-                    <EmployeeList cols='12' list={employees} readOnly={readOnly}
-                        field='employee' legend='Employee' icon='user-plus'/>
+                    <ItemList cols='12 6' list={equipments} readOnly={readOnly}
+                        field='equipments' legend='Equipments' icon='laptop' />
 
                 </div>
                 <div className='box-footer text-right'>
