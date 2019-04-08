@@ -73,7 +73,7 @@ class DeskForm extends Component {
                         field='equipments' legend='Equipments' icon='laptop'/>
 
                     <EmployeeList cols='12' list={employees} readOnly={readOnly}
-                        field='employee' legend='Employee' icon='user'/>
+                        field='employee' legend='Employee' icon='user-plus'/>
 
                 </div>
                 <div className='box-footer text-right'>

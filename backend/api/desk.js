@@ -39,7 +39,7 @@ module.exports = app => {
         }
     })
 
-    const insertDesk = (carrier) => new Promise((resolve, reject) => {
+    const saveDesk = (carrier) => new Promise((resolve, reject) => {
         const desk = carrier.desk
         const equipments = getNotEmptyEquipments(desk.equipments || [])
 
@@ -58,16 +58,7 @@ module.exports = app => {
                     resolve(carrier)
                 })
                 .catch(err => reject(err))
-        }
-    })
-
-    const updateDesk = (carrier) => new Promise((resolve, reject) => {
-        const desk = carrier.desk
-        const equipments = getNotEmptyEquipments(desk.equipments || [])
-
-        delete desk.equipments
-
-        if (desk.id) {
+        } else {
             desk.updated_at = new Date()
 
             app.db('desks')
@@ -174,7 +165,7 @@ module.exports = app => {
 
     const save = (req, res) => {
         validate(req, res)
-            .then(insertDesk)
+            .then(saveDesk)
             .then(analyzeEquipments)
             .then(insertEquipments)
             .then(updateEquipments)
@@ -219,11 +210,11 @@ module.exports = app => {
             if (foundDesk.length > 0) {
                 const index = desksList.indexOf(foundDesk[0])
                 if (desk.equipmentType && desk.equipmentSpecification) {
-                    desksList[index].equipments.push({ type: desk.equipmentType, specification: desk.equipmentSpecification, patrimony: desk.equipmentPatrimony, expirationDate:  getFormatedDate(desk.equipmentExpirationDate) })
+                    desksList[index].equipments.push({ name: desk.equipmentType, specification: desk.equipmentSpecification, patrimony: desk.equipmentPatrimony, expirationDate: getFormatedDate(desk.equipmentExpirationDate) })
                 }
             } else {
                 if (desk.equipmentType && desk.equipmentSpecification) {
-                    desk.equipments = [{ type: desk.equipmentType, specification: desk.equipmentSpecification, patrimony: desk.equipmentPatrimony, expirationDate: getFormatedDate(desk.equipmentExpirationDate) }]
+                    desk.equipments = [{ name: desk.equipmentType, specification: desk.equipmentSpecification, patrimony: desk.equipmentPatrimony, expirationDate: getFormatedDate(desk.equipmentExpirationDate) }]
                 } else {
                     desk.equipments = [{}]
                 }

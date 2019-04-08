@@ -52,12 +52,12 @@ export default class ItemList extends Component {
 
 
                     <Field cols='12 2'
+                        id={`expirationDate_${index}`}
                         name={`${member}.expirationDate`}
                         component={Date}
                         placeholder="Expiration date"
                         readOnly={this.props.readOnly}
                     />
-
 
                     <Grid cols='12 1'>
                         <If test={!index}>
