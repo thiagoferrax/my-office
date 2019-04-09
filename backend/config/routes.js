@@ -32,6 +32,12 @@ module.exports = app => {
     protectedApi.get('/desks/:id', app.api.desk.getById)
     protectedApi.get('/desks/:id/equipments', app.api.desk.getEquipments)
 
+    protectedApi.post('/equipments', app.api.equipment.save)
+    protectedApi.get('/equipments', app.api.equipment.get)
+    protectedApi.put('/equipments/:id', app.api.equipment.save)
+    protectedApi.delete('/equipments/:id', app.api.equipment.remove)
+    protectedApi.get('/equipments/:id', app.api.equipment.getById)
+
     protectedApi.get('/dashboard/summary', app.api.dashboard.get)
 
     protectedApi.get('/timelines', app.api.timeline.get)

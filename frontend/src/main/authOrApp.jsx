@@ -11,6 +11,7 @@ import Room from '../room/room'
 import Employee from '../employee/employee'
 import Desk from '../desk/desk'
 import Timeline from '../timeline/timeline'
+import Equipment from '../equipment/equipment'
 
 import { Route } from 'react-router-dom'
 
@@ -28,6 +29,7 @@ class AuthOrApp extends Component {
             return [<Route exact key='route_dashboard' path='/' component={Dashboard}/>,
             <Route key='route_rooms' path='/rooms' component={Room} />,
             <Route key='route_employees' path='/employees' component={Employee} />,
+            <Route key='route_equipments' path='/equipments' component={Equipment} />,
             <Route key='route_desks' path='/desks' component={Desk} />,
             <Route key='route_timeline' path='/timeline' component={Timeline} />]
         } else if (!user && !validToken) {

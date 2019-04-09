@@ -119,7 +119,7 @@ module.exports = app => {
         return employeesWithPath
     }
 
-    const getProjectsIds = (userId) => new Promise((resolve, reject) => {
+    const getEquipmentsIds = (userId) => new Promise((resolve, reject) => {
         let roomsIds = []
         app.db.select({
             id: 'rooms.id',
@@ -199,7 +199,7 @@ module.exports = app => {
     })
 
     const get = (req, res) => {
-        return getProjectsIds(req.decoded.id)
+        return getEquipmentsIds(req.decoded.id)
             .then(getMembersIds)
             .then(getEmployees)
             .then(removeItemsWithoutRoot)
@@ -226,7 +226,7 @@ module.exports = app => {
     }
 
     const getTree = (req, res) => {
-        return getProjectsIds(req.decoded.id)
+        return getEquipmentsIds(req.decoded.id)
             .then(getMembersIds)
             .then(getEmployees)
             .then(employees => res.json(toTree(employees)))

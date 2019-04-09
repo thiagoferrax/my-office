@@ -116,9 +116,9 @@ module.exports = app => {
                     return map
                 }, {})
 
-                const sortedProjects = Object.values(roomsMap).sort((a, b) => {return new Date(b.date) - new Date(a.date)})
+                const sortedRooms = Object.values(roomsMap).sort((a, b) => {return new Date(b.date) - new Date(a.date)})
 
-                res.json(sortedProjects)
+                res.json(sortedRooms)
             })
             .catch(err => res.status(500).json({ errors: [err] }))
     }

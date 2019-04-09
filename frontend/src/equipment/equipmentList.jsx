@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { getList, prepareToShow, showUpdate, showDelete } from './roomActions'
+import { getList, prepareToShow, showUpdate, showDelete } from './equipmentActions'
 
-class RoomList extends Component {
+class EquipmentList extends Component {
 
     componentWillMount() {
         this.props.getList()
@@ -18,15 +18,15 @@ class RoomList extends Component {
 
     renderRows() {
         const list = this.props.list || []
-        return list.map(room => (
-            <tr key={room.id}>
-                <td>{room.name}</td>
-                <td>{this.getFormatedDate(room.date)}</td>
+        return list.map(equipment => (
+            <tr key={equipment.id}>
+                <td>{equipment.name}</td>
+                <td>{this.getFormatedDate(equipment.date)}</td>
                 <td>
-                    <button className='btn btn-default' onClick={() => this.props.prepareToShow(room.id, showUpdate)}>
+                    <button className='btn btn-default' onClick={() => this.props.prepareToShow(equipment.id, showUpdate)}>
                         <i className='icon ion-md-create'></i>
                     </button>
-                    <button className='btn btn-danger' onClick={() => this.props.prepareToShow(room.id, showDelete)}>
+                    <button className='btn btn-danger' onClick={() => this.props.prepareToShow(equipment.id, showDelete)}>
                         <i className='icon ion-md-trash'></i>
                     </button>
                 </td>
@@ -54,6 +54,6 @@ class RoomList extends Component {
     }
 }
 
-const mapStateToProps = state => ({list: state.room.list})
+const mapStateToProps = state => ({list: state.equipment.list})
 const mapDispatchToProps = dispatch => bindActionCreators({getList, prepareToShow, showUpdate, showDelete}, dispatch)
-export default connect(mapStateToProps, mapDispatchToProps)(RoomList)
+export default connect(mapStateToProps, mapDispatchToProps)(EquipmentList)

@@ -4,7 +4,7 @@ import { initialize } from 'redux-form'
 import { showTabs, selectTab } from '../common/tab/tabActions'
 import consts from '../consts'
 
-const INITIAL_VALUES = { rooms: [], officeData:  [], equipments: [{}], employee: [{}]}
+const INITIAL_VALUES = { rooms: [], officeData: [], equipments: [{}], employee: [{}] }
 
 export function getList() {
     const request = axios.get(`${consts.API_URL}/desks`)
@@ -48,15 +48,6 @@ function submit(values, method) {
             })
     }
 }
-
-export function getEquipments(desk) {
-    const request = axios.get(`${consts.API_URL}/desks/${desk.id}/equipments`)
-    return {
-        type: 'EQUIPMENTS_FETCHED',
-        payload: request
-    }
-}
-
 export function initializeEmployee() {
     return {
         type: 'EMPLOYEE_INITIALIZED'
@@ -66,13 +57,14 @@ export function initializeEmployee() {
 export function prepareToShow(desk, callback) {
     return dispatch => {
         axios['get'](`${consts.API_URL}/desks/${desk.id}`)
-            .then(d => { 
+            .then(d => {
                 const deskToUpdate = d.data
-                if(desk.x >= 0 && desk.y >= 0) {
+                if (desk.x >= 0 && desk.y >= 0) {
                     deskToUpdate.x = desk.x
                     deskToUpdate.y = desk.y
                 }
-                dispatch(callback(deskToUpdate)) })
+                dispatch(callback(deskToUpdate))
+            })
             .catch(e => {
                 e.response.data.errors.forEach(error => toastr.error('Error', error))
             })
@@ -80,16 +72,16 @@ export function prepareToShow(desk, callback) {
 }
 
 export function showUpdate(desk) {
-    return [ 
+    return [
         showTabs('tabUpdate'),
-        selectTab('tabUpdate'),        
+        selectTab('tabUpdate'),
         initialize('deskForm', desk),
         getOfficeData(desk.roomId)
     ]
 }
 
 export function showDelete(desk) {
-    return [ 
+    return [
         showTabs('tabDelete'),
         selectTab('tabDelete'),
         initialize('deskForm', desk)

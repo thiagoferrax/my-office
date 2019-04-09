@@ -7,9 +7,9 @@ import consts from '../consts'
 const INITIAL_VALUES = {}
 
 export function getList() {
-    const request = axios.get(`${consts.API_URL}/rooms`)
+    const request = axios.get(`${consts.API_URL}/equipments`)
     return {
-        type: 'ROOMS_FETCHED',
+        type: 'EQUIPMENTS_FETCHED',
         payload: request
     }
 }
@@ -29,9 +29,9 @@ export function remove(values) {
 function submit(values, method) {
     return dispatch => {
         const id = values.id ? values.id : ''
-        axios[method](`${consts.API_URL}/rooms/${id}`, values)
+        axios[method](`${consts.API_URL}/equipments/${id}`, values)
             .then(resp => {
-                toastr.success('Success', 'Successful operation.')
+                toastr.success('Sucess', 'Successful operation.')
                 dispatch(init())
             })
             .catch(e => {
@@ -40,29 +40,29 @@ function submit(values, method) {
     }
 }
 
-export function prepareToShow(roomId, callback) {
+export function prepareToShow(equipmentId, callback) {
     return dispatch => {
-        axios['get'](`${consts.API_URL}/rooms/${roomId}`)
-            .then(room => { dispatch(callback(room.data)) })
+        axios['get'](`${consts.API_URL}/equipments/${equipmentId}`)
+            .then(equipment => { dispatch(callback(equipment.data)) })
             .catch(e => {
                 e.response.data.errors.forEach(error => toastr.error('Error', error))
             })
     }
 }
 
-export function showUpdate(room) {
+export function showUpdate(equipment) {
     return [
         showTabs('tabUpdate'),
         selectTab('tabUpdate'),
-        initialize('roomForm', room)
+        initialize('equipmentForm', equipment)
     ]
 }
 
-export function showDelete(room) {
+export function showDelete(equipment) {
     return [
         showTabs('tabDelete'),
         selectTab('tabDelete'),
-        initialize('roomForm', room)
+        initialize('equipmentForm', equipment)
     ]
 }
 
@@ -71,6 +71,6 @@ export function init() {
         showTabs('tabList', 'tabCreate'),
         selectTab('tabList'),
         getList(),
-        initialize('roomForm', INITIAL_VALUES)
+        initialize('equipmentForm', INITIAL_VALUES)
     ]
 }

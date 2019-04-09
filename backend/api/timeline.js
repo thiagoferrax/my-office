@@ -38,7 +38,7 @@ module.exports = app => {
         })
     }
 
-    const getProjectsIds = (summary) => new Promise((resolve, reject) => {
+    const getRoomsIds = (summary) => new Promise((resolve, reject) => {
         const userId = summary.userId
 
         app.db.select({
@@ -67,7 +67,7 @@ module.exports = app => {
         }, [])
     }
 
-    const getProjects = (summary) => new Promise((resolve, reject) => {
+    const getRooms = (summary) => new Promise((resolve, reject) => {
         app.db.select({
             id: 'rooms.id',
             room: 'rooms.name',
@@ -159,8 +159,8 @@ module.exports = app => {
         const summary = { timeline: { data: {} }, userId, membersIds: [userId], rooms: [] }
 
         getLoggedUser(summary)
-            .then(getProjectsIds)
-            .then(getProjects)
+            .then(getRoomsIds)
+            .then(getRooms)
             .then(getDesks)
             .then(getSingleUser)
             .then(summary => res.json(summary.timeline))

@@ -3,13 +3,13 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { reduxForm, Field } from 'redux-form'
 
-import { init } from './roomActions'
+import { init } from './equipmentActions'
 import LabelAndInput from '../common/form/labelAndInput'
 import Select from '../common/form/select'
 
 import { getList as getUserList } from '../user/userActions'
 
-class RoomForm extends Component {
+class EquipmentForm extends Component {
     componentWillMount() {
         this.props.getUserList()
     }
@@ -21,7 +21,7 @@ class RoomForm extends Component {
                 <div className='box-body'>
                     <Field name='name' label='Name' cols='12 4' placeholder='Enter the name'
                         component={LabelAndInput} readOnly={readOnly} autoFocus={true} />
-                    <Field name='team' label='Managers' cols='12 4'
+                    <Field name='team' label='Team' cols='12 4'
                         component={Select} readOnly={readOnly} options={userList} optionValue='id' optionLabel='name' isMulti={true} />
                 </div>
                 <div className='box-footer text-right'>
@@ -36,8 +36,8 @@ class RoomForm extends Component {
     }
 }
 
-RoomForm = reduxForm({ form: 'roomForm', destroyOnUnmount: false })(RoomForm)
+EquipmentForm = reduxForm({ form: 'equipmentForm', destroyOnUnmount: false })(EquipmentForm)
 
 const mapStateToProps = state => ({ userList: state.user.list })
 const mapDispatchToProps = dispatch => bindActionCreators({ init, getUserList }, dispatch)
-export default connect(mapStateToProps, mapDispatchToProps)(RoomForm)
+export default connect(mapStateToProps, mapDispatchToProps)(EquipmentForm)

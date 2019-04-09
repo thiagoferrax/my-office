@@ -3,7 +3,7 @@ const { array2map } = require('../common/mapUtil')
 module.exports = app => {
     const { existsOrError } = app.api.validation
 
-    const getProjects = (userId) => new Promise((resolve, reject) => {
+    const getEquipments = (userId) => new Promise((resolve, reject) => {
         const summary = { rooms: 0, desks: 0, number_desks: 0, members: 0, comments: 0, userId }
 
         app.db.select({
@@ -117,7 +117,7 @@ module.exports = app => {
     const get = (req, res) => {
         const userId = req.decoded.id
 
-        getProjects(userId)
+        getEquipments(userId)
             .then(getTeam)
             .then(getDesks)
             //.then(getEquipmentsSummary)
