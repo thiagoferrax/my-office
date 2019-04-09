@@ -14,6 +14,8 @@ module.exports = app => {
     const validate = (req, res) => new Promise((resolve, reject) => {
         const carrier = { req, res }
 
+        carrier.userId = req.decoded.id
+
         const desk = {
             id: req.body.id,
             roomId: req.body.roomId,
@@ -102,9 +104,10 @@ module.exports = app => {
 
     const insertEquipments = (carrier) => new Promise((resolve, reject) => {
         const equipments = carrier.equipmentsToInsert
+        const userId = carrier.userId
 
         if (equipments && equipments.length > 0) {
-            const rows = getEquipmentsToInsert(equipments)
+            const rows = getEquipmentsToInsert(equipments, userId)
             const chunkSize = rows.length
 
             app.db.batchInsert('equipments', rows, chunkSize)
@@ -113,7 +116,8 @@ module.exports = app => {
                     carrier.equipmentsIds = ids
                     resolve(carrier)
                 })
-                .catch(err => reject(err))
+                .catch(err => {
+                    reject(err)})
         } else {
             resolve(carrier)
         }
@@ -121,9 +125,10 @@ module.exports = app => {
 
     const updateEquipments = (carrier) => new Promise((resolve, reject) => {
         const equipments = carrier.equipmentsToUpdate
+        const userId = carrier.userId
 
         if (equipments && equipments.length > 0) {
-            const rows = getEquipmentsToUpdate(equipments)
+            const rows = getEquipmentsToUpdate(equipments, userId)
             const chunkSize = rows.length
 
             app.db.batchUpdate('equipments', rows, chunkSize)
@@ -314,16 +319,13 @@ module.exports = app => {
             .catch(err => res.status(500).json({ errors: [err] }))
     }
 
-    const getEquipmentsToInsert = equipments => {
+    const getEquipmentsToInsert = (equipments, userId) => {
         return equipments.reduce((rows, equipment) => {
-            const expirationDate = equipment.expirationDate ?
-                new Date(equipment.expirationDate) : undefined
 
             rows.push({
                 type: equipment.type,
-                specification: equipment.specification,
                 patrimony: equipment.patrimony,
-                expirationDate
+                userId 
             })
             return rows
         }, [])
@@ -331,16 +333,13 @@ module.exports = app => {
 
     const getEquipmentsToUpdate = equipments => {
         return equipments.reduce((rows, equipment) => {
-            const expirationDate = equipment.expirationDate ?
-                new Date(equipment.expirationDate) : undefined
-
             rows.push({
                 id: equipment.id,
                 type: equipment.type,
-                specification: equipment.specification,
                 patrimony: equipment.patrimony,
-                expirationDate
+                userId
             })
+
             return rows
         }, [])
     }
