@@ -11,8 +11,6 @@ module.exports = app => {
             userId: req.decoded.id,
         }
 
-        console.log('save', equipment)
-
         if (req.params.id) equipment.id = req.params.id
 
         try {
@@ -20,9 +18,6 @@ module.exports = app => {
             existsOrError(equipment.type, 'Type was not informed!')
             existsOrError(equipment.userId, 'User was not informed!')
         } catch (msg) {
-
-            console.log('save', msg)
-
             return res.status(400).json({ errors: [msg] })
         }
 
@@ -38,15 +33,12 @@ module.exports = app => {
         } else {
             equipment.created_at = new Date()
             equipment.updated_at = null
-            
-            console.log('save', 'new equipment')
 
             app.db('equipments')
                 .insert(equipment)
                 .returning('id')
                 .then(_ => res.status(204).send())
                 .catch(err => {
-                    console.log('save...', err)
                     res.status(500).json({ errors: [err] })})
         }
     }
@@ -98,8 +90,6 @@ module.exports = app => {
     }
 
     const get = (req, res) => {
-
-        console.log('get')
         const userId = req.decoded.id
 
         app.db.select(
@@ -116,7 +106,6 @@ module.exports = app => {
             .leftJoin('users', 'equipments.userId', 'users.id')
             .where({ 'equipments.userId': userId }).orWhere({ 'users.id': userId })
             .then(equipments => {
-                console.log('get equipments', equipments)
                 const equipmentsMap = equipments.reduce((map, equipment) => {
                     map[equipment.id] = equipment
                     return map
