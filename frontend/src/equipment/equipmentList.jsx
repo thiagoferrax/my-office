@@ -20,7 +20,9 @@ class EquipmentList extends Component {
         const list = this.props.list || []
         return list.map(equipment => (
             <tr key={equipment.id}>
-                <td>{equipment.name}</td>
+                <td>{equipment.patrimony}</td>
+                <td>{equipment.type}</td>
+                <td>{this.getFormatedDate(equipment.expirationDate)}</td>
                 <td>{this.getFormatedDate(equipment.date)}</td>
                 <td>
                     <button className='btn btn-default' onClick={() => this.props.prepareToShow(equipment.id, showUpdate)}>
@@ -40,7 +42,9 @@ class EquipmentList extends Component {
                 <table className='table'>
                     <thead>
                         <tr>
-                            <th>Name</th>
+                            <th>Patrimony</th>
+                            <th>Type</th>
+                            <th>Expiration date</th>
                             <th>Created at</th>
                             <th className='table-actions'>Actions</th>
                         </tr>

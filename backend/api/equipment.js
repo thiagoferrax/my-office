@@ -4,23 +4,27 @@ module.exports = app => {
     const save = (req, res) => {
         const equipment = {
             id: req.body.id,
-            name: req.body.name,
-            team: req.body.team,
+            patrimony: req.body.patrimony,
+            type: req.body.type,
+            specification: req.body.specification,
+            expirationDate: req.body.expirationDate,
             userId: req.decoded.id,
         }
+
+        console.log('save', equipment)
 
         if (req.params.id) equipment.id = req.params.id
 
         try {
-            existsOrError(equipment.name, 'Name was not informed!')
+            existsOrError(equipment.patrimony, 'Patrimony was not informed!')
+            existsOrError(equipment.type, 'Type was not informed!')
             existsOrError(equipment.userId, 'User was not informed!')
-            existsOrError(equipment.team, 'Team was not informed!')
         } catch (msg) {
+
+            console.log('save', msg)
+
             return res.status(400).json({ errors: [msg] })
         }
-
-        const team = equipment.team
-        delete equipment.team
 
         if (equipment.id) {
             delete equipment.userId
@@ -29,23 +33,21 @@ module.exports = app => {
             app.db('equipments')
                 .update(equipment)
                 .where({ id: equipment.id })
-                .then(_ => {
-                    if (team && team.length > 0) {
-                        updateTeam(equipment.id, team, res)
-                    } else {
-                        res.status(204).send()
-                    }
-                })
+                .then(_ => res.status(204).send())
                 .catch(err => res.status(500).json({ errors: [err] }))
         } else {
             equipment.created_at = new Date()
             equipment.updated_at = null
             
+            console.log('save', 'new equipment')
+
             app.db('equipments')
                 .insert(equipment)
                 .returning('id')
-                .then(equipmentId => insertTeam(equipmentId[0], team, res))
-                .catch(err => res.status(500).json({ errors: [err] }))
+                .then(_ => res.status(204).send())
+                .catch(err => {
+                    console.log('save...', err)
+                    res.status(500).json({ errors: [err] })})
         }
     }
 
@@ -96,21 +98,25 @@ module.exports = app => {
     }
 
     const get = (req, res) => {
+
+        console.log('get')
         const userId = req.decoded.id
 
         app.db.select(
             {
                 id: 'equipments.id',
-                name: 'equipments.name',
+                patrimony: 'equipments.patrimony',
+                type: 'equipments.type',
+                specification: 'equipments.specification',
+                expirationDate: 'equipments.expirationDate',
                 userId: 'equipments.userId',
                 date: 'equipments.created_at'
             }
         ).from('equipments')
-            .leftJoin('teams', 'teams.equipmentId', 'equipments.id')
-            .leftJoin('users', 'teams.userId', 'users.id')
+            .leftJoin('users', 'equipments.userId', 'users.id')
             .where({ 'equipments.userId': userId }).orWhere({ 'users.id': userId })
             .then(equipments => {
-
+                console.log('get equipments', equipments)
                 const equipmentsMap = equipments.reduce((map, equipment) => {
                     map[equipment.id] = equipment
                     return map
@@ -124,32 +130,22 @@ module.exports = app => {
     }
 
     const getById = (req, res) => {
+        const userId = req.decoded.id
+
         app.db.select(
             {
                 id: 'equipments.id',
-                name: 'equipments.name',
+                patrimony: 'equipments.patrimony',
+                type: 'equipments.type',
+                specification: 'equipments.specification',
+                expirationDate: 'equipments.expirationDate',
                 userId: 'equipments.userId',
-                memberId: 'users.id'
+                date: 'equipments.created_at'
             }
         ).from('equipments')
-            .leftJoin('teams', 'teams.equipmentId', 'equipments.id')
-            .leftJoin('users', 'teams.userId', 'users.id')
-            .where({ 'equipments.id': req.params.id })
-            .then(equipmentTeam => {
-                let equipment = {
-                    id: equipmentTeam[0].id,
-                    name: equipmentTeam[0].name,
-                    userId: equipmentTeam[0].userId,
-                    team: []
-                }
-
-                equipment.team = equipmentTeam.reduce((team, member) => {
-                    team.push(member.memberId)
-                    return team
-                }, [])
-
-                res.json(equipment)
-            })
+            .leftJoin('users', 'equipments.userId', 'users.id')
+            .where({ 'equipments.id': req.params.id }).andWhere({ 'equipments.userId': userId })
+            .then(equipments => res.json(equipments[0]))
             .catch(err => res.status(500).json({ errors: [err] }))
     }
 
