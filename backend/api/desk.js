@@ -85,7 +85,6 @@ module.exports = app => {
 
             app.db('equipments').whereIn('patrimony', Object.keys(patrimonies))
                 .then(equipmentsFound => {
-                    console.log('analyzeEquipments', Object.keys(patrimonies), equipmentsFound)
                     const equipmentsToUpdate = equipmentsFound.map(e => ({ ...e, ...patrimonies[e.patrimony] }))
                     const patrimoniesFound = equipmentsFound.map(e => e.patrimony)
                     const equipmentsToInsert = equipments.filter(e => !patrimoniesFound.includes(e.patrimony))
@@ -93,7 +92,6 @@ module.exports = app => {
                     carrier.equipmentsToUpdate = equipmentsToUpdate
                     carrier.equipmentsToInsert = equipmentsToInsert
 
-                    console.log('analyzeEquipments', equipmentsToInsert, equipmentsToUpdate)
                     resolve(carrier)
                 }
                 ).catch(err => reject(err))
