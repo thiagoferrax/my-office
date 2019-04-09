@@ -2,12 +2,24 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { reduxForm, Field } from 'redux-form'
-
-import { init } from './equipmentActions'
 import LabelAndInput from '../common/form/labelAndInput'
+import { init } from './equipmentActions'
+import Date from '../common/form/date'
 import Select from '../common/form/select'
+import Input from '../common/form/input'
 
 import { getList as getUserList } from '../user/userActions'
+
+
+const getPossibleEquipments = () => {
+    const equipments = []
+    equipments.push({ id: 'Computer', type: 'Computer' })
+    equipments.push({ id: 'Monitor', type: 'Monitor' })
+    equipments.push({ id: 'Phone', type: 'Phone' })
+    equipments.push({ id: 'Drawer', type: 'Drawer' })
+    equipments.push({ id: 'Chair', type: 'Chair' })
+    return equipments
+}
 
 class EquipmentForm extends Component {
     componentWillMount() {
@@ -19,10 +31,42 @@ class EquipmentForm extends Component {
         return (
             <form role='form' onSubmit={handleSubmit}>
                 <div className='box-body'>
-                    <Field name='name' label='Name' cols='12 4' placeholder='Enter the name'
-                        component={LabelAndInput} readOnly={readOnly} autoFocus={true} />
-                    <Field name='team' label='Team' cols='12 4'
-                        component={Select} readOnly={readOnly} options={userList} optionValue='id' optionLabel='name' isMulti={true} />
+
+                    <Field cols='12 2'
+                        name="patrimony"
+                        type="text"
+                        component={LabelAndInput}
+                        label="Patrimony"
+                        placeholder="Enter the patrimony"
+                        readOnly={readOnly}
+                    />
+
+                    <Field name="type" cols='12 2'
+                        component={Select}
+                        label="Type"
+                        options={getPossibleEquipments()}
+                        optionValue='id' optionLabel='type'
+                        placeholder="Enter the type" readOnly={readOnly} />
+
+                    <Field cols='12 6'
+                        name="specification"
+                        type="text"
+                        component={LabelAndInput}
+                        label="Specification"
+                        placeholder="Enter the specification"
+                        readOnly={readOnly}
+                    />
+
+
+                    <Field cols='12 2'
+                        id="expirationDate"
+                        name="expirationDate"
+                        label="Expiration date"
+                        component={Date}
+                        placeholder="Enter the expiration date"
+                        readOnly={readOnly}
+                    />
+
                 </div>
                 <div className='box-footer text-right'>
                     <button type='submit' className={`btn btn-${this.props.submitClass}`}>

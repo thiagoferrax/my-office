@@ -12,8 +12,6 @@ module.exports = app => {
 
     protectedApi.post('/employees', app.api.employee.save)
     protectedApi.get('/employees', app.api.employee.get)
-    protectedApi.post('/employees/clone', app.api.employee.clone)       
-    protectedApi.get('/employees/tree', app.api.employee.getTree)
     protectedApi.put('/employees/:id', app.api.employee.save)
     protectedApi.delete('/employees/:id', app.api.employee.remove)
     protectedApi.get('/employees/:id', app.api.employee.getById)

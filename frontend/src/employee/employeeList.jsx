@@ -14,7 +14,10 @@ class EmployeeList extends Component {
         const list = this.props.list || []
         return list.map(employee => (
             <tr key={employee.id}>
-                <td>{employee.description}</td>
+                <td>{employee.name}</td>
+                <td>{employee.identifier}</td>
+                <td>{employee.email}</td>
+                <td>{employee.phone}</td>
                 <td>
                     <button className='btn btn-default' onClick={() => this.props.showUpdate(employee)}>
                         <i className='icon ion-md-create'></i>
@@ -34,6 +37,9 @@ class EmployeeList extends Component {
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Identifier</th>
+                            <th>Email</th>
+                            <th>Phone</th>
                             <th className='table-actions'>Actions</th>
                         </tr>
                     </thead>

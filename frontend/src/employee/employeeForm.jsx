@@ -77,27 +77,22 @@ class EmployeeForm extends Component {
     }
 
     render() {
-        const { handleSubmit, readOnly, list, description, parentId, tree, init } = this.props
+        const { handleSubmit, readOnly, list, name, parentId, tree, init } = this.props
         return (
             <form role='form' onSubmit={handleSubmit}>
                 <div className='box-body'>
-                    <Field name='description' value={description} component={LabelAndInput} readOnly={readOnly}
-                        label='Name' cols='12 4' placeholder='Enter the item description' autoFocus={true} />
+                    <Field name='name' value={name} component={LabelAndInput} readOnly={readOnly}
+                        label='Name' cols='12 3' placeholder='Enter the name' autoFocus={true} />
 
                     <Field name='identifier' component={LabelAndInput} readOnly={readOnly}
-                        label='Identifier' cols='12 4' placeholder='Enter the identifier' autoFocus={true} />
+                        label='Identifier' cols='12 3' placeholder='Enter the identifier' autoFocus={true} />
 
                     <Field name='email' component={LabelAndInput} readOnly={readOnly}
-                        label='Email' cols='12 4' placeholder='Enter the email' autoFocus={true} />
+                        label='Email' cols='12 3' placeholder='Enter the email' autoFocus={true} />
 
                     <Field name='phone' component={LabelAndInput} readOnly={readOnly}
-                        label='Phone' cols='12 4' placeholder='Enter the phone' autoFocus={true} />
+                        label='Phone' cols='12 3' placeholder='Enter the phone' autoFocus={true} />
 
-                    <Field name='role' component={LabelAndInput} readOnly={readOnly}
-                        label='Role' cols='12 4' placeholder='Enter the role' autoFocus={true} />
-
-                    <Field name='department' component={LabelAndInput} readOnly={readOnly}
-                        label='Department' cols='12 4' placeholder='Enter the department' autoFocus={true} />
                 </div>
                 <div className='box-footer text-right'>
                     <button type='submit' className={`btn btn-${this.props.submitClass}`}>
