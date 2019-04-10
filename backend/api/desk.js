@@ -81,7 +81,6 @@ module.exports = app => {
 
     const analyzeEquipments = (carrier) => new Promise((resolve, reject) => {
 
-        const deskId = carrier.deskId
         const equipments = carrier.equipments
 
         if (equipments && equipments.length > 0) {
@@ -108,7 +107,6 @@ module.exports = app => {
 
     const analyzeEmployees = (carrier) => new Promise((resolve, reject) => {
 
-        const deskId = carrier.deskId
         const employees = carrier.employees
 
         if (employees && employees.length > 0) {
@@ -118,6 +116,7 @@ module.exports = app => {
 
             app.db('employees').whereIn('identifier', Object.keys(identifiers))
                 .then(employeesFound => {
+
                     const employeesToUpdate = employeesFound.map(e => ({ ...e, ...identifiers[e.identifier] }))
                     const identifiersFound = employeesFound.map(e => e.identifier)
                     const employeesToInsert = employees.filter(e => !identifiersFound.includes(e.identifier))
@@ -160,6 +159,7 @@ module.exports = app => {
 
         if (employees && employees.length > 0) {
             const rows = getEmployeesToInsert(employees, userId)
+
             const chunkSize = rows.length
 
             app.db.batchInsert('employees', rows, chunkSize)
@@ -466,7 +466,7 @@ module.exports = app => {
     }
 
     const getEmployeesToInsert = (employees, userId) => {
-        return employees.reduce((rows, equipment) => {
+        return employees.reduce((rows, employee) => {
 
             rows.push({
                 identifier: employee.identifier,

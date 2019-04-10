@@ -24,6 +24,11 @@ class Dashboard extends Component {
     }
 
     render() {
+        // Number of types of equipment per room
+        // Number of employees per room
+        // Number of tables occupied and unoccupied per room
+        // Number of equipment types expiring per month
+
         const { rooms, number_desks, members, officeData } = this.props.summary
         return (
             <div>

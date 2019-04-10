@@ -70,7 +70,7 @@ class DeskForm extends Component {
                         options={this.getPossiblePositions()} optionValue='id' optionLabel='name' />
 
                     <EmployeeList cols='12 6' list={employees} readOnly={readOnly}
-                        field='employee' legend='Employee' icon='user-plus' />
+                        field='employees' legend='Employee' icon='user-plus' />
 
                     <ItemList cols='12 6' list={equipments} readOnly={readOnly}
                         field='equipments' legend='Equipments' icon='laptop' />
