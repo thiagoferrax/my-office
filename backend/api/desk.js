@@ -21,6 +21,7 @@ module.exports = app => {
             roomId: req.body.roomId,
             userId: req.decoded.id,
             equipments: req.body.equipments,
+            employees: req.body.employees,
             chairDirection: req.body.chairDirection,
             x: req.body.x || 0,
             y: req.body.y || 0
@@ -44,8 +45,13 @@ module.exports = app => {
     const saveDesk = (carrier) => new Promise((resolve, reject) => {
         const desk = carrier.desk
         const equipments = getNotEmptyEquipments(desk.equipments || [])
+        const employees = getNotEmptyEmployees(desk.employees || [])
+
+        carrier.equipments = equipments
+        carrier.employees = employees
 
         delete desk.equipments
+        delete desk.employees
 
         if (!desk.id) {
             desk.created_at = new Date()
@@ -56,7 +62,6 @@ module.exports = app => {
                 .returning('id')
                 .then(deskId => {
                     carrier.deskId = deskId[0]
-                    carrier.equipments = equipments
                     resolve(carrier)
                 })
                 .catch(err => reject(err))
@@ -68,7 +73,6 @@ module.exports = app => {
                 .where({ id: desk.id })
                 .then(_ => {
                     carrier.deskId = desk.id
-                    carrier.equipments = equipments
                     resolve(carrier)
                 })
                 .catch(err => reject(err))
@@ -102,6 +106,33 @@ module.exports = app => {
         }
     })
 
+    const analyzeEmployees = (carrier) => new Promise((resolve, reject) => {
+
+        const deskId = carrier.deskId
+        const employees = carrier.employees
+
+        if (employees && employees.length > 0) {
+            const identifiers = employees.map(employee => ({
+                identifier: employee.identifier, employee
+            }))
+
+            app.db('employees').whereIn('identifier', Object.keys(identifiers))
+                .then(employeesFound => {
+                    const employeesToUpdate = employeesFound.map(e => ({ ...e, ...identifiers[e.identifier] }))
+                    const identifiersFound = employeesFound.map(e => e.identifier)
+                    const employeesToInsert = employees.filter(e => !identifiersFound.includes(e.identifier))
+
+                    carrier.employeesToUpdate = employeesToUpdate
+                    carrier.employeesToInsert = employeesToInsert
+
+                    resolve(carrier)
+                }
+                ).catch(err => reject(err))
+        } else {
+            resolve(carrier)
+        }
+    })
+
     const insertEquipments = (carrier) => new Promise((resolve, reject) => {
         const equipments = carrier.equipmentsToInsert
         const userId = carrier.userId
@@ -114,6 +145,27 @@ module.exports = app => {
                 .returning('id')
                 .then(ids => {
                     carrier.equipmentsIds = ids
+                    resolve(carrier)
+                })
+                .catch(err => {
+                    reject(err)})
+        } else {
+            resolve(carrier)
+        }
+    })
+
+    const insertEmployees = (carrier) => new Promise((resolve, reject) => {
+        const employees = carrier.employeesToInsert
+        const userId = carrier.userId
+
+        if (employees && employees.length > 0) {
+            const rows = getEmployeesToInsert(employees, userId)
+            const chunkSize = rows.length
+
+            app.db.batchInsert('employees', rows, chunkSize)
+                .returning('id')
+                .then(ids => {
+                    carrier.employeesIds = ids
                     resolve(carrier)
                 })
                 .catch(err => {
@@ -145,6 +197,28 @@ module.exports = app => {
         }
     })
 
+    const updateEmployees = (carrier) => new Promise((resolve, reject) => {
+        const employees = carrier.employeesToUpdate
+        const userId = carrier.userId
+
+        if (employees && employees.length > 0) {
+            const rows = getEmployeesToUpdate(employees, userId)
+            const chunkSize = rows.length
+
+            app.db.batchUpdate('employees', rows, chunkSize)
+                .returning('id')
+                .then(ids => {
+                    carrier.employeesIds =
+                        carrier.employeesIds ?
+                            [...carrier.employeesIds, ...ids] : ids
+                    resolve(carrier)
+                })
+                .catch(err => reject(err))
+        } else {
+            resolve(carrier)
+        }
+    })
+
     const insertDesksEquipments = (carrier) => new Promise((resolve, reject) => {
         const equipmentsIds = carrier.equipmentsIds
         const deskId = carrier.deskId
@@ -166,6 +240,27 @@ module.exports = app => {
         }
     })
 
+    const insertDesksEmployees = (carrier) => new Promise((resolve, reject) => {
+        const employeesIds = carrier.employeesIds
+        const deskId = carrier.deskId
+
+        if (employeesIds && employeesIds.length > 0) {
+            app.db('desks_employees').where({ deskId }).del().then(
+                rowsDeleted => {
+                    const rows = getDesksEmployeesToInsert(deskId, employeesIds)
+                    const chunkSize = rows.length
+                    app.db.batchInsert('desks_employees', rows, chunkSize)
+                        .then(_ => resolve(carrier))
+                        .catch(err => reject(err))
+
+                    resolve(carrier)
+                }
+            ).catch(err => reject(err))
+        } else {
+            resolve(carrier)
+        }
+    })
+
     const save = (req, res) => {
         validate(req, res)
             .then(saveDesk)
@@ -173,6 +268,10 @@ module.exports = app => {
             .then(insertEquipments)
             .then(updateEquipments)
             .then(insertDesksEquipments)
+            .then(analyzeEmployees)
+            .then(insertEmployees)
+            .then(updateEmployees)
+            .then(insertDesksEmployees)
             .then(_ => res.status(204).send())
             .catch(err => res.status(400).json({ errors: [err] }))
     }
@@ -184,6 +283,16 @@ module.exports = app => {
                 notEmptyEquipments.push(equipment)
             }
             return notEmptyEquipments
+        }, [])
+    }
+
+    const getNotEmptyEmployees = (employees) => {
+        return employees.reduce((notEmptyEmployees, employee) => {
+            const keys = Object.keys(employee)
+            if (keys.length > 0 && employee.identifier && employee.name) {
+                notEmptyEmployees.push(employee)
+            }
+            return notEmptyEmployees
         }, [])
     }
 
@@ -349,6 +458,41 @@ module.exports = app => {
             rows.push({
                 deskId,
                 equipmentId
+            })
+            return rows
+        }, [])
+    }
+
+    const getEmployeesToInsert = (employees, userId) => {
+        return employees.reduce((rows, equipment) => {
+
+            rows.push({
+                identifier: employee.identifier,
+                name: employee.name,
+                userId 
+            })
+            return rows
+        }, [])
+    }
+
+    const getEmployeesToUpdate = employees => {
+        return employees.reduce((rows, employee) => {
+            rows.push({
+                id: employee.id,
+                identifier: employee.identifier,
+                name: employee.name,
+                userId
+            })
+
+            return rows
+        }, [])
+    }
+
+    const getDesksEmployeesToInsert = (deskId, employeesIds) => {
+        return employeesIds.reduce((rows, employeeId) => {
+            rows.push({
+                deskId,
+                employeeId
             })
             return rows
         }, [])
