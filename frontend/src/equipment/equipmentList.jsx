@@ -22,8 +22,8 @@ class EquipmentList extends Component {
             <tr key={equipment.id}>
                 <td>{equipment.patrimony}</td>
                 <td>{equipment.type}</td>
-                <td>{this.getFormatedDate(equipment.expirationDate)}</td>
-                <td>{this.getFormatedDate(equipment.date)}</td>
+                <td>{equipment.expirationDate ? this.getFormatedDate(equipment.expirationDate) : '-'}</td>
+                <td>{equipment.date ? this.getFormatedDate(equipment.date) : '-'}</td>
                 <td>
                     <button className='btn btn-default' onClick={() => this.props.prepareToShow(equipment.id, showUpdate)}>
                         <i className='icon ion-md-create'></i>

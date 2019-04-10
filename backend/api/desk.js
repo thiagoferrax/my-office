@@ -434,7 +434,8 @@ module.exports = app => {
             rows.push({
                 type: equipment.type,
                 patrimony: equipment.patrimony,
-                userId 
+                userId,
+                created_at: new Date() 
             })
             return rows
         }, [])
@@ -446,7 +447,8 @@ module.exports = app => {
                 id: equipment.id,
                 type: equipment.type,
                 patrimony: equipment.patrimony,
-                userId
+                userId,
+                updated_at: new Date() 
             })
 
             return rows
@@ -469,7 +471,8 @@ module.exports = app => {
             rows.push({
                 identifier: employee.identifier,
                 name: employee.name,
-                userId 
+                userId,
+                created_at: new Date()
             })
             return rows
         }, [])
@@ -481,7 +484,8 @@ module.exports = app => {
                 id: employee.id,
                 identifier: employee.identifier,
                 name: employee.name,
-                userId
+                userId,
+                updated_at: new Date()
             })
 
             return rows

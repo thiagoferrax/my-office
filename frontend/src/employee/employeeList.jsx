@@ -10,6 +10,13 @@ class EmployeeList extends Component {
         this.props.getList()
     }
 
+    getFormatedDate(isoDate) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' }
+        
+        const date = new Date(isoDate)
+        return `${date.toLocaleDateString('en-US', options)} at ${date.toLocaleTimeString('en-US')}`
+    }
+
     renderRows() {
         const list = this.props.list || []
         return list.map(employee => (
@@ -18,6 +25,7 @@ class EmployeeList extends Component {
                 <td>{employee.identifier}</td>
                 <td>{employee.email}</td>
                 <td>{employee.phone}</td>
+                <td>{employee.created_at ? this.getFormatedDate(employee.created_at) : '-'}</td>
                 <td>
                     <button className='btn btn-default' onClick={() => this.props.showUpdate(employee)}>
                         <i className='icon ion-md-create'></i>
@@ -40,6 +48,7 @@ class EmployeeList extends Component {
                             <th>Identifier</th>
                             <th>Email</th>
                             <th>Phone</th>
+                            <th>Created at</th>
                             <th className='table-actions'>Actions</th>
                         </tr>
                     </thead>
