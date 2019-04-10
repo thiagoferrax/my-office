@@ -92,13 +92,23 @@ class DeskForm extends Component {
                                     <h3 className="box-title">MY OFFICE - {officeData[0] && officeData[0].room}</h3>
                                 </div>
                                 <div className="box-body">
-                                    <OfficeMap
-                                        data={officeData}
-                                        minHorizontalSize={5}
-                                        minVerticalSize={5}
-                                        onSelect={desk => this.props.prepareToShow(desk, showUpdate)}
-                                        onMove={desk => this.props.update(desk, showUpdate)} 
-                                        editMode={true} />
+                                    <If test={this.props.submitLabel === 'Update'}>
+                                        <OfficeMap
+                                            data={officeData}
+                                            minHorizontalSize={5}
+                                            minVerticalSize={5}
+                                            onSelect={desk => this.props.prepareToShow(desk, showUpdate)}
+                                            onMove={desk => this.props.update(desk, showUpdate)}
+                                            editMode={true} />
+                                    </If>
+                                    <If test={this.props.submitLabel !== 'Update'}>
+                                        <OfficeMap
+                                            data={officeData}
+                                            minHorizontalSize={5}
+                                            minVerticalSize={5}
+                                            onMove={desk => this.props.update(desk, showUpdate)}
+                                            editMode={true} />
+                                    </If>
                                 </div>
                             </div>
                         </Grid >
