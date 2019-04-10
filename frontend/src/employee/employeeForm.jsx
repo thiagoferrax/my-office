@@ -82,16 +82,16 @@ class EmployeeForm extends Component {
             <form role='form' onSubmit={handleSubmit}>
                 <div className='box-body'>
                     <Field name='name' value={name} component={LabelAndInput} readOnly={readOnly}
-                        label='Name' cols='12 3' placeholder='Enter the name' autoFocus={true} />
+                        label='Name' cols='12 3' autoFocus={true} />
 
                     <Field name='identifier' component={LabelAndInput} readOnly={readOnly}
-                        label='Identifier' cols='12 3' placeholder='Enter the identifier' autoFocus={true} />
+                        label='Identifier' cols='12 3' autoFocus={true} />
 
                     <Field name='email' component={LabelAndInput} readOnly={readOnly}
-                        label='Email' cols='12 3' placeholder='Enter the email' autoFocus={true} />
+                        label='Email' cols='12 3' autoFocus={true} />
 
                     <Field name='phone' component={LabelAndInput} readOnly={readOnly}
-                        label='Phone' cols='12 3' placeholder='Enter the phone' autoFocus={true} />
+                        label='Phone' cols='12 3' autoFocus={true} />
 
                 </div>
                 <div className='box-footer text-right'>

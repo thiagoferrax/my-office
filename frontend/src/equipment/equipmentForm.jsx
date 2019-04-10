@@ -37,7 +37,6 @@ class EquipmentForm extends Component {
                         type="text"
                         component={LabelAndInput}
                         label="Patrimony"
-                        placeholder="Enter the patrimony"
                         readOnly={readOnly}
                     />
 
@@ -46,14 +45,13 @@ class EquipmentForm extends Component {
                         label="Type"
                         options={getPossibleEquipments()}
                         optionValue='id' optionLabel='type'
-                        placeholder="Enter the type" readOnly={readOnly} />
+                        readOnly={readOnly} />
 
                     <Field cols='12 6'
                         name="specification"
                         type="text"
                         component={LabelAndInput}
                         label="Specification"
-                        placeholder="Enter the specification"
                         readOnly={readOnly}
                     />
 
@@ -63,7 +61,6 @@ class EquipmentForm extends Component {
                         name="expirationDate"
                         label="Expiration date"
                         component={Date}
-                        placeholder="Enter the expiration date"
                         readOnly={readOnly}
                     />
 
