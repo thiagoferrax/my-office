@@ -97,7 +97,8 @@ class DeskForm extends Component {
                                         minHorizontalSize={5}
                                         minVerticalSize={5}
                                         onSelect={desk => this.props.prepareToShow(desk, showUpdate)}
-                                        onMove={desk => this.props.update(desk, showUpdate)} />
+                                        onMove={desk => this.props.update(desk, showUpdate)} 
+                                        editMode={true} />
                                 </div>
                             </div>
                         </Grid >
