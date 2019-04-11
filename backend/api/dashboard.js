@@ -41,6 +41,14 @@ module.exports = app => {
             .catch(err => reject(err))
     })
 
+    const buildEquipment = (desk) => {
+        return ({ 
+            type: desk.equipmentType, 
+            patrimony: desk.equipmentPatrimony, 
+            specification: desk.equipmentSpecification, 
+            expirationDate: desk.equipmentExpirationDate })
+    }
+
     const getDesks = (summary) => new Promise((resolve, reject) => {
         app.db.select({
             id: 'desks.id',
@@ -73,12 +81,12 @@ module.exports = app => {
                     if (foundDesk.length > 0) {
                         const index = data[room].indexOf(foundDesk[0])
                         if (desk.equipmentType && desk.equipmentPatrimony) {
-                            data[room][index].equipments.push({ name: desk.equipmentType, specification: desk.equipmentSpecification })
+                            data[room][index].equipments.push(buildEquipment(desk))
                         }
                     } else {
                         desk.equipments = []
                         if (desk.equipmentType && desk.equipmentPatrimony) {
-                            desk.equipments.push({ name: desk.equipmentType, specification: desk.equipmentSpecification })
+                            desk.equipments.push(buildEquipment(desk))
                         }
                         data[room].push({ ...desk })
                         number_desks++
