@@ -321,11 +321,11 @@ module.exports = app => {
             const foundDesk = desksList.filter(e => e.id == desk.id)
             if (foundDesk.length > 0) {
                 const index = desksList.indexOf(foundDesk[0])
-                if (desk.equipmentType && desk.equipmentSpecification) {
+                if (desk.equipmentType && desk.equipmentPatrimony) {
                     desksList[index].equipments.push({ name: desk.equipmentType, specification: desk.equipmentSpecification, patrimony: desk.equipmentPatrimony, expirationDate: getFormatedDate(desk.equipmentExpirationDate) })
                 }
             } else {
-                if (desk.equipmentType && desk.equipmentSpecification) {
+                if (desk.equipmentType && desk.equipmentPatrimony) {
                     desk.equipments = [{ name: desk.equipmentType, specification: desk.equipmentSpecification, patrimony: desk.equipmentPatrimony, expirationDate: getFormatedDate(desk.equipmentExpirationDate) }]
                 } else {
                     desk.equipments = [{}]
@@ -374,7 +374,9 @@ module.exports = app => {
                 x: 'desks.x',
                 y: 'desks.y',
                 equipmentType: 'equipments.type',
-                equipmentSpecification: 'equipments.specification'
+                equipmentSpecification: 'equipments.specification',
+                equipmentPatrimony: 'equipments.patrimony',
+                equipmentExpirationDate: 'equipments.expirationDate'
             }
         ).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')

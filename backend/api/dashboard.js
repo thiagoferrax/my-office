@@ -51,8 +51,10 @@ module.exports = app => {
             y: 'desks.y',
             userId: 'desks.userId',
             date: 'desks.created_at',
-            equipmentName: 'equipments.type',
-            equipmentSpecification: 'equipments.specification'
+            equipmentType: 'equipments.type',
+            equipmentSpecification: 'equipments.specification',
+            equipmentPatrimony: 'equipments.patrimony',
+            equipmentExpirationDate: 'equipments.expirationDate'
         }).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
             .leftJoin('desks_equipments', 'desks_equipments.deskId', 'desks.id')
@@ -70,13 +72,13 @@ module.exports = app => {
                     const foundDesk = data[room].filter(e => e.id == desk.id)
                     if (foundDesk.length > 0) {
                         const index = data[room].indexOf(foundDesk[0])
-                        if (desk.equipmentName && desk.equipmentSpecification) {
-                            data[room][index].equipments.push({ name: desk.equipmentName, specification: desk.equipmentSpecification })
+                        if (desk.equipmentType && desk.equipmentPatrimony) {
+                            data[room][index].equipments.push({ name: desk.equipmentType, specification: desk.equipmentSpecification })
                         }
                     } else {
                         desk.equipments = []
-                        if (desk.equipmentName && desk.equipmentSpecification) {
-                            desk.equipments.push({ name: desk.equipmentName, specification: desk.equipmentSpecification })
+                        if (desk.equipmentType && desk.equipmentPatrimony) {
+                            desk.equipments.push({ name: desk.equipmentType, specification: desk.equipmentSpecification })
                         }
                         data[room].push({ ...desk })
                         number_desks++

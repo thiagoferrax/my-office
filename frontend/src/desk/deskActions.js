@@ -40,8 +40,6 @@ function submit(values, method) {
         const roomId = values.roomId
         const isUpdate = method === 'put' && id 
 
-        console.log(method, id, isUpdate)
-
         axios[method](`${consts.API_URL}/desks/${id}`, values)
             .then(resp => {
                 toastr.success('Success', 'Successful operation.')
