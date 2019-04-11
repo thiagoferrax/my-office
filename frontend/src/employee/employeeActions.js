@@ -14,34 +14,6 @@ export function getList() {
     }
 }
 
-export function getTree() {  
-    const request = axios.get(`${consts.API_URL}/employees/tree`)
-    return {
-        type: 'TREE_FETCHED',
-        payload: request
-    }
-}
-
-export function clone(employee) {  
-    return dispatch => {
-        axios['post'](`${consts.API_URL}/employees/clone`, {employee})
-            .then(resp => {
-                toastr.success('Success', 'Successful operation.')
-                dispatch(init())
-            })
-            .catch(e => {
-                e.response.data.errors.forEach(error => toastr.error('Error', error))
-            })
-    }
-}
-
-export function selectParent(parentId) {  
-    return {
-        type: 'PARENT_SELECTED',
-        payload: parentId
-    }
-}
-
 export function create(values) {
     return submit(values, 'post')
 }
@@ -73,7 +45,6 @@ export function showUpdate(employee) {
         showTabs('tabUpdate'),
         selectTab('tabUpdate'),        
         initialize('employeeForm', employee),
-        selectParent(employee.parentId)
     ]
 }
 
@@ -90,7 +61,6 @@ export function init() {
         showTabs('tabList', 'tabCreate'),
         selectTab('tabList'),
         getList(),
-        getTree(),
         initialize('employeeForm', INITIAL_VALUES)
     ]
 }

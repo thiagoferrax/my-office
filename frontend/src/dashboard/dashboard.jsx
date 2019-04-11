@@ -54,7 +54,8 @@ class Dashboard extends Component {
                                         <div className="box-body">
                                             <OfficeMap
                                                 data={officeData[room]}
-                                                minHorizontalSize={5} />
+                                                minHorizontalSize={5} 
+                                                fields={['type', 'patrimony', 'specification']}/>
                                         </div>
                                     </div>
                                 </Grid >)
