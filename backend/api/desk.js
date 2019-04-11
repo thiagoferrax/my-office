@@ -84,13 +84,15 @@ module.exports = app => {
         const equipments = carrier.equipments
 
         if (equipments && equipments.length > 0) {
-            const patrimonies = equipments.map(equipment => ({
-                patrimony: equipment.patrimony, equipment
+            const patrimoniesMap = equipments.map(equipment => ({
+                patrimony: +equipment.patrimony, equipment
             }))
 
-            app.db('equipments').whereIn('patrimony', Object.keys(patrimonies))
+            const patrimonies = patrimoniesMap.map(p => p.patrimony)
+
+            app.db('equipments').whereIn('patrimony', patrimonies)
                 .then(equipmentsFound => {
-                    const equipmentsToUpdate = equipmentsFound.map(e => ({ ...e, ...patrimonies[e.patrimony] }))
+                    const equipmentsToUpdate = equipmentsFound.map(e => ({ ...e, ...patrimoniesMap[e.patrimony] }))
                     const patrimoniesFound = equipmentsFound.map(e => e.patrimony)
                     const equipmentsToInsert = equipments.filter(e => !patrimoniesFound.includes(e.patrimony))
 
@@ -147,7 +149,8 @@ module.exports = app => {
                     resolve(carrier)
                 })
                 .catch(err => {
-                    reject(err)})
+                    reject(err)
+                })
         } else {
             resolve(carrier)
         }
@@ -169,7 +172,8 @@ module.exports = app => {
                     resolve(carrier)
                 })
                 .catch(err => {
-                    reject(err)})
+                    reject(err)
+                })
         } else {
             resolve(carrier)
         }
@@ -180,6 +184,7 @@ module.exports = app => {
         const userId = carrier.userId
 
         if (equipments && equipments.length > 0) {
+
             const rows = getEquipmentsToUpdate(equipments, userId)
             const chunkSize = rows.length
 
@@ -446,20 +451,20 @@ module.exports = app => {
                 type: equipment.type,
                 patrimony: equipment.patrimony,
                 userId,
-                created_at: new Date() 
+                created_at: new Date()
             })
             return rows
         }, [])
     }
 
-    const getEquipmentsToUpdate = equipments => {
+    const getEquipmentsToUpdate = (equipments, userId) => {
         return equipments.reduce((rows, equipment) => {
             rows.push({
                 id: equipment.id,
                 type: equipment.type,
                 patrimony: equipment.patrimony,
                 userId,
-                updated_at: new Date() 
+                updated_at: new Date()
             })
 
             return rows
