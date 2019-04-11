@@ -2,28 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { reduxForm, Field } from 'redux-form'
-import Tree from 'tree-slide-bar'
 import PropTypes from 'prop-types'
 
 import { init, showDelete, showUpdate } from './employeeActions'
 import LabelAndInput from '../common/form/labelAndInput'
-import Grid from '../common/layout/grid'
 
 class EmployeeForm extends Component {
-    constructor(props) {
-        super(props)
-    }
-
-    static contextTypes = {
-        store: PropTypes.object
-    }
-
-    componentWillMount() {
-        this.props.getTree()
-    }
 
     render() {
-        const { handleSubmit, readOnly, list, name, parentId, tree, init } = this.props
+        const { handleSubmit, readOnly, name } = this.props
         return (
             <form role='form' onSubmit={handleSubmit}>
                 <div className='box-body'>
@@ -55,7 +42,7 @@ class EmployeeForm extends Component {
 EmployeeForm = reduxForm({ form: 'employeeForm', destroyOnUnmount: false })(EmployeeForm)
 
 const mapStateToProps = state => ({
-    description: state.employee.description,
+    name: state.employee.name,
     list: state.employee.list,
 })
 
