@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { reduxForm, Field, formValueSelector } from 'redux-form'
 
-import { init, getOfficeData, prepareToShow, showUpdate, update } from './deskActions'
+import { init, getOfficeData, prepareToShow, showUpdate, showCreate, update } from './deskActions'
 import { getList as getRooms } from '../room/roomActions'
 import { getList as getEmployees } from '../employee/employeeActions'
 import If from '../common/operator/if'
@@ -50,7 +50,10 @@ class DeskForm extends Component {
 
     render() {
 
-        const { rooms, handleSubmit, readOnly, getOfficeData, officeData, showUpdate, equipments, employees } = this.props
+        const { rooms, handleSubmit, submitLabel, readOnly, getOfficeData, officeData, showCreate, showUpdate, equipments, employees } = this.props
+
+
+        const functionShow = submitLabel === 'Create' ? showCreate : showUpdate
 
         return (
             <form role='form' onSubmit={handleSubmit}>
@@ -92,23 +95,13 @@ class DeskForm extends Component {
                                     <h3 className="box-title">MY OFFICE - {officeData[0] && officeData[0].room}</h3>
                                 </div>
                                 <div className="box-body">
-                                    <If test={this.props.submitLabel === 'Update'}>
-                                        <OfficeMap
-                                            data={officeData}
-                                            minHorizontalSize={5}
-                                            minVerticalSize={5}
-                                            onSelect={desk => this.props.prepareToShow(desk, showUpdate)}
-                                            onMove={desk => this.props.update(desk, showUpdate)}
-                                            editMode={true} />
-                                    </If>
-                                    <If test={this.props.submitLabel !== 'Update'}>
-                                        <OfficeMap
-                                            data={officeData}
-                                            minHorizontalSize={5}
-                                            minVerticalSize={5}
-                                            onMove={desk => this.props.update(desk, showUpdate)}
-                                            editMode={true} />
-                                    </If>
+                                    <OfficeMap
+                                        data={officeData}
+                                        minHorizontalSize={5}
+                                        minVerticalSize={5}
+                                        onSelect={desk => this.props.prepareToShow(desk, functionShow)}
+                                        onMove={desk => this.props.update(desk, functionShow)}
+                                        editMode={true} />
                                 </div>
                             </div>
                         </Grid >
@@ -128,5 +121,5 @@ const mapStateToProps = state => ({
     equipments: state.desk.equipments,
     employees: state.employee.list
 })
-const mapDispatchToProps = dispatch => bindActionCreators({ init, getRooms, getEmployees, getOfficeData, prepareToShow, showUpdate, update }, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({ init, getRooms, getEmployees, getOfficeData, prepareToShow, showCreate, showUpdate, update }, dispatch)
 export default connect(mapStateToProps, mapDispatchToProps)(DeskForm)

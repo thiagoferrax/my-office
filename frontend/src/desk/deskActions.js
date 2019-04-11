@@ -38,10 +38,14 @@ function submit(values, method) {
     return dispatch => {
         const id = values.id ? values.id : ''
         const roomId = values.roomId
+        const isUpdate = method === 'put' && id 
+
+        console.log(method, id, isUpdate)
+
         axios[method](`${consts.API_URL}/desks/${id}`, values)
             .then(resp => {
                 toastr.success('Success', 'Successful operation.')
-                dispatch([getOfficeData(roomId), init()])
+                dispatch([getOfficeData(roomId), isUpdate ? initUpdate(values) : init()])
             })
             .catch(e => {
                 e.response.data.errors.forEach(error => toastr.error('Error', error))
@@ -80,11 +84,29 @@ export function showUpdate(desk) {
     ]
 }
 
+
+export function showCreate(desk) {
+    delete desk.id
+    return [
+        showTabs('tabCreate', 'tabList'),
+        selectTab('tabCreate'),
+        initialize('deskForm', desk),
+        getOfficeData(desk.roomId)
+    ]
+}
+
 export function showDelete(desk) {
     return [
         showTabs('tabDelete'),
         selectTab('tabDelete'),
         initialize('deskForm', desk)
+    ]
+}
+
+export function initUpdate(desk) {
+    return [
+        initialize('deskForm', desk),
+        getOfficeData(desk.roomId)
     ]
 }
 
