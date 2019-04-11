@@ -316,17 +316,26 @@ module.exports = app => {
         }
     }
 
+    const buildEquipment = (desk) => {
+        return ({
+            type: desk.equipmentType,
+            specification: desk.equipmentSpecification,
+            patrimony: desk.equipmentPatrimony,
+            expirationDate: getFormatedDate(desk.equipmentExpirationDate)
+        })
+    }
+
     const getDesksWithEquipments = (desks) => {
         return desks && desks.reduce((desksList, desk) => {
             const foundDesk = desksList.filter(e => e.id == desk.id)
             if (foundDesk.length > 0) {
                 const index = desksList.indexOf(foundDesk[0])
                 if (desk.equipmentType && desk.equipmentPatrimony) {
-                    desksList[index].equipments.push({ name: desk.equipmentType, specification: desk.equipmentSpecification, patrimony: desk.equipmentPatrimony, expirationDate: getFormatedDate(desk.equipmentExpirationDate) })
+                    desksList[index].equipments.push(buildEquipment(desk))
                 }
             } else {
                 if (desk.equipmentType && desk.equipmentPatrimony) {
-                    desk.equipments = [{ name: desk.equipmentType, specification: desk.equipmentSpecification, patrimony: desk.equipmentPatrimony, expirationDate: getFormatedDate(desk.equipmentExpirationDate) }]
+                    desk.equipments = [buildEquipment(desk)]
                 } else {
                     desk.equipments = [{}]
                 }
