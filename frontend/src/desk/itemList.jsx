@@ -10,11 +10,12 @@ import './itemList.css'
 
 const getPossibleEquipments = () => {
     const equipments = []
-    equipments.push({ id: 'Computer', type: 'Computer' })
+    equipments.push({ id: 'Chair', type: 'Chair' })
+    equipments.push({ id: 'Desktop', type: 'Desktop' })
+    equipments.push({ id: 'Drawer', type: 'Drawer' })
+    equipments.push({ id: 'Laptop', type: 'Laptop' })
     equipments.push({ id: 'Monitor', type: 'Monitor' })
     equipments.push({ id: 'Phone', type: 'Phone' })
-    equipments.push({ id: 'Drawer', type: 'Drawer' })
-    equipments.push({ id: 'Chair', type: 'Chair' })
     return equipments
 }
 

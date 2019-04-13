@@ -99,6 +99,9 @@ module.exports = app => {
                     carrier.equipmentsToUpdate = equipmentsToUpdate
                     carrier.equipmentsToInsert = equipmentsToInsert
 
+                    console.log('analyzeEquipments', equipmentsToInsert, equipmentsToUpdate)
+
+
                     resolve(carrier)
                 }
                 ).catch(err => reject(err))
@@ -181,25 +184,10 @@ module.exports = app => {
 
     const updateEquipments = (carrier) => new Promise((resolve, reject) => {
         const equipments = carrier.equipmentsToUpdate
-        const userId = carrier.userId
-
         if (equipments && equipments.length > 0) {
-
-            const rows = getEquipmentsToUpdate(equipments, userId)
-            const chunkSize = rows.length
-
-            app.db.batchUpdate('equipments', rows, chunkSize)
-                .returning('id')
-                .then(ids => {
-                    carrier.equipmentsIds =
-                        carrier.equipmentsIds ?
-                            [...carrier.equipmentsIds, ...ids] : ids
-                    resolve(carrier)
-                })
-                .catch(err => reject(err))
-        } else {
-            resolve(carrier)
+            carrier.equipmentsIds = (carrier.equipmentsIds || []).concat(equipments.map(e => e.id)) 
         }
+        resolve(carrier)
     })
 
     const updateEmployees = (carrier) => new Promise((resolve, reject) => {
@@ -235,11 +223,17 @@ module.exports = app => {
                     const chunkSize = rows.length
                     app.db.batchInsert('desks_equipments', rows, chunkSize)
                         .then(_ => resolve(carrier))
-                        .catch(err => reject(err))
+                        .catch(err => {
+                            console.log('insertDesksEquipments', err)
+                            reject(err)
+                        })
 
                     resolve(carrier)
                 }
-            ).catch(err => reject(err))
+            ).catch(err => {
+                console.log('insertDesksEquipments', err)
+                reject(err)
+            })
         } else {
             resolve(carrier)
         }

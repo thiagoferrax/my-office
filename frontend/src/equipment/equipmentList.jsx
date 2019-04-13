@@ -22,7 +22,6 @@ class EquipmentList extends Component {
             <tr key={equipment.id}>
                 <td>{equipment.patrimony}</td>
                 <td>{equipment.type}</td>
-                <td>{equipment.expirationDate ? this.getFormatedDate(equipment.expirationDate) : '-'}</td>
                 <td>{equipment.date ? this.getFormatedDate(equipment.date) : '-'}</td>
                 <td>
                     <button className='btn btn-default' onClick={() => this.props.prepareToShow(equipment.id, showUpdate)}>
@@ -44,7 +43,6 @@ class EquipmentList extends Component {
                         <tr>
                             <th>Patrimony</th>
                             <th>Type</th>
-                            <th>Expiration date</th>
                             <th>Created at</th>
                             <th className='table-actions'>Actions</th>
                         </tr>
