@@ -102,7 +102,7 @@ class DeskForm extends Component {
                                         onSelect={desk => this.props.prepareToShow(desk, functionShow)}
                                         onMove={desk => this.props.update(desk, functionShow)}
                                         editMode={true} 
-                                        fields={['type', 'patrimony']} />
+                                        fields={['type', 'patrimony', 'specification']} />
                                 </div>
                             </div>
                         </Grid >
