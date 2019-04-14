@@ -23,8 +23,6 @@ class EmployeeList extends Component {
             <tr key={employee.id}>
                 <td>{employee.name}</td>
                 <td>{employee.identifier}</td>
-                <td>{employee.email}</td>
-                <td>{employee.phone}</td>
                 <td>{employee.created_at ? this.getFormatedDate(employee.created_at) : '-'}</td>
                 <td>
                     <button className='btn btn-default' onClick={() => this.props.showUpdate(employee)}>
@@ -46,8 +44,6 @@ class EmployeeList extends Component {
                         <tr>
                             <th>Name</th>
                             <th>Identifier</th>
-                            <th>Email</th>
-                            <th>Phone</th>
                             <th>Created at</th>
                             <th className='table-actions'>Actions</th>
                         </tr>

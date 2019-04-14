@@ -46,7 +46,6 @@ function submit(values, method) {
                 dispatch([getOfficeData(roomId), isUpdate ? initUpdate(values) : init()])
             })
             .catch(e => {
-                console.log(e)
                 e.response.data.errors.forEach(error => toastr.error('Error', error))
             })
     }

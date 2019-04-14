@@ -99,9 +99,6 @@ module.exports = app => {
                     carrier.equipmentsToUpdate = equipmentsToUpdate
                     carrier.equipmentsToInsert = equipmentsToInsert
 
-                    console.log('analyzeEquipments', equipmentsToInsert, equipmentsToUpdate)
-
-
                     resolve(carrier)
                 }
                 ).catch(err => reject(err))
@@ -121,7 +118,6 @@ module.exports = app => {
 
             app.db('employees').whereIn('identifier', Object.keys(identifiers))
                 .then(employeesFound => {
-
                     const employeesToUpdate = employeesFound.map(e => ({ ...e, ...identifiers[e.identifier] }))
                     const identifiersFound = employeesFound.map(e => e.identifier)
                     const employeesToInsert = employees.filter(e => !identifiersFound.includes(e.identifier))
@@ -185,31 +181,17 @@ module.exports = app => {
     const updateEquipments = (carrier) => new Promise((resolve, reject) => {
         const equipments = carrier.equipmentsToUpdate
         if (equipments && equipments.length > 0) {
-            carrier.equipmentsIds = (carrier.equipmentsIds || []).concat(equipments.map(e => e.id)) 
+            carrier.equipmentsIds = (carrier.equipmentsIds || []).concat(equipments.map(e => e.id))
         }
         resolve(carrier)
     })
 
     const updateEmployees = (carrier) => new Promise((resolve, reject) => {
         const employees = carrier.employeesToUpdate
-        const userId = carrier.userId
-
         if (employees && employees.length > 0) {
-            const rows = getEmployeesToUpdate(employees, userId)
-            const chunkSize = rows.length
-
-            app.db.batchUpdate('employees', rows, chunkSize)
-                .returning('id')
-                .then(ids => {
-                    carrier.employeesIds =
-                        carrier.employeesIds ?
-                            [...carrier.employeesIds, ...ids] : ids
-                    resolve(carrier)
-                })
-                .catch(err => reject(err))
-        } else {
-            resolve(carrier)
+            carrier.employeesIds = (carrier.employeesIds || []).concat(employeesIds.map(e => e.id))
         }
+        resolve(carrier)
     })
 
     const insertDesksEquipments = (carrier) => new Promise((resolve, reject) => {
@@ -224,14 +206,12 @@ module.exports = app => {
                     app.db.batchInsert('desks_equipments', rows, chunkSize)
                         .then(_ => resolve(carrier))
                         .catch(err => {
-                            console.log('insertDesksEquipments', err)
                             reject(err)
                         })
 
                     resolve(carrier)
                 }
             ).catch(err => {
-                console.log('insertDesksEquipments', err)
                 reject(err)
             })
         } else {
@@ -250,11 +230,13 @@ module.exports = app => {
                     const chunkSize = rows.length
                     app.db.batchInsert('desks_employees', rows, chunkSize)
                         .then(_ => resolve(carrier))
-                        .catch(err => reject(err))
-
-                    resolve(carrier)
+                        .catch(err => {
+                            reject(err)
+                        })
                 }
-            ).catch(err => reject(err))
+            ).catch(err => {
+                reject(err)
+            })
         } else {
             resolve(carrier)
         }
