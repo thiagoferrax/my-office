@@ -340,12 +340,16 @@ module.exports = app => {
                 equipmentType: 'equipments.type',
                 equipmentSpecification: 'equipments.specification',
                 equipmentPatrimony: 'equipments.patrimony',
-                equipmentExpirationDate: 'equipments.expirationDate'
+                equipmentExpirationDate: 'equipments.expirationDate',
+                employeeName: 'employees.name',
+                employeeIdentifier: 'employees.identifier',                
             }
         ).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
             .leftJoin('desks_equipments', 'desks_equipments.deskId', 'desks.id')
             .leftJoin('equipments', 'desks_equipments.equipmentId', 'equipments.id')
+            .leftJoin('desks_employees', 'desks_employees.deskId', 'desks.id')
+            .leftJoin('employees', 'desks_employees.employeeId', 'employees.id')
             .where({ 'desks.userId': req.decoded.id })
             .orderBy('desks.created_at', 'desc')
             .then(desks => {
@@ -366,12 +370,16 @@ module.exports = app => {
                 equipmentType: 'equipments.type',
                 equipmentSpecification: 'equipments.specification',
                 equipmentPatrimony: 'equipments.patrimony',
-                equipmentExpirationDate: 'equipments.expirationDate'
+                equipmentExpirationDate: 'equipments.expirationDate',
+                employeeName: 'employees.name',
+                employeeIdentifier: 'employees.identifier',        
             }
         ).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
             .leftJoin('desks_equipments', 'desks_equipments.deskId', 'desks.id')
             .leftJoin('equipments', 'desks_equipments.equipmentId', 'equipments.id')
+            .leftJoin('desks_employees', 'desks_employees.deskId', 'desks.id')
+            .leftJoin('employees', 'desks_employees.employeeId', 'employees.id')
             .where({ 'desks.userId': req.decoded.id, 'rooms.id': req.params.id })
             .orderBy('desks.created_at', 'desc')
             .then(desks => {

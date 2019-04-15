@@ -68,6 +68,7 @@ module.exports = app => {
             .leftJoin('desks_equipments', 'desks_equipments.deskId', 'desks.id')
             .leftJoin('equipments', 'desks_equipments.equipmentId', 'equipments.id')
             .whereIn('desks.roomId', summary.roomsIds)
+            .orderBy('desks.created_at', 'desc')
             .then(desks => {
                 let number_desks = 0
                 summary.officeData = desks && desks.reduce((data, desk) => {
