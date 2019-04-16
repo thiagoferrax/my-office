@@ -323,15 +323,13 @@ module.exports = app => {
                 if (desk.equipmentType && desk.equipmentPatrimony) {
                     desksList[index].equipments.push(buildEquipment(desk))
                 }
+
                 if (desk.employeeName && desk.employeeIdentifier) {
-                    if(!desksList[index].employees) {
-                        desksList[index].employees = []    
-                    }
                     const employee = buildEmployee(desk)
                     if(!employeeMap.includes(employee.identifier)) {
                         desksList[index].employees.push(employee)
                         employeeMap.push(employee.identifier)
-                    }                    
+                    }               
                 }
             } else {
                 if (desk.equipmentType && desk.equipmentPatrimony) {
@@ -339,16 +337,20 @@ module.exports = app => {
                 } else {
                     desk.equipments = [{}]
                 }
+
                 if (desk.employeeName && desk.employeeIdentifier) {
                     if(!desk.employees) {
-                        desk.employees = []    
-                    }                   
+                        desk.employees = []
+                    }
                     const employee = buildEmployee(desk) 
                     if(!employeeMap.includes(employee.identifier)) {
                         desk.employees.push(employee)
                         employeeMap.push(employee.identifier)
                     }                    
+                } else {
+                    desk.employees = [{}]
                 }
+                    
                 desksList.push({ ...desk })
             }
             return desksList

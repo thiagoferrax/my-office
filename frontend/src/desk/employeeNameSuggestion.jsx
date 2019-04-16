@@ -147,7 +147,7 @@ export default class Example extends React.Component {
               onSuggestionsClearRequested={this.onSuggestionsClearRequested}
               getSuggestionValue={this.getSuggestionValue}
               renderSuggestion={this.renderSuggestion}
-              inputProps={{ ...inputProps, ...this.props.input }}
+              inputProps={{ ...inputProps, ...this.props.input}}
               placeholder={this.props.placeholder}
               readOnly={this.props.readOnly}
               className="form-control"

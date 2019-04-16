@@ -18,7 +18,7 @@ class EmployeeList extends Component {
     }
 
     renderRows() {
-        const list = this.props.list || []
+        const list = this.props.list
         return list.map(employee => (
             <tr key={employee.id}>
                 <td>{employee.name}</td>
