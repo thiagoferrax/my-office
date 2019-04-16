@@ -115,8 +115,7 @@ module.exports = app => {
             const identifiers = employees.map(employee => ({
                 identifier: employee.identifier, employee
             }))
-
-            app.db('employees').whereIn('identifier', Object.keys(identifiers))
+            app.db('employees').whereIn('identifier', identifiers.map(i => i.identifier))
                 .then(employeesFound => {
                     const employeesToUpdate = employeesFound.map(e => ({ ...e, ...identifiers[e.identifier] }))
                     const identifiersFound = employeesFound.map(e => e.identifier)
@@ -188,8 +187,9 @@ module.exports = app => {
 
     const updateEmployees = (carrier) => new Promise((resolve, reject) => {
         const employees = carrier.employeesToUpdate
+
         if (employees && employees.length > 0) {
-            carrier.employeesIds = (carrier.employeesIds || []).concat(employeesIds.map(e => e.id))
+            carrier.employeesIds = (carrier.employeesIds || []).concat(employees.map(e => e.id))
         }
         resolve(carrier)
     })
@@ -329,7 +329,6 @@ module.exports = app => {
                     }
                     const employee = buildEmployee(desk)
                     if(!employeeMap.includes(employee.identifier)) {
-                        console.log(employee)
                         desksList[index].employees.push(employee)
                         employeeMap.push(employee.identifier)
                     }                    
@@ -346,7 +345,6 @@ module.exports = app => {
                     }                   
                     const employee = buildEmployee(desk) 
                     if(!employeeMap.includes(employee.identifier)) {
-                        console.log(employee)
                         desk.employees.push(employee)
                         employeeMap.push(employee.identifier)
                     }                    
@@ -390,8 +388,6 @@ module.exports = app => {
     }
 
     const getOfficeData = (req, res) => {
-        console.log('getOfficeData')
-
         app.db.select(
             {
                 roomId: 'rooms.id',
@@ -416,10 +412,8 @@ module.exports = app => {
             .where({ 'desks.userId': req.decoded.id, 'rooms.id': req.params.id })
             .orderBy('desks.created_at', 'desc')
             .then(desks => {
-                console.log('getOfficeData before')
                 const desksWithEquipments = getDesksWithEquipments(desks)
 
-                console.log('getOfficeData', desksWithEquipments)
                 res.json(desksWithEquipments)
             })
             .catch(err => res.status(500).json({ errors: [err] }))
