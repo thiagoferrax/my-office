@@ -306,7 +306,16 @@ module.exports = app => {
         })
     }
 
+    const buildEmployee = (desk) => {
+        return ({
+            name: desk.employeeName,
+            identifier: desk.employeeIdentifier,
+        })
+    }
+
     const getDesksWithEquipments = (desks) => {
+
+        const employeeMap = []
         return desks && desks.reduce((desksList, desk) => {
             const foundDesk = desksList.filter(e => e.id == desk.id)
             if (foundDesk.length > 0) {
@@ -314,11 +323,33 @@ module.exports = app => {
                 if (desk.equipmentType && desk.equipmentPatrimony) {
                     desksList[index].equipments.push(buildEquipment(desk))
                 }
+                if (desk.employeeName && desk.employeeIdentifier) {
+                    if(!desksList[index].employees) {
+                        desksList[index].employees = []    
+                    }
+                    const employee = buildEmployee(desk)
+                    if(!employeeMap.includes(employee.identifier)) {
+                        console.log(employee)
+                        desksList[index].employees.push(employee)
+                        employeeMap.push(employee.identifier)
+                    }                    
+                }
             } else {
                 if (desk.equipmentType && desk.equipmentPatrimony) {
                     desk.equipments = [buildEquipment(desk)]
                 } else {
                     desk.equipments = [{}]
+                }
+                if (desk.employeeName && desk.employeeIdentifier) {
+                    if(!desk.employees) {
+                        desk.employees = []    
+                    }                   
+                    const employee = buildEmployee(desk) 
+                    if(!employeeMap.includes(employee.identifier)) {
+                        console.log(employee)
+                        desk.employees.push(employee)
+                        employeeMap.push(employee.identifier)
+                    }                    
                 }
                 desksList.push({ ...desk })
             }
@@ -342,7 +373,7 @@ module.exports = app => {
                 equipmentPatrimony: 'equipments.patrimony',
                 equipmentExpirationDate: 'equipments.expirationDate',
                 employeeName: 'employees.name',
-                employeeIdentifier: 'employees.identifier',                
+                employeeIdentifier: 'employees.identifier',
             }
         ).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
@@ -359,6 +390,8 @@ module.exports = app => {
     }
 
     const getOfficeData = (req, res) => {
+        console.log('getOfficeData')
+
         app.db.select(
             {
                 roomId: 'rooms.id',
@@ -372,7 +405,7 @@ module.exports = app => {
                 equipmentPatrimony: 'equipments.patrimony',
                 equipmentExpirationDate: 'equipments.expirationDate',
                 employeeName: 'employees.name',
-                employeeIdentifier: 'employees.identifier',        
+                employeeIdentifier: 'employees.identifier',
             }
         ).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
@@ -383,7 +416,11 @@ module.exports = app => {
             .where({ 'desks.userId': req.decoded.id, 'rooms.id': req.params.id })
             .orderBy('desks.created_at', 'desc')
             .then(desks => {
-                res.json(getDesksWithEquipments(desks))
+                console.log('getOfficeData before')
+                const desksWithEquipments = getDesksWithEquipments(desks)
+
+                console.log('getOfficeData', desksWithEquipments)
+                res.json(desksWithEquipments)
             })
             .catch(err => res.status(500).json({ errors: [err] }))
     }
@@ -400,12 +437,16 @@ module.exports = app => {
                 equipmentType: 'equipments.type',
                 equipmentSpecification: 'equipments.specification',
                 equipmentPatrimony: 'equipments.patrimony',
-                equipmentExpirationDate: 'equipments.expirationDate'
+                equipmentExpirationDate: 'equipments.expirationDate',
+                employeeName: 'employees.name',
+                employeeIdentifier: 'employees.identifier',
             }
         ).from('desks')
             .leftJoin('rooms', 'desks.roomId', 'rooms.id')
             .leftJoin('desks_equipments', 'desks_equipments.deskId', 'desks.id')
             .leftJoin('equipments', 'desks_equipments.equipmentId', 'equipments.id')
+            .leftJoin('desks_employees', 'desks_employees.deskId', 'desks.id')
+            .leftJoin('employees', 'desks_employees.employeeId', 'employees.id')
             .where({ 'desks.id': req.params.id })
             .then(desks => res.json(getDesksWithEquipments(desks)[0]))
             .catch(err => res.status(500).json({ errors: [err] }))

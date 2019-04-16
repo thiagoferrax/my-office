@@ -31,7 +31,7 @@ export default class EmployeeList extends Component {
             return (
                 <Row key={index}>
 
-                    <Field cols='12 8'
+                    <Field cols='12 7'
                         name={`${member}.name`}
                         type="text"
                         field="name"
