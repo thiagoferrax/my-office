@@ -1,3 +1,28 @@
 .removeZIndex {
     z-index: 0;
 }
+
+.datePicker {
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+}
+
+.react-datepicker-wrapper {
+    display: flex !important;
+}
+
+.react-datepicker__input-container {
+    width: 100%;
+}
+
+.react-datepicker__current-month, .react-datepicker-time__header, .react-datepicker-year-header {
+    font-size: 1.1em !important;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+}
+
+.react-datepicker {
+    font-size: 0.8em !important;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+}

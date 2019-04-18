@@ -7,6 +7,13 @@ import PropTypes from 'prop-types'
 import { init, showDelete, showUpdate } from './employeeActions'
 import LabelAndInput from '../common/form/labelAndInput'
 
+import Date from '../common/form/date'
+import If from '../common/operator/if'
+import Row from '../common/layout/row'
+import Phone from '../common/form/phone'
+import Email from '../common/form/email'
+import Identifier from '../common/form/identifier'
+
 class EmployeeForm extends Component {
 
     render() {
@@ -17,13 +24,13 @@ class EmployeeForm extends Component {
                     <Field name='name' value={name} component={LabelAndInput} readOnly={readOnly}
                         label='Name' cols='12 3' autoFocus={true} />
 
-                    <Field name='identifier' component={LabelAndInput} readOnly={readOnly}
+                    <Field name='identifier' component={Identifier} readOnly={readOnly}
                         label='Identifier' cols='12 3' autoFocus={true} />
 
-                    <Field name='email' component={LabelAndInput} readOnly={readOnly}
+                    <Field name='email' component={Email} readOnly={readOnly}
                         label='Email' cols='12 3' autoFocus={true} />
 
-                    <Field name='phone' component={LabelAndInput} readOnly={readOnly}
+                    <Field name='phone' component={Phone} readOnly={readOnly}
                         label='Phone' cols='12 3' autoFocus={true} />
 
                 </div>

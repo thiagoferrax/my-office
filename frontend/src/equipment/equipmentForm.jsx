@@ -6,10 +6,6 @@ import LabelAndInput from '../common/form/labelAndInput'
 import { init } from './equipmentActions'
 import Date from '../common/form/date'
 import Select from '../common/form/select'
-import Input from '../common/form/input'
-
-import { getList as getUserList } from '../user/userActions'
-
 
 const getPossibleEquipments = () => {
     const equipments = []
@@ -23,12 +19,8 @@ const getPossibleEquipments = () => {
 }
 
 class EquipmentForm extends Component {
-    componentWillMount() {
-        this.props.getUserList()
-    }
-
     render() {
-        const { handleSubmit, readOnly, userList } = this.props
+        const { handleSubmit, readOnly } = this.props
         return (
             <form role='form' onSubmit={handleSubmit}>
                 <div className='box-body'>
@@ -62,6 +54,7 @@ class EquipmentForm extends Component {
                         name="expirationDate"
                         label="Expiration date"
                         component={Date}
+                        
                         readOnly={readOnly}
                     />
 
@@ -80,6 +73,6 @@ class EquipmentForm extends Component {
 
 EquipmentForm = reduxForm({ form: 'equipmentForm', destroyOnUnmount: false })(EquipmentForm)
 
-const mapStateToProps = state => ({ userList: state.user.list })
-const mapDispatchToProps = dispatch => bindActionCreators({ init, getUserList }, dispatch)
+const mapStateToProps = state => ({ })
+const mapDispatchToProps = dispatch => bindActionCreators({ init}, dispatch)
 export default connect(mapStateToProps, mapDispatchToProps)(EquipmentForm)

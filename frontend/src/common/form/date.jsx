@@ -3,11 +3,10 @@ import Grid from '../layout/grid'
 import If from '../operator/if'
 import $ from 'jquery'
 import './form.css'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 export default class ItemList extends Component {
-    componentDidMount() {
-        $("document").ready(() => { $(`#${this.props.id}`).datepicker({ autoclose: true, todayHighlight: true }) })
-    }
 
     render() {
         return (
@@ -20,7 +19,11 @@ export default class ItemList extends Component {
                         <div className="input-group-addon">
                             <i className="fa fa-calendar"></i>
                         </div>
-                        <input {...this.props.input} type="text" className="form-control pull-right" id={this.props.id} placeholder={this.props.placeholder} />
+                        
+                        <DatePicker className="datePicker"
+                            selected={this.props.input.value ? new Date(this.props.input.value) : null}
+                            onChange={this.props.input.onChange}
+                        />
                     </div>
                 </div>
             </Grid>
