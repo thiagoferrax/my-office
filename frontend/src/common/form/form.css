@@ -7,6 +7,12 @@
     height: 34px;
     padding: 6px 12px;
     font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+    border: 1px solid #ccc; 
+}
+
+.datePicker:focus {
+    outline: 0;
+    border: 1px solid #3c8dbc; 
 }
 
 .react-datepicker-wrapper {

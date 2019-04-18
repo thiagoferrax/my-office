@@ -122,6 +122,8 @@ module.exports = app => {
             return data
         }, {})
 
+        console.log(summary.equipmentsSummary)
+
         resolve(summary)
     })
 
@@ -131,7 +133,7 @@ module.exports = app => {
         getEquipments(userId)
             .then(getTeam)
             .then(getDesks)
-            //.then(getEquipmentsSummary)
+            .then(getEquipmentsSummary)
             .then(summary => res.json(summary))
             .catch(err => res.status(500).json({ errors: [err] }))
     }
