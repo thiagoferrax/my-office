@@ -97,11 +97,12 @@ class DeskForm extends Component {
                                 <div className="box-body">
                                     <OfficeMap
                                         data={officeData}
-                                        minHorizontalSize={5}
-                                        minVerticalSize={5}
+                                        horizontalSize={6}
+                                        verticalSize={6}
                                         onSelect={desk => this.props.prepareToShow(desk, functionShow)}
                                         onMove={desk => this.props.update(desk, functionShow)}
                                         editMode={true} 
+                                        showNavigator={true}
                                         fields={['type', 'patrimony', 'specification']} />
                                 </div>
                             </div>
