@@ -96,6 +96,7 @@ class DeskForm extends Component {
                                 </div>
                                 <div className="box-body">
                                     <OfficeMap
+                                        id={officeData[0] && officeData[0].room}
                                         data={officeData}
                                         horizontalSize={6}
                                         verticalSize={6}
