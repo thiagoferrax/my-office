@@ -122,8 +122,6 @@ module.exports = app => {
             return data
         }, {})
 
-        console.log(summary.equipmentsSummary)
-
         resolve(summary)
     })
 
