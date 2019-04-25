@@ -98,8 +98,8 @@ class DeskForm extends Component {
                                     <OfficeMap
                                         id={officeData[0] && officeData[0].room}
                                         data={officeData}
-                                        horizontalSize={6}
-                                        verticalSize={6}
+                                        horizontalSize={8}
+                                        verticalSize={8}
                                         onSelect={desk => this.props.prepareToShow(desk, functionShow)}
                                         onMove={desk => this.props.update(desk, functionShow)}
                                         editMode={true} 

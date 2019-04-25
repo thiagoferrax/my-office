@@ -57,7 +57,7 @@ class Dashboard extends Component {
                                                 id={`id_${room}`}
                                                 data={officeData[room]}
                                                 fields={['type', 'patrimony', 'specification']}
-                                                horizontalSize={6}
+                                                horizontalSize={8}
                                                 verticalSize={4}
                                                 showNavigator={true}
                                             />
