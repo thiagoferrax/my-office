@@ -10,6 +10,7 @@ import Email from '../common/form/email'
 import Identifier from '../common/form/identifier'
 
 import EmployeeNameSuggestion from './employeeNameSuggestion'
+import './itemList.css'
 
 const getPossibleEquipments = () => {
     const equipments = []
@@ -31,7 +32,7 @@ export default class EmployeeList extends Component {
             return (
                 <Row key={index}>
 
-                    <Field cols='12 7'
+                    <Field cols='12 6'
                         name={`${member}.name`}
                         type="text"
                         field="name"
@@ -49,13 +50,16 @@ export default class EmployeeList extends Component {
                         readOnly={this.props.readOnly}
                     />
 
-
-                    <If test={index}>
-                        <button type='button' className='btn btn-danger' cols='12 1'
-                            onClick={() => fields.remove(index)}>
-                            <i className="icon ion-md-trash"></i>
-                        </button>
-                    </If>
+                    <Grid cols='12 2'>
+                        <If test={!index}>
+                            <button type='button' className='btn btn-default marginBottom' onClick={() => {
+                                    fields.remove(index)
+                                    fields.unshift({})
+                                }} cols='12 1'>
+                                <i className="fa fa-close"></i>
+                            </button>
+                        </If>
+                    </Grid>
                 </Row>)
         })
     }

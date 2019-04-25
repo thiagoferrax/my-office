@@ -44,7 +44,7 @@ export default class ItemList extends Component {
 
                     <Grid cols='12 2'>
                         <If test={!index}>
-                            <button type='button' className='btn btn-default marginBottom' onClick={() => fields.unshift({})}>
+                            <button type='button' className='btn btn-sucess marginBottom' onClick={() => fields.unshift({})} cols='12 1'>
                                 <i className="fa fa-plus"></i>
                             </button>
                             {(touched || submitFailed) && error && <span>{error}</span>}
