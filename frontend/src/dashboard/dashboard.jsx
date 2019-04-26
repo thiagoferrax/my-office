@@ -53,7 +53,6 @@ class Dashboard extends Component {
                     <Row>
                         {
                             officeData && Object.keys(officeData).map((room => {
-                                console.log(room)
                                 return (<Grid key={`room_${room}`} cols='12'>
                                     <div className="box_ box-default">
                                         <div className="box-header with-border">
@@ -65,7 +64,7 @@ class Dashboard extends Component {
                                                 id={`id_${room}`}
                                                 data={officeData[room]}
                                                 fields={['type', 'patrimony', 'specification']}
-                                                horizontalSize={7}
+                                                horizontalSize={6}
                                                 verticalSize={4}
                                                 showNavigator={true}
                                             />
