@@ -9,14 +9,19 @@ import InfoBox from '../common/widget/infoBox'
 import OfficeMap from 'office-map'
 import Grid from '../common/layout/grid'
 import Row from '../common/layout/row'
+import {getList as getEmployees} from '../employee/employeeActions'
 
 class Dashboard extends Component {
     componentWillMount() {
         this.props.getSummary()
+        this.props.getEmployees()
     }
 
     componentDidMount() {
-        this.interval = setInterval(() => this.props.getSummary(), 5000)
+        this.interval = setInterval(() => {
+            this.props.getSummary()
+            this.props.getEmployees()
+        }, 5000)
     }
 
     componentWillUnmount() {
@@ -30,16 +35,19 @@ class Dashboard extends Component {
         // Number of equipment types expiring per month
 
         const { rooms, number_desks, members, officeData } = this.props.summary
+        const employees = this.props.employees
         return (
             <div>
                 <ContentHeader title='Dashboard' small='Control Panel' />
                 <Content>
                     <Row>
-                        <InfoBox cols='12 6 4' color='aqua' icon='cube'
+                        <InfoBox cols='12 6 3' color='aqua' icon='cube'
                             value={rooms.length} text='Rooms' />
-                        <InfoBox cols='12 6 4' color='red' icon='people '
+                        <InfoBox cols='12 6 3' color='red' icon='person'
                             value={members.length} text='Managers' />
-                        <InfoBox cols='12 6 4' color='green' icon='desktop'
+                        <InfoBox cols='12 6 3' color='yellow' icon='people'
+                            value={employees.length} text='Employees' />
+                        <InfoBox cols='12 6 3' color='green' icon='desktop'
                             value={number_desks} text='Desks' />
                     </Row>
                     <Row>
@@ -57,7 +65,7 @@ class Dashboard extends Component {
                                                 id={`id_${room}`}
                                                 data={officeData[room]}
                                                 fields={['type', 'patrimony', 'specification']}
-                                                horizontalSize={7}
+                                                horizontalSize={6}
                                                 verticalSize={4}
                                                 showNavigator={true}
                                             />
@@ -76,6 +84,7 @@ class Dashboard extends Component {
     }
 }
 
-const mapStateToProps = state => ({ summary: state.dashboard.summary })
-const mapDispatchToProps = dispatch => bindActionCreators({ getSummary }, dispatch)
+const mapStateToProps = state => ({ summary: state.dashboard.summary,
+                                    employees: state.employee.list })
+const mapDispatchToProps = dispatch => bindActionCreators({ getSummary, getEmployees }, dispatch)
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
