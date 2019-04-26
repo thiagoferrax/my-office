@@ -102,21 +102,31 @@ module.exports = app => {
 
     const getEquipmentsSummary = (summary) => new Promise((resolve, reject) => {
         const roomsIds = Object.keys(summary.officeData)
+        
         summary.equipmentsSummary = roomsIds.reduce((data, roomId) => {
             if (!Object.keys(data).includes(`${roomId}`)) {
                 data[roomId] = {}
             }
             const desks = summary.officeData[roomId]
+            const equipmentMap = []
 
+            console.log('getEquipmentsSummary')
             desks.forEach(desk => {
                 const equipments = desk.equipments
 
                 equipments && equipments.forEach(equipment => {
-                    if (!Object.keys(data[roomId]).includes(`${equipment.type}`)) {
-                        data[roomId][equipment.type] = 1
-                    } else {
-                        data[roomId][equipment.type] += 1
+
+                    if(!equipmentMap.includes(equipment.patrimony)) {
+
+                        equipmentMap.push(equipment.patrimony)
+
+                        if (!Object.keys(data[roomId]).includes(`${equipment.type}`)) {
+                            data[roomId][equipment.type] = 1
+                        } else {
+                            data[roomId][equipment.type] += 1
+                        }    
                     }
+
                 })
             })
             return data

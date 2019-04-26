@@ -46,7 +46,7 @@ class Dashboard extends Component {
                         <InfoBox cols='12 6 3' color='red' icon='person'
                             value={members.length} text='Managers' />
                         <InfoBox cols='12 6 3' color='yellow' icon='people'
-                            value={employees.length} text='Employees' />
+                            value={(employees && employees.length) || 0} text='Employees' />
                         <InfoBox cols='12 6 3' color='green' icon='desktop'
                             value={number_desks} text='Desks' />
                     </Row>
@@ -65,7 +65,7 @@ class Dashboard extends Component {
                                                 id={`id_${room}`}
                                                 data={officeData[room]}
                                                 fields={['type', 'patrimony', 'specification']}
-                                                horizontalSize={6}
+                                                horizontalSize={7}
                                                 verticalSize={4}
                                                 showNavigator={true}
                                             />
