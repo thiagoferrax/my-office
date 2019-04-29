@@ -67,29 +67,23 @@ export default class Example extends React.Component {
   constructor() {
     super();
 
-    // Autosuggest is a controlled component.
-    // This means that you need to provide an input value
-    // and an onChange handler that updates this value (see below).
-    // Suggestions also need to be provided to the Autosuggest,
-    // and they are initially empty because the Autosuggest is closed.
     this.state = {
-      value: '',
       suggestions: []
     };
+
+    this.onChange =  this.onChange.bind(this)
   }
 
   getSuggestionValue = suggestion => suggestion[this.props.field];
 
-  // Use your imagination to render suggestions.
   renderSuggestion = suggestion => (
     <div>
       {suggestion[this.props.field]}
     </div>
   );
 
-  // Teach Autosuggest how to calculate suggestions for any given input value.
   getSuggestions = value => {
-    const inputValue = value.trim().toLowerCase();
+    const inputValue = value && value.trim().toLowerCase();
     const inputLength = inputValue.length;
 
     const list = this.props.list || []
@@ -100,20 +94,15 @@ export default class Example extends React.Component {
   };
 
   onChange = (event, { newValue }) => {
-    this.setState({
-      value: newValue
-    });
-  };
+    this.props.input.onChange(newValue)
+  }
 
-  // Autosuggest will call this function every time you need to update suggestions.
-  // You already implemented this logic above, so just use it.
   onSuggestionsFetchRequested = ({ value }) => {
     this.setState({
       suggestions: this.getSuggestions(value)
     });
   };
 
-  // Autosuggest will call this function every time you need to clear suggestions.
   onSuggestionsClearRequested = () => {
     this.setState({
       suggestions: []
@@ -123,14 +112,12 @@ export default class Example extends React.Component {
   render() {
     const { value, suggestions } = this.state;
 
-    // Autosuggest will pass through all these props to the input.
     const inputProps = {
       placeholder: this.props.placeholder,
       value,
       onChange: this.onChange
     };
 
-    // Finally, render it!
     return (
       <Grid cols={this.props.cols || 12}>
         <div className="form-group">
@@ -147,7 +134,7 @@ export default class Example extends React.Component {
               onSuggestionsClearRequested={this.onSuggestionsClearRequested}
               getSuggestionValue={this.getSuggestionValue}
               renderSuggestion={this.renderSuggestion}
-              inputProps={{ ...inputProps, ...this.props.input}}
+              inputProps={{...this.props.input, onChange: this.onChange}}
               placeholder={this.props.placeholder}
               readOnly={this.props.readOnly}
               className="form-control"

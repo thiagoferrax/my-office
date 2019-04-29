@@ -110,7 +110,6 @@ module.exports = app => {
             const desks = summary.officeData[roomId]
             const equipmentMap = []
 
-            console.log('getEquipmentsSummary')
             desks.forEach(desk => {
                 const equipments = desk.equipments
 
