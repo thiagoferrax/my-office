@@ -70,8 +70,6 @@ export default class Example extends React.Component {
     this.state = {
       suggestions: []
     };
-
-    this.onChange =  this.onChange.bind(this)
   }
 
   getSuggestionValue = suggestion => suggestion[this.props.field];
@@ -94,12 +92,70 @@ export default class Example extends React.Component {
   };
 
   onChange = (event, { newValue }) => {
-    this.props.input.onChange(newValue)
+    const { input, onSelected } = this.props
+
+    input.onChange(newValue)
+
+    if(onSelected) {
+      const inputValue = newValue && newValue.trim().toLowerCase();
+      const inputLength = inputValue.length;
+
+      const list = this.props.list || []
+
+      const selectedValue = inputLength === 0 ? [] : list.filter(element =>
+      element[this.props.field].toLowerCase() === inputValue)
+    
+      onSelected(selectedValue.length > 0 && selectedValue[0])
+    }
   }
 
+  onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method })  => {
+    const { onSelected } = this.props
+
+    if(onSelected) {
+      const inputValue = suggestionValue && suggestionValue.trim().toLowerCase();
+      const inputLength = inputValue.length;
+
+      const list = this.props.list || []
+
+      const selectedValue = inputLength === 0 ? [] : list.filter(element =>
+      element[this.props.field].toLowerCase().slice(0, inputLength) === inputValue)
+    
+      onSelected(selectedValue.length > 0 && selectedValue[0])
+    }
+  }
+
+  onSuggestionHighlighted = ({ suggestion })  => {
+    const { onSelected } = this.props
+
+    if(onSelected && suggestion) {
+      const name = suggestion.name
+      const inputValue = name && name.trim().toLowerCase();
+      const inputLength = inputValue.length;
+
+      const list = this.props.list || []
+
+      const selectedValue = inputLength === 0 ? [] : list.filter(element =>
+      element[this.props.field].toLowerCase().slice(0, inputLength) === inputValue)
+    
+      onSelected(selectedValue.length > 0 && selectedValue[0])
+    }
+  }
+
+  
+
   onSuggestionsFetchRequested = ({ value }) => {
+    const suggestions = this.getSuggestions(value)
+
+    const { onSelected } = this.props
+    if(suggestions && suggestions.length === 0) {
+      if(onSelected) {
+        onSelected('')
+      }    
+    }
+
     this.setState({
-      suggestions: this.getSuggestions(value)
+      suggestions
     });
   };
 
@@ -110,14 +166,8 @@ export default class Example extends React.Component {
   };
 
   render() {
-    const { value, suggestions } = this.state;
-
-    const inputProps = {
-      placeholder: this.props.placeholder,
-      value,
-      onChange: this.onChange
-    };
-
+    const { suggestions } = this.state;
+    
     return (
       <Grid cols={this.props.cols || 12}>
         <div className="form-group">
@@ -138,7 +188,9 @@ export default class Example extends React.Component {
               placeholder={this.props.placeholder}
               readOnly={this.props.readOnly}
               className="form-control"
-              theme={theme} />
+              theme={theme} 
+              onSuggestionSelected={this.onSuggestionSelected} 
+              onSuggestionHighlighted={this.onSuggestionHighlighted} />
           </div>
         </div>
       </Grid>

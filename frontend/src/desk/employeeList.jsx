@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Field, FieldArray } from 'redux-form'
+import { Field, FieldArray, change } from 'redux-form'
 import Grid from '../common/layout/grid'
 import Input from '../common/form/input'
 import Date from '../common/form/date'
@@ -25,6 +25,11 @@ const getPossibleEquipments = () => {
 }
 
 export default class EmployeeList extends Component {
+    onSelected = (employee, member, index) => {
+        if(this.props.onSelected) {
+            this.props.onSelected(employee, member, index)
+        }
+    }
 
     renderRows = ({ fields, meta: { touched, error, submitFailed } }) => {
 
@@ -39,10 +44,11 @@ export default class EmployeeList extends Component {
                         list={this.props.list}
                         placeholder="Name"
                         readOnly={this.props.readOnly}
-                        component={EmployeeNameSuggestion} />
-
+                        component={EmployeeNameSuggestion} 
+                        onSelected={employee => this.onSelected(employee, member, index)} />
 
                     <Field cols='12 4'
+                        id={`${member}.identifier`}
                         name={`${member}.identifier`}
                         type="text"
                         component={Identifier}

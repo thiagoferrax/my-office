@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { reduxForm, Field, formValueSelector } from 'redux-form'
+import { reduxForm, Field, formValueSelector, change} from 'redux-form'
 
 import { init, getOfficeData, prepareToShow, showUpdate, showCreate, update } from './deskActions'
 import { getList as getRooms } from '../room/roomActions'
@@ -18,10 +18,13 @@ import SelectWithIcon from '../common/form/selectWithIcon'
 import './desk.css'
 
 class DeskForm extends Component {
+    constructor(props) {
+        super(props)
+        
+        props.getRooms()
+        props.getEmployees()
 
-    componentWillMount() {
-        this.props.getRooms()
-        this.props.getEmployees()
+        this.onEmployeeChange = this.onEmployeeChange.bind(this)
     }
 
     getPossibleDirections() {
@@ -48,6 +51,15 @@ class DeskForm extends Component {
         return positions
     }
 
+    onEmployeeChange(employee, member, index) {
+        this.setValue(member, index, employee.identifier)
+        
+    }
+
+    setValue = (member, index, value) => {
+        this.props.dispatch(change(`deskForm`, `employees[${index}].identifier`, value || ''))
+    }
+
     render() {
 
         const { rooms, handleSubmit, submitLabel, readOnly, getOfficeData, officeData, showCreate, showUpdate, equipments, employees } = this.props
@@ -72,8 +84,8 @@ class DeskForm extends Component {
                         component={SelectWithIcon} icon="map-marker" readOnly={readOnly}
                         options={this.getPossiblePositions()} optionValue='id' optionLabel='name' />
 
-                    <EmployeeList cols='12 6' list={employees} readOnly={readOnly}
-                        field='employees' legend='Employee' icon='user-plus' />
+                    <EmployeeList id="employeeList" cols='12 6' list={employees} readOnly={readOnly}
+                        field='employees' legend='Employee' icon='user-plus' onSelected={this.onEmployeeChange} />
 
                     <ItemList cols='12 6' list={equipments} readOnly={readOnly}
                         field='equipments' legend='Equipments' icon='laptop' />
