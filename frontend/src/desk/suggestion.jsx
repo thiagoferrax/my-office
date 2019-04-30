@@ -84,10 +84,11 @@ export default class Example extends Component {
     }
     
     const list = this.props.list || []
-    const inputValue = value && value.trim().toLowerCase()
+    const inputValue = `${value}`.trim().toLowerCase()
+
     const inputLength = inputValue.length
     return inputLength === 0 ? [] :
-      list.filter(element => element[this.props.field].toLowerCase().slice(0, inputLength) === inputValue)
+      list.filter(element => `${element[this.props.field]}`.toLowerCase().slice(0, inputLength) === `${inputValue}`)
   }
 
   onChange = (event, { newValue }) => {
@@ -122,7 +123,8 @@ export default class Example extends Component {
     const { onSelected } = this.props
 
     if (onSelected && suggestion) {
-      const selectedValue = this.getSelectedValue(suggestion.name)
+      const selectedValue = this.getSelectedValue(suggestion[this.props.field])
+
       onSelected(selectedValue)
     }
   }
