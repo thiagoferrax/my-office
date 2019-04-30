@@ -2,6 +2,8 @@ import axios from 'axios'
 import { toastr } from 'react-redux-toastr'
 import { initialize } from 'redux-form'
 import { showTabs, selectTab } from '../common/tab/tabActions'
+import { getList as getEmployees } from '../employee/employeeActions'
+import { getList as getEquipments } from '../equipment/equipmentActions'
 import consts from '../consts'
 
 const INITIAL_VALUES = { rooms: [], officeData: [], equipments: [{}], employees: [{}] }
@@ -113,6 +115,8 @@ export function init() {
         showTabs('tabCreate', 'tabList'),
         selectTab('tabCreate'),
         getList(),
+        getEmployees(),
+        getEquipments(),
         initialize('deskForm', INITIAL_VALUES),
     ]
 }

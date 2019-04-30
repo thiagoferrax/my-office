@@ -6,7 +6,8 @@ import Date from '../common/form/date'
 import If from '../common/operator/if'
 import Row from '../common/layout/row'
 import Select from '../common/form/select'
-import './itemList.css'
+import EquipmentSuggestion from './suggestion'
+import './equipmentList.css'
 
 const getPossibleEquipments = () => {
     const equipments = []
@@ -20,6 +21,11 @@ const getPossibleEquipments = () => {
 }
 
 export default class ItemList extends Component {
+    onSelected = (equipment, member, index) => {
+        if(this.props.onSelected) {
+            this.props.onSelected(equipment, member, index)
+        }
+    }
 
     renderRows = ({ fields, meta: { touched, error, submitFailed } }) => {
 
@@ -31,8 +37,12 @@ export default class ItemList extends Component {
                         name={`${member}.patrimony`}
                         type="text"
                         component={Input}
-                        label="Patrimony"
                         placeholder="Patrimony"
+                        component={EquipmentSuggestion} 
+                        list={this.props.list}
+                        icon="fa fa-tag"                        
+                        field="patrimony"
+                        onSelected={equipment => this.onSelected(equipment, member, index)}
                         readOnly={this.props.readOnly}
                     />
 
@@ -44,7 +54,7 @@ export default class ItemList extends Component {
 
                     <Grid cols='12 2'>
                         <If test={!index}>
-                            <button type='button' className='btn btn-success marginBottom' onClick={() => fields.unshift({})} cols='12 1'>
+                            <button type='button' className='btn btn-default marginBottom' onClick={() => fields.unshift({})} cols='12 1'>
                                 <i className="fa fa-plus"></i>
                             </button>
                             {(touched || submitFailed) && error && <span>{error}</span>}

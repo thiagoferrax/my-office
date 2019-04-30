@@ -9,8 +9,8 @@ import Phone from '../common/form/phone'
 import Email from '../common/form/email'
 import Identifier from '../common/form/identifier'
 
-import EmployeeNameSuggestion from './employeeNameSuggestion'
-import './itemList.css'
+import EmployeeSuggestion from './suggestion'
+import './equipmentList.css'
 
 const getPossibleEquipments = () => {
     const equipments = []
@@ -44,7 +44,7 @@ export default class EmployeeList extends Component {
                         list={this.props.list}
                         placeholder="Name"
                         readOnly={this.props.readOnly}
-                        component={EmployeeNameSuggestion} 
+                        component={EmployeeSuggestion} 
                         onSelected={employee => this.onSelected(employee, member, index)} />
 
                     <Field cols='12 4'

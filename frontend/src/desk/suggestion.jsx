@@ -38,15 +38,15 @@ const theme = {
     position: 'absolute',
     top: 41,
     width: '100%',
-    height: 34,
     border: '1px solid #aaa',
     backgroundColor: '#fff',
-    fontFamily: 'Helvetica, sans-serif',
+    fontFamily: 'Source Sans Pro',
     fontWeight: 400,
     fontSize: 14,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
-    zIndex: 2
+    zIndex: 2,
+    padding: '2px 0px 0px 0px'
   },
   suggestionsList: {
     margin: 0,
@@ -63,13 +63,11 @@ const theme = {
   }
 }
 
-export default class Example extends React.Component {
+export default class Example extends Component {
   constructor() {
     super();
 
-    this.state = {
-      suggestions: []
-    };
+    this.state = { suggestions: [] }
   }
 
   getSuggestionValue = suggestion => suggestion[this.props.field];
@@ -78,96 +76,77 @@ export default class Example extends React.Component {
     <div>
       {suggestion[this.props.field]}
     </div>
-  );
+  )
 
   getSuggestions = value => {
-    const inputValue = value && value.trim().toLowerCase();
-    const inputLength = inputValue.length;
-
+    if (!value) {
+      return []
+    }
+    
     const list = this.props.list || []
-
-    return inputLength === 0 ? [] : list.filter(element =>
-      element[this.props.field].toLowerCase().slice(0, inputLength) === inputValue
-    );
-  };
+    const inputValue = value && value.trim().toLowerCase()
+    const inputLength = inputValue.length
+    return inputLength === 0 ? [] :
+      list.filter(element => element[this.props.field].toLowerCase().slice(0, inputLength) === inputValue)
+  }
 
   onChange = (event, { newValue }) => {
     const { input, onSelected } = this.props
 
     input.onChange(newValue)
 
-    if(onSelected) {
+    if (onSelected) {
+      const list = this.props.list || []
       const inputValue = newValue && newValue.trim().toLowerCase();
-      const inputLength = inputValue.length;
+      const selectedValue = inputValue.length === 0 ? [] :
+        list.filter(element => element[this.props.field].toLowerCase() === inputValue)
 
-      const list = this.props.list || []
-
-      const selectedValue = inputLength === 0 ? [] : list.filter(element =>
-      element[this.props.field].toLowerCase() === inputValue)
-    
-      onSelected(selectedValue.length > 0 && selectedValue[0])
+      if (selectedValue.length > 0) {
+        onSelected(selectedValue[0])
+      }
     }
   }
 
-  onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method })  => {
+  onSuggestionSelected = (event, { suggestionValue }) => {
     const { onSelected } = this.props
 
-    if(onSelected) {
-      const inputValue = suggestionValue && suggestionValue.trim().toLowerCase();
-      const inputLength = inputValue.length;
-
-      const list = this.props.list || []
-
-      const selectedValue = inputLength === 0 ? [] : list.filter(element =>
-      element[this.props.field].toLowerCase().slice(0, inputLength) === inputValue)
-    
-      onSelected(selectedValue.length > 0 && selectedValue[0])
+    if (onSelected) {
+      const selectedValue = this.getSelectedValue(suggestionValue)
+      onSelected(selectedValue)
     }
   }
 
-  onSuggestionHighlighted = ({ suggestion })  => {
+  onSuggestionHighlighted = ({ suggestion }) => {
     const { onSelected } = this.props
 
-    if(onSelected && suggestion) {
-      const name = suggestion.name
-      const inputValue = name && name.trim().toLowerCase();
-      const inputLength = inputValue.length;
-
-      const list = this.props.list || []
-
-      const selectedValue = inputLength === 0 ? [] : list.filter(element =>
-      element[this.props.field].toLowerCase().slice(0, inputLength) === inputValue)
-    
-      onSelected(selectedValue.length > 0 && selectedValue[0])
+    if (onSelected && suggestion) {
+      const selectedValue = this.getSelectedValue(suggestion.name)
+      onSelected(selectedValue)
     }
   }
 
-  
+  getSelectedValue = value => {
+    const suggestions = this.getSuggestions(value)
+    return suggestions.length > 0 ? suggestions[0] : ''
+  }
 
   onSuggestionsFetchRequested = ({ value }) => {
     const suggestions = this.getSuggestions(value)
+    this.setState({ suggestions })
 
     const { onSelected } = this.props
-    if(suggestions && suggestions.length === 0) {
-      if(onSelected) {
-        onSelected('')
-      }    
+    if (suggestions && suggestions.length === 0 && onSelected) {
+      onSelected('')
     }
-
-    this.setState({
-      suggestions
-    });
-  };
+  }
 
   onSuggestionsClearRequested = () => {
-    this.setState({
-      suggestions: []
-    });
-  };
+    this.setState({ suggestions: [] })
+  }
 
   render() {
     const { suggestions } = this.state;
-    
+
     return (
       <Grid cols={this.props.cols || 12}>
         <div className="form-group">
@@ -175,8 +154,8 @@ export default class Example extends React.Component {
             <label>{this.props.label}</label>
           </If>
           <div className="input-group">
-            <div className="input-group-addon">
-              <i className="fa fa-user"></i>
+            <div className="input-group-addon">              
+                <i className={this.props.icon || "fa fa-user"}></i>              
             </div>
             <Autosuggest
               suggestions={suggestions}
@@ -184,12 +163,12 @@ export default class Example extends React.Component {
               onSuggestionsClearRequested={this.onSuggestionsClearRequested}
               getSuggestionValue={this.getSuggestionValue}
               renderSuggestion={this.renderSuggestion}
-              inputProps={{...this.props.input, onChange: this.onChange}}
+              inputProps={{ ...this.props.input, onChange: this.onChange, placeholder: this.props.placeholder}}
               placeholder={this.props.placeholder}
               readOnly={this.props.readOnly}
               className="form-control"
-              theme={theme} 
-              onSuggestionSelected={this.onSuggestionSelected} 
+              theme={theme}
+              onSuggestionSelected={this.onSuggestionSelected}
               onSuggestionHighlighted={this.onSuggestionHighlighted} />
           </div>
         </div>

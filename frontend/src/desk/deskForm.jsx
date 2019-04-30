@@ -6,12 +6,13 @@ import { reduxForm, Field, formValueSelector, change} from 'redux-form'
 import { init, getOfficeData, prepareToShow, showUpdate, showCreate, update } from './deskActions'
 import { getList as getRooms } from '../room/roomActions'
 import { getList as getEmployees } from '../employee/employeeActions'
+import { getList as getEquipments } from '../equipment/equipmentActions'
 import If from '../common/operator/if'
 import Grid from '../common/layout/grid'
 import OfficeMap from 'office-map'
 
 import Select from '../common/form/select'
-import ItemList from './itemList'
+import EquipmentList from './equipmentList'
 import EmployeeList from './employeeList'
 import SelectWithIcon from '../common/form/selectWithIcon'
 
@@ -23,8 +24,7 @@ class DeskForm extends Component {
         
         props.getRooms()
         props.getEmployees()
-
-        this.onEmployeeChange = this.onEmployeeChange.bind(this)
+        props.getEquipments()
     }
 
     getPossibleDirections() {
@@ -37,27 +37,27 @@ class DeskForm extends Component {
         directions.push({ id: 'north-west', name: 'North-west' })
         directions.push({ id: 'south-east', name: 'South-east' })
         directions.push({ id: 'south-west', name: 'South-west' })
-
         return directions
     }
 
     getPossiblePositions() {
         const positions = []
-
         for (let i = 0; i < 26; i++) {
             positions.push({ id: i, name: i })
         }
-
         return positions
     }
 
-    onEmployeeChange(employee, member, index) {
-        this.setValue(member, index, employee.identifier)
-        
+    onEmployeeChange = (employee, member, index) => {
+        if(employee) {
+            this.props.dispatch(change(`deskForm`, `employees[${index}].identifier`, employee.identifier || ''))
+        }        
     }
 
-    setValue = (member, index, value) => {
-        this.props.dispatch(change(`deskForm`, `employees[${index}].identifier`, value || ''))
+    onEquipmentChange = (equipment, member, index) => {
+        if(equipment) {
+            this.props.dispatch(change(`deskForm`, `equipments[${index}].type`, equipment.type || ''))
+        }
     }
 
     render() {
@@ -87,8 +87,8 @@ class DeskForm extends Component {
                     <EmployeeList id="employeeList" cols='12 6' list={employees} readOnly={readOnly}
                         field='employees' legend='Employee' icon='user-plus' onSelected={this.onEmployeeChange} />
 
-                    <ItemList cols='12 6' list={equipments} readOnly={readOnly}
-                        field='equipments' legend='Equipments' icon='laptop' />
+                    <EquipmentList cols='12 6' list={equipments} readOnly={readOnly}
+                        field='equipments' legend='Equipments' icon='laptop' onSelected={this.onEquipmentChange}/>
 
                 </div>
                 <div className='box-footer text-right'>
@@ -133,8 +133,8 @@ const selector = formValueSelector('deskForm')
 const mapStateToProps = state => ({
     rooms: state.room.list,
     officeData: state.desk.officeData,
-    equipments: state.desk.equipments,
+    equipments: state.equipment.list,
     employees: state.employee.list
 })
-const mapDispatchToProps = dispatch => bindActionCreators({ init, getRooms, getEmployees, getOfficeData, prepareToShow, showCreate, showUpdate, update }, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({ init, getRooms, getEmployees, getEquipments, getOfficeData, prepareToShow, showCreate, showUpdate, update }, dispatch)
 export default connect(mapStateToProps, mapDispatchToProps)(DeskForm)
