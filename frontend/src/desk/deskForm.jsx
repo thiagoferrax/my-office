@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { reduxForm, Field, formValueSelector, change} from 'redux-form'
+import { reduxForm, Field, formValueSelector, change } from 'redux-form'
 
 import { init, getOfficeData, prepareToShow, showUpdate, showCreate, update } from './deskActions'
 import { getList as getRooms } from '../room/roomActions'
@@ -21,7 +21,7 @@ import './desk.css'
 class DeskForm extends Component {
     constructor(props) {
         super(props)
-        
+
         props.getRooms()
         props.getEmployees()
         props.getEquipments()
@@ -49,15 +49,11 @@ class DeskForm extends Component {
     }
 
     onEmployeeChange = (employee, member, index) => {
-        if(employee) {
-            this.props.dispatch(change(`deskForm`, `employees[${index}].identifier`, employee.identifier || ''))
-        }        
+        this.props.dispatch(change(`deskForm`, `employees[${index}].identifier`, (employee && employee.identifier) || ''))
     }
 
     onEquipmentChange = (equipment, member, index) => {
-        if(equipment) {
-            this.props.dispatch(change(`deskForm`, `equipments[${index}].type`, equipment.type || ''))
-        }
+        this.props.dispatch(change(`deskForm`, `equipments[${index}].type`, (equipment && equipment.type) || ''))
     }
 
     render() {
@@ -88,7 +84,7 @@ class DeskForm extends Component {
                         field='employees' legend='Employee' icon='user-plus' onSelected={this.onEmployeeChange} />
 
                     <EquipmentList cols='12 6' list={equipments} readOnly={readOnly}
-                        field='equipments' legend='Equipments' icon='laptop' onSelected={this.onEquipmentChange}/>
+                        field='equipments' legend='Equipments' icon='laptop' onSelected={this.onEquipmentChange} />
 
                 </div>
                 <div className='box-footer text-right'>
@@ -114,7 +110,7 @@ class DeskForm extends Component {
                                         verticalSize={6}
                                         onSelect={desk => this.props.prepareToShow(desk, functionShow)}
                                         onMove={desk => this.props.update(desk, functionShow)}
-                                        editMode={true} 
+                                        editMode={true}
                                         showNavigator={true}
                                         fields={['type', 'patrimony', 'specification']} />
                                 </div>

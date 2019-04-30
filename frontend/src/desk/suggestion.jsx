@@ -103,6 +103,8 @@ export default class Example extends Component {
 
       if (selectedValue.length > 0) {
         onSelected(selectedValue[0])
+      } else {
+        onSelected('')
       }
     }
   }
