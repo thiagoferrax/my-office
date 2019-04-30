@@ -87,8 +87,19 @@ export default class Example extends Component {
     const inputValue = `${value}`.trim().toLowerCase()
 
     const inputLength = inputValue.length
-    return inputLength === 0 ? [] :
-      list.filter(element => `${element[this.props.field]}`.toLowerCase().slice(0, inputLength) === `${inputValue}`)
+
+    let suggestions = inputLength === 0 ? [] :
+    list.filter(element => `${element[this.props.field]}`.toLowerCase().slice(0, inputLength) === `${inputValue}`)
+
+    suggestions = suggestions.sort((a, b) => {
+      if(isNaN(a[this.props.field]))  {
+        return a[this.props.field].length - b[this.props.field].length
+      } else {
+        return a[this.props.field] - b[this.props.field]
+      }      
+    })
+
+    return suggestions
   }
 
   onChange = (event, { newValue }) => {
