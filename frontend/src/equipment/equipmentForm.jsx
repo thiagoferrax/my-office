@@ -10,6 +10,7 @@ import Select from '../common/form/select'
 const getPossibleEquipments = () => {
     const equipments = []
     equipments.push({ id: 'Chair', type: 'Chair' })
+    equipments.push({ id: 'Desk', type: 'Desk' })
     equipments.push({ id: 'Desktop', type: 'Desktop' })
     equipments.push({ id: 'Drawer', type: 'Drawer' })
     equipments.push({ id: 'Laptop', type: 'Laptop' })
