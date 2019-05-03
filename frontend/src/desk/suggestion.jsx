@@ -22,6 +22,9 @@ const theme = {
     lineHeight: 1.42857143,
     color: '#333333'
   },
+  inputDisabled: {
+    backgroundColor: '#eeeeee !important'
+  },
   inputFocused: {
     outline: 'none',
     border: '1px solid #3c8dbc'
@@ -38,13 +41,13 @@ const theme = {
     position: 'absolute',
     top: 41,
     width: '100%',
-    border: '1px solid #aaa',
+    border: '1px solid #d2d6de',
     backgroundColor: '#fff',
     fontFamily: 'Source Sans Pro',
     fontWeight: 400,
     fontSize: 14,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
+    borderRadius: 4,
+    borderRadius: 4,
     zIndex: 2,
     padding: '2px 0px 0px 0px'
   },
@@ -59,7 +62,7 @@ const theme = {
     height: 34
   },
   suggestionHighlighted: {
-    backgroundColor: '#ddd'
+    backgroundColor: '#deebff'
   }
 }
 
@@ -178,9 +181,8 @@ export default class Example extends Component {
               onSuggestionsClearRequested={this.onSuggestionsClearRequested}
               getSuggestionValue={this.getSuggestionValue}
               renderSuggestion={this.renderSuggestion}
-              inputProps={{ ...this.props.input, onChange: this.onChange, placeholder: this.props.placeholder}}
+              inputProps={{ ...this.props.input, onChange: this.onChange, placeholder: this.props.placeholder, disabled: this.props.readOnly}}
               placeholder={this.props.placeholder}
-              readOnly={this.props.readOnly}
               className="form-control"
               theme={theme}
               onSuggestionSelected={this.onSuggestionSelected}

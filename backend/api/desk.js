@@ -333,7 +333,7 @@ module.exports = app => {
                 }
             } else {
                 if (desk.equipmentType && desk.equipmentPatrimony) {
-                    desk.equipments = [buildEquipment(desk)]
+                    desk.equipments = [{}, buildEquipment(desk)]
                 } else {
                     desk.equipments = [{}]
                 }

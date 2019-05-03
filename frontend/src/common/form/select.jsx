@@ -85,7 +85,7 @@ export default class Select extends Component {
                         onChange={e => this.handleChange(e)}
                         getOptionValue={opt => opt[optionValue || 'value']}
                         getOptionLabel={opt => opt[optionLabel || 'label']}
-                        value={this.getValue()} autoFocus={autoFocus} readOnly={readOnly} />
+                        value={this.getValue()} autoFocus={autoFocus} isDisabled={readOnly} />
                 </If>
                 <If test={!onlyCombo}>
                     <Grid cols={cols}>
@@ -96,7 +96,7 @@ export default class Select extends Component {
                                 onChange={e => this.handleChange(e)}
                                 getOptionValue={opt => opt[optionValue || 'value']}
                                 getOptionLabel={opt => opt[optionLabel || 'label']}
-                                value={this.getValue()} autoFocus={autoFocus} readOnly={readOnly} />
+                                value={this.getValue()} autoFocus={autoFocus} isDisabled={readOnly} />
                         </div>
                     </Grid>
                 </If>

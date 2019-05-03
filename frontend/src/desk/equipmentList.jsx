@@ -61,7 +61,7 @@ export default class ItemList extends Component {
                             {(touched || submitFailed) && error && <span>{error}</span>}
                         </If>
                         <If test={index}>
-                            <button type='button' className='btn btn-danger' cols='12 1'
+                            <button type='button' className='btn btn-danger marginBottom' cols='12 1'
                                 onClick={() => fields.remove(index)}>
                                 <i className="icon ion-md-trash"></i>
                             </button>

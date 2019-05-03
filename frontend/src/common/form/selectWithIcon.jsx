@@ -13,7 +13,7 @@ export default props => (
                 <div className="input-group-addon">
                     <i className={`fa fa-${props.icon}`}></i>
                 </div>
-                <Select {...props} onlyCombo={true}/>
+                <Select {...props} onlyCombo={true} readOnly={props.readOnly}/>
             </div>
         </div>
     </Grid>
