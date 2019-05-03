@@ -9,7 +9,7 @@ export default props => (
             <MenuItem path='rooms' label='Rooms' icon='cube' />    
             <MenuItem path='employees' label='Employees' icon='people' />
             <MenuItem path='equipments' label='Equipments' icon='laptop' />      
-            <MenuItem path='desks' label='Desks' icon='desktop' />  
+            <MenuItem path='desks' label='Workstations' icon='desktop' />  
         </MenuTree>
         <MenuItem path='timeline' label='Timeline' icon='calendar' />      
     </ul>

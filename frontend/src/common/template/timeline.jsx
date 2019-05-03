@@ -63,7 +63,7 @@ const deskItem = ({ sprint, room, user, employee, formattedTime }) => {
             key={`desks_${sprint}_${room}_${user}_${employee}_${formattedTime}`}
             time={formattedTime}
             icon="desktop" color="green">
-            A new desk in <a href="/#/rooms">{room}</a> was created by <a href="#">{user}</a>
+            A new workstation in <a href="/#/rooms">{room}</a> was created by <a href="#">{user}</a>
         </TimelineItem>
     )
 }

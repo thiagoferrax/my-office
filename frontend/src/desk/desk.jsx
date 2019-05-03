@@ -23,7 +23,7 @@ class Desk extends Component {
     render() {
         return (
             <div> 
-                <ContentHeader title='Desks' small='Management' />
+                <ContentHeader title='Workstations' small='Management' />
                 <Content>
                     <Tabs> 
                         <TabsHeader> 

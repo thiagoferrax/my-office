@@ -44,7 +44,7 @@ class EvaluatonList extends Component {
                 <table className='table'>
                     <thead>
                         <tr>
-                            <th>Desk identifier</th>
+                            <th>Identifier</th>
                             <th>Chair direction</th>
                             <th>X position</th>
                             <th>Y position</th>

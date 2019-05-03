@@ -48,7 +48,7 @@ class Dashboard extends Component {
                         <InfoBox cols='12 6 3' color='yellow' icon='people'
                             value={(employees && employees.length) || 0} text='Employees' />
                         <InfoBox cols='12 6 3' color='green' icon='desktop'
-                            value={number_desks} text='Desks' />
+                            value={number_desks} text='Workstations' />
                     </Row>
                     <Row>
                         {
