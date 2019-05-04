@@ -58,8 +58,7 @@ class DeskForm extends Component {
 
     render() {
 
-        const { rooms, handleSubmit, submitLabel, readOnly, getOfficeData, officeData, showCreate, showUpdate, equipments, employees } = this.props
-
+        const { rooms, handleSubmit, submitLabel, readOnly, getOfficeData, officeData, showCreate, showUpdate, equipments, employees, idSelected } = this.props
 
         const functionShow = submitLabel === 'Create' ? showCreate : showUpdate
 
@@ -112,7 +111,8 @@ class DeskForm extends Component {
                                         onMove={desk => this.props.update(desk, functionShow)}
                                         editMode={true}
                                         showNavigator={true}
-                                        fields={['type', 'patrimony', 'specification']} />
+                                        fields={['type', 'patrimony', 'specification']} 
+                                        idSelected={idSelected} />
                                 </div>
                             </div>
                         </Grid >
@@ -130,7 +130,8 @@ const mapStateToProps = state => ({
     rooms: state.room.list,
     officeData: state.desk.officeData,
     equipments: state.equipment.list,
-    employees: state.employee.list
+    employees: state.employee.list,
+    idSelected: state.desk.idSelected
 })
 const mapDispatchToProps = dispatch => bindActionCreators({ init, getRooms, getEmployees, getEquipments, getOfficeData, prepareToShow, showCreate, showUpdate, update }, dispatch)
 export default connect(mapStateToProps, mapDispatchToProps)(DeskForm)

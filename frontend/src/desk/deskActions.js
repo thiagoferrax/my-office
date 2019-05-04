@@ -36,6 +36,13 @@ export function remove(values) {
     return submit(values, 'delete')
 }
 
+export function selectId(id) {
+    return {
+        type: 'ID_SELECTED',
+        payload: id
+    }
+}
+
 function submit(values, method) {
     return dispatch => {
         const id = values.id ? values.id : ''
@@ -77,6 +84,7 @@ export function prepareToShow(desk, callback) {
 
 export function showUpdate(desk) {
     return [
+        selectId(desk.id),
         showTabs('tabUpdate'),
         selectTab('tabUpdate'),
         initialize('deskForm', desk),
@@ -97,6 +105,7 @@ export function showCreate(desk) {
 
 export function showDelete(desk) {
     return [
+        selectId(desk.id),
         showTabs('tabDelete'),
         selectTab('tabDelete'),
         initialize('deskForm', desk)
@@ -105,6 +114,7 @@ export function showDelete(desk) {
 
 export function initUpdate(desk) {
     return [
+        selectId(desk.id),
         initialize('deskForm', desk),
         getOfficeData(desk.roomId)
     ]
@@ -112,6 +122,7 @@ export function initUpdate(desk) {
 
 export function init() {
     return [
+        selectId(undefined),
         showTabs('tabCreate', 'tabList'),
         selectTab('tabCreate'),
         getList(),
