@@ -99,11 +99,11 @@ class DeskForm extends Component {
                             <div className="box_ box-default">
                                 <div className="box-header with-border">
                                     <i className="fa fa-building-o"></i>
-                                    <h3 className="box-title">MY OFFICE - {officeData[0] && officeData[0].room}</h3>
+                                    <h3 className="box-title">MY OFFICE - {officeData && officeData[0] && officeData[0].room}</h3>
                                 </div>
                                 <div className="box-body">
                                     <OfficeMap
-                                        id={officeData[0] && officeData[0].room}
+                                        id={officeData && officeData[0] && officeData[0].room}
                                         data={officeData}
                                         horizontalSize={6}
                                         verticalSize={6}
