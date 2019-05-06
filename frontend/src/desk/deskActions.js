@@ -17,7 +17,10 @@ export function getList() {
 }
 
 export function getOfficeData(roomId) {
-    const request = axios.get(`${consts.API_URL}/rooms/${roomId}/officeData`)
+    let request = {data: []}
+    if(roomId) {
+        request = axios.get(`${consts.API_URL}/rooms/${roomId}/officeData`)
+    }    
     return {
         type: 'OFFICE_DATA_FETCHED',
         payload: request
@@ -99,7 +102,7 @@ export function showCreate(desk) {
         showTabs('tabCreate', 'tabList'),
         selectTab('tabCreate'),
         initialize('deskForm', desk),
-        getOfficeData(desk.roomId)
+        //getOfficeData(desk.roomId)
     ]
 }
 
@@ -129,5 +132,6 @@ export function init() {
         getEmployees(),
         getEquipments(),
         initialize('deskForm', INITIAL_VALUES),
+        getOfficeData(null)
     ]
 }
